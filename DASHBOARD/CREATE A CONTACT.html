@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Umbrella Claims & Property Solutions - Create Contact</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #f0f0f0;
+            color: #1e3c72;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: #f0f0f0;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+            outline: none;
+        }
+
+        .form-control.error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #1e3c72;
+            border: 2px solid #1e3c72;
+        }
+
+        .btn-outline:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: #1e3c72;
+                cursor: pointer;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+        }
+
+        /* Overlay for mobile menu */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.open {
+            display: block;
+        }
+
+        /* Success message */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="company-name" style="display: none;">UMBRELLA CLAIMS & PROPERTY SOLUTIONS</div>
+                <div class="company-name">UMBRELLA CLAIMS & PROPERTY SOLUTIONS</div>
+                <div class="user-info">Welcome, <span id="userName">User</span></div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-user-plus"></i>
+                        Create Contact
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Create New Contact</h1>
+                <div class="user-menu">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <div class="user-profile">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span id="userDisplayName">User Name</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="success-message" id="successMessage">Contact created successfully! Redirecting to dashboard...</div>
+                <form id="createContactForm">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Personal Information</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">First Name *</label>
+                                <input type="text" class="form-control" name="firstName" required>
+                                <div class="error-message" id="firstNameError">First name is required</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" name="lastName" required>
+                                <div class="error-message" id="lastNameError">Last name is required</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" name="email" required>
+                                <div class="error-message" id="emailError">Please enter a valid email address</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone *</label>
+                                <input type="tel" class="form-control" name="phone" required>
+                                <div class="error-message" id="phoneError">Phone number is required</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" name="dateOfBirth">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select class="form-control" name="gender">
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Address Information</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Street Address</label>
+                                <input type="text" class="form-control" name="streetAddress">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" name="city">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">State</label>
+                                <select class="form-control" name="state">
+                                    <option value="">Select State</option>
+                                    <option value="SC">South Carolina</option>
+                                    <option value="NC">North Carolina</option>
+                                    <option value="GA">Georgia</option>
+                                    <option value="TN">Tennessee</option>
+                                    <option value="AL">Alabama</option>
+                                    <option value="FL">Florida</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">ZIP Code</label>
+                                <input type="text" class="form-control" name="zipCode">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Country</label>
+                                <input type="text" class="form-control" name="country" value="United States">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Professional Information</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Company</label>
+                                <input type="text" class="form-control" name="company">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-control" name="jobTitle">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <input type="text" class="form-control" name="department">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Work Phone</label>
+                                <input type="tel" class="form-control" name="workPhone">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Work Email</label>
+                                <input type="email" class="form-control" name="workEmail">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Website</label>
+                                <input type="url" class="form-control" name="website">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Preferences -->
+                    <div class="form-section">
+                        <h2 class="section-title">Contact Preferences</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Preferred Contact Method</label>
+                                <select class="form-control" name="preferredContact">
+                                    <option value="">Select Preferred Method</option>
+                                    <option value="email">Email</option>
+                                    <option value="phone">Phone</option>
+                                    <option value="text">Text Message</option>
+                                    <option value="mail">Mail</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Best Time to Contact</label>
+                                <select class="form-control" name="bestTime">
+                                    <option value="">Select Best Time</option>
+                                    <option value="morning">Morning (9 AM - 12 PM)</option>
+                                    <option value="afternoon">Afternoon (12 PM - 5 PM)</option>
+                                    <option value="evening">Evening (5 PM - 8 PM)</option>
+                                    <option value="anytime">Anytime</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <input type="checkbox" name="marketingEmails" style="margin-right: 10px;">
+                                Receive marketing emails
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <input type="checkbox" name="newsletter" style="margin-right: 10px;">
+                                Subscribe to newsletter
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Additional Information</h2>
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" rows="4" placeholder="Any additional notes about this contact..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tags</label>
+                            <input type="text" class="form-control" name="tags" placeholder="Enter tags separated by commas (e.g., client, prospect, vendor)">
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline" onclick="window.location.href='DASHBOARD.html'">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">
+                            Save as Draft
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <span id="submitBtnText">Create Contact</span>
+                            <span id="submitBtnLoading" style="display: none;">Creating Contact...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Initialize page
+        function initializePage() {
+            if (!checkAuth()) return;
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+            const userName = userEmail.split('@')[0];
+            const userInitial = userName.charAt(0).toUpperCase();
+
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('userDisplayName').textContent = userName;
+            document.getElementById('userAvatar').textContent = userInitial;
+        }
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('open');
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('open');
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Form validation and submission
+        document.getElementById('createContactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            clearErrors();
+            
+            // Get form values
+            const formData = new FormData(this);
+            const contactData = Object.fromEntries(formData);
+            
+            // Validate required fields
+            let isValid = true;
+            
+            if (!contactData.firstName.trim()) {
+                showError('firstName', 'First name is required');
+                isValid = false;
+            }
+            
+            if (!contactData.lastName.trim()) {
+                showError('lastName', 'Last name is required');
+                isValid = false;
+            }
+            
+            if (!contactData.email.trim()) {
+                showError('email', 'Email is required');
+                isValid = false;
+            } else if (!isValidEmail(contactData.email)) {
+                showError('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!contactData.phone.trim()) {
+                showError('phone', 'Phone number is required');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Show loading state
+            setLoadingState(true);
+            
+            // Simulate API call
+            setTimeout(() => {
+                console.log('New contact data:', contactData);
+                
+                // Show success message
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // Redirect to dashboard after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'DASHBOARD.html';
+                }, 2000);
+                
+            }, 1500);
+        });
+
+        // Helper functions
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function showError(fieldName, message) {
+            const field = document.querySelector(`[name="${fieldName}"]`);
+            const errorElement = document.getElementById(`${fieldName}Error`);
+            
+            if (field && errorElement) {
+                field.classList.add('error');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            const errorInputs = document.querySelectorAll('.form-control.error');
+            
+            errorElements.forEach(el => el.style.display = 'none');
+            errorInputs.forEach(input => input.classList.remove('error'));
+        }
+
+        function setLoadingState(loading) {
+            const submitBtn = document.getElementById('submitBtn');
+            const submitBtnText = document.getElementById('submitBtnText');
+            const submitBtnLoading = document.getElementById('submitBtnLoading');
+            
+            if (loading) {
+                submitBtn.classList.add('loading');
+                submitBtnText.style.display = 'none';
+                submitBtnLoading.style.display = 'inline';
+            } else {
+                submitBtn.classList.remove('loading');
+                submitBtnText.style.display = 'inline';
+                submitBtnLoading.style.display = 'none';
+            }
+        }
+
+        // Save as draft functionality
+        function saveAsDraft() {
+            const formData = new FormData(document.getElementById('createContactForm'));
+            const draftData = Object.fromEntries(formData);
+            
+            localStorage.setItem('contactDraft', JSON.stringify(draftData));
+            alert('Draft saved successfully!');
+        }
+
+        // Load draft on page load
+        window.addEventListener('load', function() {
+            initializePage();
+            
+            const savedDraft = localStorage.getItem('contactDraft');
+            if (savedDraft) {
+                const draftData = JSON.parse(savedDraft);
+                const form = document.getElementById('createContactForm');
+                
+                Object.keys(draftData).forEach(key => {
+                    const field = form.querySelector(`[name="${key}"]`);
+                    if (field) {
+                        field.value = draftData[key];
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

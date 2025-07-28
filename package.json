@@ -1,0 +1,17 @@
+{
+  "name": "umbrellacpssrm-final",
+  "version": "1.0.0",
+  "description": "Umbrella Claims & Property Solutions CRM - Final Version",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["crm", "umbrella", "claims", "property", "management"],
+  "author": "Umbrella Claims & Property Solutions",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+} 
