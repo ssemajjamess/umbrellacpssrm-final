@@ -575,6 +575,7 @@
     <script src="https://static.alstatic.net/scriptbundle/Fingerprinting-374ba2396971c1c9.js" crossorigin integrity='sha512-+BpzAg0bl5Uo+oAo8Eq/43wiroi1ZXYQnxFze2ix/gjOKsuysLF7Zbu8C9IZD1X/9bQhTkedzSf7KMh3ftaI7w=='></script>
     <script src="https://static.alstatic.net/scriptbundle/AngularSignin-08b1788b4a0ef32e.js" crossorigin integrity='sha512-sicsrHmZQb+rDJzcFeaYXLnku6aWapeqb2+j15b/nKCp+7SuEQ0a/1qKmkBXTOvhoq9e32Ii4VzuJB+JVy6E+w=='></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="crm-data.js"></script>
     
     <script>
         var app = angular.module('umbrella-claims', [], [function () { }]);
@@ -588,37 +589,70 @@
             }
 
             // Set user information
-            const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
-            const userName = userEmail.split('@')[0];
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
             
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userEmail').textContent = userEmail;
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+
+            // Update dashboard stats with real data
+            function updateDashboardStats() {
+                const stats = crm.getDashboardStats();
+                document.getElementById('activeLeads').textContent = stats.activeLeads;
+                document.getElementById('activeJobs').textContent = stats.activeJobs;
+                document.getElementById('pendingTasks').textContent = stats.pendingTasks;
+                document.getElementById('monthlyRevenue').textContent = '$' + stats.monthlyRevenue.toLocaleString();
+            }
+
+            // Load recent activities
+            function loadRecentActivities() {
+                const activities = crm.getRecentActivities(4);
+                const activityContainer = document.querySelector('.recent-activity .card-content');
+                
+                if (activityContainer) {
+                    activityContainer.innerHTML = '';
+                    activities.forEach(activity => {
+                        const activityItem = document.createElement('div');
+                        activityItem.className = 'activity-item';
+                        
+                        let icon = '📝';
+                        if (activity.type === 'lead') icon = '👤';
+                        if (activity.type === 'job') icon = '🏠';
+                        if (activity.type === 'task') icon = '✅';
+                        if (activity.type === 'customer') icon = '👥';
+                        
+                        activityItem.innerHTML = `
+                            <div class="activity-icon">${icon}</div>
+                            <div>
+                                <div>${activity.description}</div>
+                                <small style="color: #666;">${new Date(activity.timestamp).toLocaleString()}</small>
+                            </div>
+                        `;
+                        activityContainer.appendChild(activityItem);
+                    });
+                }
+            }
 
             // Logout functionality
             document.getElementById('logoutBtn').addEventListener('click', function() {
                 if (confirm('Are you sure you want to sign out?')) {
                     localStorage.removeItem('userLoggedIn');
                     localStorage.removeItem('userEmail');
+                    localStorage.removeItem('userName');
                     window.location.href = '../index.html';
                 }
             });
 
-            // Update dashboard stats periodically
-            function updateStats() {
-                const leads = Math.floor(Math.random() * 50) + 10;
-                const jobs = Math.floor(Math.random() * 30) + 5;
-                const tasks = Math.floor(Math.random() * 20) + 3;
-                const revenue = Math.floor(Math.random() * 100000) + 20000;
-
-                document.getElementById('activeLeads').textContent = leads;
-                document.getElementById('activeJobs').textContent = jobs;
-                document.getElementById('pendingTasks').textContent = tasks;
-                document.getElementById('monthlyRevenue').textContent = '$' + revenue.toLocaleString();
-            }
+            // Initialize dashboard
+            updateDashboardStats();
+            loadRecentActivities();
 
             // Update stats every 30 seconds
-            setInterval(updateStats, 30000);
-            updateStats(); // Initial update
+            setInterval(updateDashboardStats, 30000);
         }]);
     </script>
 </body>

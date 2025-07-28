@@ -566,7 +566,28 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Insurance Company</label>
-                                <input type="text" class="form-control" name="insuranceCompany">
+                                <select class="form-control" name="insuranceCompany" id="insuranceCompany">
+                                    <option value="">Select Insurance Company</option>
+                                    <option value="ALLSTATE">ALLSTATE</option>
+                                    <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
+                                    <option value="FARM BUREAU">FARM BUREAU</option>
+                                    <option value="FARMERS">FARMERS</option>
+                                    <option value="FOREMOST">FOREMOST</option>
+                                    <option value="GEICO">GEICO</option>
+                                    <option value="HARTFORD">HARTFORD</option>
+                                    <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
+                                    <option value="HORACE MANN">HORACE MANN</option>
+                                    <option value="THE GENERAL">THE GENERAL</option>
+                                    <option value="KEMPER">KEMPER</option>
+                                    <option value="NATIONWIDE">NATIONWIDE</option>
+                                    <option value="PROGRESSIVE">PROGRESSIVE</option>
+                                    <option value="SAGESURE">SAGESURE</option>
+                                    <option value="STATEFARM">STATEFARM</option>
+                                    <option value="SAFECO">SAFECO</option>
+                                    <option value="TRAVELERS">TRAVELERS</option>
+                                    <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
+                                    <option value="USAA">USAA</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Policy Number</label>
@@ -671,6 +692,7 @@
     <!-- Mobile Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <script src="crm-data.js"></script>
     <script>
         // Check if user is logged in
         function checkAuth() {
@@ -687,13 +709,16 @@
             if (!checkAuth()) return;
 
             // Set user information
-            const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
-            const userName = userEmail.split('@')[0];
-            const userInitial = userName.charAt(0).toUpperCase();
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
 
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userDisplayName').textContent = userName;
-            document.getElementById('userAvatar').textContent = userInitial;
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
         }
 
         // Mobile menu functionality
@@ -791,19 +816,43 @@
             // Show loading state
             setLoadingState(true);
             
-            // Simulate API call
+            // Prepare lead data for CRM
+            const crmLeadData = {
+                customerName: `${leadData.firstName} ${leadData.lastName}`,
+                phone: leadData.phone,
+                email: leadData.email,
+                address: `${leadData.propertyAddress}, ${leadData.city}, ${leadData.state} ${leadData.zipCode}`,
+                soldBy: crm.getCurrentUser().name,
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: leadData.insuranceCompany || 'TBD',
+                claimNumber: leadData.claimNumber || '',
+                adjusterInfo: leadData.adjusterInfo || '',
+                roofType: leadData.roofType || '',
+                replacementType: leadData.replacementType || '',
+                claimType: leadData.claimType,
+                incidentDate: leadData.incidentDate,
+                estimatedLoss: leadData.estimatedLoss,
+                damageDescription: leadData.damageDescription,
+                propertyType: leadData.propertyType,
+                propertyValue: leadData.propertyValue,
+                leadSource: leadData.leadSource,
+                notes: leadData.notes
+            };
+
+            // Add lead to CRM
+            crm.addLead(crmLeadData);
+            
+            // Clear draft
+            localStorage.removeItem('leadDraft');
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Redirect to dashboard after 2 seconds
             setTimeout(() => {
-                console.log('New lead data:', leadData);
-                
-                // Show success message
-                document.getElementById('successMessage').style.display = 'block';
-                
-                // Redirect to dashboard after 2 seconds
-                setTimeout(() => {
-                    window.location.href = 'DASHBOARD.html';
-                }, 2000);
-                
-            }, 1500);
+                window.location.href = 'DASHBOARD.html';
+            }, 2000);
         });
 
         // Helper functions
