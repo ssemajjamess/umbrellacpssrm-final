@@ -295,8 +295,15 @@
                         </button>
                     </form>
                     <form id="ms-login-form" action="#" method="post">
-                        <button class="gsi-material-button" type="submit" style="padding: 0; margin-right: 0;">
-                            <img src="/Images/Login/ms-signin-button.svg" alt="Sign In with Microsoft" />
+                        <button class="gsi-material-button" type="submit" style="padding: 0; margin-right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; min-width: 200px; height: 40px;">
+                            <svg width="20" height="20" viewBox="0 0 23 23" style="margin-right: 8px;">
+                                <path fill="#f3f3f3" d="M0 0h23v23H0z"/>
+                                <path fill="#f35325" d="M1 1h10v10H1z"/>
+                                <path fill="#81bc06" d="M12 1h10v10H12z"/>
+                                <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+                                <path fill="#ffba08" d="M12 12h10v10H12z"/>
+                            </svg>
+                            <span style="color: #333; font-size: 14px; font-weight: 500;">Sign in with Microsoft</span>
                         </button>
                     </form>
                 </div>
@@ -316,41 +323,113 @@
         </section>
         <div class="promo__container">
             <div class="promo__faux-col"></div>
-            <section class="promo f--center">
-                <div class="umbrella-branding">
-                    <div class="company-info">
-                        <h1 class="company-name">Customer & Insurance Claim Management</h1>
-                        <p class="company-tagline">Streamline your roofing business with our comprehensive CRM solution. Manage leads, track jobs, handle claims, and grow your business.</p>
-                        <div class="features-list" style="margin: 20px 0;">
-                            <div style="display: flex; align-items: center; margin: 10px 0;">
-                                <div style="width: 30px; height: 30px; background: #4a90e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                    <span style="color: white; font-weight: bold;">✓</span>
+            <section class="promo f--center" style="padding-top: 0; margin-top: 0;">
+                <div class="umbrella-branding" style="margin-top: 0; padding-top: 20px;">
+                    <div class="company-info" style="margin-top: 0;">
+                        <h1 class="company-name" style="color: #1e3c72; font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">Customer & Insurance Claim Management</h1>
+                        <p class="company-tagline" style="color: #2a5298; font-size: 1.3rem; font-weight: 400; margin-bottom: 30px; line-height: 1.6;">Streamline your roofing business with our comprehensive CRM solution. Manage leads, track jobs, handle claims, and grow your business with professional tools designed for property contractors.</p>
+                        
+                        <!-- Professional Features Section -->
+                        <div class="features-list" style="margin: 30px 0;">
+                            <div style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: rgba(30, 60, 114, 0.1); border-radius: 10px; border-left: 4px solid #1e3c72;">
+                                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #1e3c72, #2a5298); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; box-shadow: 0 4px 8px rgba(30, 60, 114, 0.3);">
+                                    <span style="color: white; font-weight: bold; font-size: 16px;">✓</span>
                                 </div>
-                                <span style="color: white; font-size: 18px;">Lead Management & Tracking</span>
+                                <div>
+                                    <span style="color: #1e3c72; font-size: 18px; font-weight: 600;">Lead Management & Tracking</span>
+                                    <p style="color: #2a5298; font-size: 14px; margin: 5px 0 0 0;">Capture, qualify, and convert leads efficiently</p>
+                                </div>
                             </div>
-                            <div style="display: flex; align-items: center; margin: 10px 0;">
-                                <div style="width: 30px; height: 30px; background: #4a90e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                    <span style="color: white; font-weight: bold;">✓</span>
+                            
+                            <div style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: rgba(30, 60, 114, 0.1); border-radius: 10px; border-left: 4px solid #1e3c72;">
+                                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #1e3c72, #2a5298); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; box-shadow: 0 4px 8px rgba(30, 60, 114, 0.3);">
+                                    <span style="color: white; font-weight: bold; font-size: 16px;">✓</span>
                                 </div>
-                                <span style="color: white; font-size: 18px;">Insurance Claims Processing</span>
+                                <div>
+                                    <span style="color: #1e3c72; font-size: 18px; font-weight: 600;">Insurance Claims Processing</span>
+                                    <p style="color: #2a5298; font-size: 14px; margin: 5px 0 0 0;">Streamlined claims management and documentation</p>
+                                </div>
                             </div>
-                            <div style="display: flex; align-items: center; margin: 10px 0;">
-                                <div style="width: 30px; height: 30px; background: #4a90e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                    <span style="color: white; font-weight: bold;">✓</span>
+                            
+                            <div style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: rgba(30, 60, 114, 0.1); border-radius: 10px; border-left: 4px solid #1e3c72;">
+                                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #1e3c72, #2a5298); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; box-shadow: 0 4px 8px rgba(30, 60, 114, 0.3);">
+                                    <span style="color: white; font-weight: bold; font-size: 16px;">✓</span>
                                 </div>
-                                <span style="color: white; font-size: 18px;">Contract Management & E-Signatures</span>
+                                <div>
+                                    <span style="color: #1e3c72; font-size: 18px; font-weight: 600;">Contract Management & E-Signatures</span>
+                                    <p style="color: #2a5298; font-size: 14px; margin: 5px 0 0 0;">Digital contracts with secure electronic signatures</p>
+                                </div>
                             </div>
-                            <div style="display: flex; align-items: center; margin: 10px 0;">
-                                <div style="width: 30px; height: 30px; background: #4a90e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                    <span style="color: white; font-weight: bold;">✓</span>
+                            
+                            <div style="display: flex; align-items: center; margin: 15px 0; padding: 15px; background: rgba(30, 60, 114, 0.1); border-radius: 10px; border-left: 4px solid #1e3c72;">
+                                <div style="width: 35px; height: 35px; background: linear-gradient(135deg, #1e3c72, #2a5298); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 20px; box-shadow: 0 4px 8px rgba(30, 60, 114, 0.3);">
+                                    <span style="color: white; font-weight: bold; font-size: 16px;">✓</span>
                                 </div>
-                                <span style="color: white; font-size: 18px;">Scheduling & Crew Management</span>
+                                <div>
+                                    <span style="color: #1e3c72; font-size: 18px; font-weight: 600;">Scheduling & Crew Management</span>
+                                    <p style="color: #2a5298; font-size: 14px; margin: 5px 0 0 0;">Optimize crew assignments and project timelines</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="contact-info" style="text-align: center; margin-top: 30px;">
-                            <p style="color: rgba(255, 255, 255, 0.8); margin: 5px 0;">141 Traction St, Greenville, SC 29611</p>
-                            <p style="color: rgba(255, 255, 255, 0.8); margin: 5px 0;">(864) 767-6188 • customerscare@roofsbyumbrella.com</p>
-                            <p style="color: rgba(255, 255, 255, 0.8); margin: 5px 0;">www.roofsbyumbrella.com</p>
+
+                        <!-- Additional Professional Features -->
+                        <div style="margin: 30px 0; padding: 25px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; border: 2px solid rgba(30, 60, 114, 0.2);">
+                            <h3 style="color: #1e3c72; font-size: 1.4rem; font-weight: 600; margin-bottom: 15px; text-align: center;">Advanced Features</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div style="text-align: center; padding: 10px;">
+                                    <div style="width: 25px; height: 25px; background: #1e3c72; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                        <span style="color: white; font-size: 12px;">📊</span>
+                                    </div>
+                                    <p style="color: #1e3c72; font-size: 14px; font-weight: 500;">Real-time Analytics</p>
+                                </div>
+                                <div style="text-align: center; padding: 10px;">
+                                    <div style="width: 25px; height: 25px; background: #1e3c72; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                        <span style="color: white; font-size: 12px;">📱</span>
+                                    </div>
+                                    <p style="color: #1e3c72; font-size: 14px; font-weight: 500;">Mobile App</p>
+                                </div>
+                                <div style="text-align: center; padding: 10px;">
+                                    <div style="width: 25px; height: 25px; background: #1e3c72; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                        <span style="color: white; font-size: 12px;">🔒</span>
+                                    </div>
+                                    <p style="color: #1e3c72; font-size: 14px; font-weight: 500;">Bank-level Security</p>
+                                </div>
+                                <div style="text-align: center; padding: 10px;">
+                                    <div style="width: 25px; height: 25px; background: #1e3c72; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                        <span style="color: white; font-size: 12px;">📈</span>
+                                    </div>
+                                    <p style="color: #1e3c72; font-size: 14px; font-weight: 500;">Growth Tools</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Professional Contact Section -->
+                        <div class="contact-info" style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(30, 60, 114, 0.1); border-radius: 15px; border: 2px solid rgba(30, 60, 114, 0.2);">
+                            <h3 style="color: #1e3c72; font-size: 1.3rem; font-weight: 600; margin-bottom: 15px;">Contact Information</h3>
+                            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                                <div style="text-align: center;">
+                                    <p style="color: #1e3c72; font-weight: 600; margin: 5px 0; font-size: 16px;">📍 Address</p>
+                                    <p style="color: #2a5298; margin: 5px 0; font-size: 14px;">141 Traction St<br>Greenville, SC 29611</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: #1e3c72; font-weight: 600; margin: 5px 0; font-size: 16px;">📞 Phone</p>
+                                    <p style="color: #2a5298; margin: 5px 0; font-size: 14px;">(864) 767-6188</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: #1e3c72; font-weight: 600; margin: 5px 0; font-size: 16px;">✉️ Email</p>
+                                    <p style="color: #2a5298; margin: 5px 0; font-size: 14px;">customerscare@roofsbyumbrella.com</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="color: #1e3c72; font-weight: 600; margin: 5px 0; font-size: 16px;">🌐 Website</p>
+                                    <p style="color: #2a5298; margin: 5px 0; font-size: 14px;">www.roofsbyumbrella.com</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trust Indicators -->
+                        <div style="margin-top: 25px; text-align: center;">
+                            <p style="color: #1e3c72; font-size: 12px; font-weight: 500; margin: 5px 0;">🔒 SSL Secured • 📊 99.9% Uptime • 🛡️ GDPR Compliant</p>
+                            <p style="color: #2a5298; font-size: 11px; margin: 5px 0;">Trusted by 500+ contractors across South Carolina</p>
                         </div>
                     </div>
                 </div>
