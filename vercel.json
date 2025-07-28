@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "name": "umbrellacpssrm-final",
   "builds": [
     {
       "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "**/*",
       "use": "@vercel/static"
     }
   ],
@@ -23,6 +26,10 @@
     {
       "src": "/LOGOS/(.*)",
       "dest": "/LOGOS/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ],
   "env": {
