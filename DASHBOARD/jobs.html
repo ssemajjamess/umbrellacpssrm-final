@@ -543,6 +543,7 @@
                             <th>JOB COST</th>
                             <th>LABOR COST</th>
                             <th>MATERIAL COST</th>
+                            <th>PROFIT</th>
                             <th>GOOGLE RATING</th>
                             <th>JOB NOTES</th>
                             <th>DOCUMENTS</th>
@@ -683,12 +684,14 @@
                     const row = document.createElement('tr');
                     const statusClass = job.status ? job.status.toLowerCase() : 'active';
                     
+                    const profit = crm.calculateProfit(job.jobCost, job.laborCost, job.materialCost);
                     row.innerHTML = `
                         <td>${job.crew || 'BROM ROOFING'}</td>
                         <td>${job.customerName || 'N/A'}</td>
-                        <td class="cost-display">$${job.jobCost || 0}</td>
-                        <td class="cost-display">$${job.laborCost || 0}</td>
-                        <td class="cost-display">$${job.materialCost || 0}</td>
+                        <td class="cost-display">$${(job.jobCost || 0).toLocaleString()}</td>
+                        <td class="cost-display">$${(job.laborCost || 0).toLocaleString()}</td>
+                        <td class="cost-display">$${(job.materialCost || 0).toLocaleString()}</td>
+                        <td class="cost-display profit-display">$${profit.toLocaleString()}</td>
                         <td>
                             <span class="rating">
                                 ${'★'.repeat(job.googleRating || 0)}${'☆'.repeat(5 - (job.googleRating || 0))}
@@ -710,12 +713,111 @@
                             <button class="btn" onclick="viewJob(${job.id})">
                                 <i class="fas fa-eye"></i>
                             </button>
+                            <button class="btn" onclick="updateCosts(${job.id})">
+                                <i class="fas fa-dollar-sign"></i>
+                            </button>
                         </td>
                     `;
                     tbody.appendChild(row);
                 });
             } catch (error) {
                 console.error('Error loading jobs:', error);
+            }
+        }
+
+        // Update job costs
+        function updateCosts(jobId) {
+            const job = crm.data.jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Update Costs - ${job.customerName}</h3>
+                        <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Job Cost ($)</label>
+                            <input type="number" id="jobCost" class="form-input" value="${job.jobCost || 0}" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Labor Cost ($)</label>
+                            <input type="number" id="laborCost" class="form-input" value="${job.laborCost || 0}" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Material Cost ($)</label>
+                            <input type="number" id="materialCost" class="form-input" value="${job.materialCost || 0}" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Google Rating (1-5)</label>
+                            <input type="number" id="googleRating" class="form-input" value="${job.googleRating || 0}" min="1" max="5">
+                        </div>
+                        <div class="form-group">
+                            <label>Job Notes</label>
+                            <textarea id="jobNotes" class="form-input">${job.jobNotes || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Document Link</label>
+                            <input type="url" id="documentLink" class="form-input" value="${job.documentLink || ''}" placeholder="https://drive.google.com/...">
+                        </div>
+                        <div class="profit-preview">
+                            <strong>Profit Preview: $<span id="profitPreview">0</span></strong>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveJobCosts(${jobId})">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Add event listeners for real-time profit calculation
+            const jobCostInput = document.getElementById('jobCost');
+            const laborCostInput = document.getElementById('laborCost');
+            const materialCostInput = document.getElementById('materialCost');
+            const profitPreview = document.getElementById('profitPreview');
+
+            function updateProfitPreview() {
+                const jobCost = parseFloat(jobCostInput.value) || 0;
+                const laborCost = parseFloat(laborCostInput.value) || 0;
+                const materialCost = parseFloat(materialCostInput.value) || 0;
+                const profit = crm.calculateProfit(jobCost, laborCost, materialCost);
+                profitPreview.textContent = profit.toLocaleString();
+            }
+
+            jobCostInput.addEventListener('input', updateProfitPreview);
+            laborCostInput.addEventListener('input', updateProfitPreview);
+            materialCostInput.addEventListener('input', updateProfitPreview);
+            updateProfitPreview();
+        }
+
+        // Save job costs
+        function saveJobCosts(jobId) {
+            const jobCost = parseFloat(document.getElementById('jobCost').value) || 0;
+            const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+            const materialCost = parseFloat(document.getElementById('materialCost').value) || 0;
+            const googleRating = parseInt(document.getElementById('googleRating').value) || 0;
+            const jobNotes = document.getElementById('jobNotes').value;
+            const documentLink = document.getElementById('documentLink').value;
+
+            const job = crm.data.jobs.find(j => j.id === jobId);
+            if (job) {
+                job.jobCost = jobCost;
+                job.laborCost = laborCost;
+                job.materialCost = materialCost;
+                job.googleRating = googleRating;
+                job.jobNotes = jobNotes;
+                job.documentLink = documentLink;
+                job.profit = crm.calculateProfit(jobCost, laborCost, materialCost);
+                job.updatedAt = new Date().toISOString();
+                crm.saveData();
+                
+                alert('Job costs updated successfully!');
+                document.querySelector('.modal').remove();
+                loadJobs();
             }
         }
 

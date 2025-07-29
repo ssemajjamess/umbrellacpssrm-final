@@ -63,7 +63,35 @@ class UmbrellaCRM {
             ...leadData,
             createdAt: new Date().toISOString(),
             stage: 'LEAD',
-            activities: []
+            activities: [],
+            // Additional fields from screenshots
+            claimFiled: leadData.claimFiled || 'NO',
+            approved: leadData.approved || 'PENDING',
+            incidentDate: leadData.incidentDate || '',
+            claimNumber: leadData.claimNumber || '',
+            adjusterInfo: leadData.adjusterInfo || '',
+            replacementType: leadData.replacementType || '',
+            roofType: leadData.roofType || '',
+            propertyType: leadData.propertyType || 'RESIDENTIAL',
+            estimatedLoss: leadData.estimatedLoss || '',
+            damageDescription: leadData.damageDescription || '',
+            propertyValue: leadData.propertyValue || '',
+            leadSource: leadData.leadSource || '',
+            notes: leadData.notes || '',
+            // Document and photo fields
+            documents: [],
+            photos: {
+                before: [],
+                after: []
+            },
+            // Cost tracking
+            jobCost: 0,
+            laborCost: 0,
+            materialCost: 0,
+            profit: 0,
+            googleRating: 0,
+            jobNotes: '',
+            documentLinks: []
         };
         this.data.leads.push(lead);
         this.addActivity('lead', 'created', `New lead created for ${leadData.customerName}`);
@@ -171,6 +199,60 @@ class UmbrellaCRM {
             .reduce((total, job) => total + (job.revenue || 0), 0);
     }
 
+    // Calculate weekly jobs sold (Monday to Sunday)
+    getWeeklyJobsSold() {
+        const now = new Date();
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Monday
+        startOfWeek.setHours(0, 0, 0, 0);
+        
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // Sunday
+        endOfWeek.setHours(23, 59, 59, 999);
+        
+        return this.data.leads.filter(lead => {
+            const leadDate = new Date(lead.createdAt);
+            return leadDate >= startOfWeek && leadDate <= endOfWeek;
+        }).length;
+    }
+
+    // Get weekly record
+    getWeeklyRecord() {
+        return localStorage.getItem('weeklyRecord') || 0;
+    }
+
+    // Set weekly record
+    setWeeklyRecord(count) {
+        const currentRecord = parseInt(this.getWeeklyRecord());
+        if (count > currentRecord) {
+            localStorage.setItem('weeklyRecord', count);
+            return true; // New record
+        }
+        return false; // No new record
+    }
+
+    // Calculate profit for a job
+    calculateProfit(jobCost, laborCost, materialCost) {
+        const totalCost = (laborCost || 0) + (materialCost || 0);
+        const profit = (jobCost || 0) - totalCost;
+        return Math.max(0, profit);
+    }
+
+    // Update job costs and profit
+    updateJobCosts(leadId, jobCost, laborCost, materialCost) {
+        const lead = this.data.leads.find(l => l.id === leadId);
+        if (lead) {
+            lead.jobCost = jobCost || 0;
+            lead.laborCost = laborCost || 0;
+            lead.materialCost = materialCost || 0;
+            lead.profit = this.calculateProfit(jobCost, laborCost, materialCost);
+            lead.updatedAt = new Date().toISOString();
+            this.saveData();
+            return lead;
+        }
+        return null;
+    }
+
     // Get leads by stage
     getLeadsByStage(stage) {
         return this.data.leads.filter(lead => lead.stage === stage);
@@ -249,6 +331,76 @@ class UmbrellaCRM {
     // Get all users
     getUsers() {
         return this.data.users;
+    }
+
+    // Add document to customer
+    addDocument(leadId, documentData) {
+        const lead = this.data.leads.find(l => l.id === leadId);
+        if (lead) {
+            const document = {
+                id: Date.now(),
+                name: documentData.name,
+                type: documentData.type,
+                url: documentData.url,
+                uploadedAt: new Date().toISOString(),
+                uploadedBy: this.data.currentUser?.name || 'Unknown'
+            };
+            lead.documents.push(document);
+            this.saveData();
+            return document;
+        }
+        return null;
+    }
+
+    // Add photo to customer
+    addPhoto(leadId, photoData, type = 'before') {
+        const lead = this.data.leads.find(l => l.id === leadId);
+        if (lead) {
+            const photo = {
+                id: Date.now(),
+                name: photoData.name,
+                url: photoData.url,
+                tags: photoData.tags || [],
+                uploadedAt: new Date().toISOString(),
+                uploadedBy: this.data.currentUser?.name || 'Unknown'
+            };
+            lead.photos[type].push(photo);
+            this.saveData();
+            return photo;
+        }
+        return null;
+    }
+
+    // Update user profile photo
+    updateUserPhoto(userId, photoUrl) {
+        const user = this.data.users.find(u => u.id === userId);
+        if (user) {
+            user.photoUrl = photoUrl;
+            this.saveData();
+            return user;
+        }
+        return null;
+    }
+
+    // Get document folders (from Acculynx structure)
+    getDocumentFolders() {
+        return [
+            'Contracts',
+            'Insurance Documents',
+            'Photos - Before',
+            'Photos - After',
+            'Invoices',
+            'Permits',
+            'Warranties',
+            'Inspections',
+            'Claims Documents',
+            'Adjuster Reports',
+            'Estimates',
+            'Change Orders',
+            'Punch Lists',
+            'Final Walkthrough',
+            'Customer Reviews'
+        ];
     }
 }
 

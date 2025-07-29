@@ -452,12 +452,19 @@
                 <div class="error-message" id="errorMessage">An error occurred. Please try again.</div>
 
                 <div class="profile-header">
-                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <div class="profile-avatar" id="profileAvatar">
+                        <img id="profilePhoto" src="" alt="Profile Photo" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        <span id="profileInitial">U</span>
+                    </div>
                     <div class="profile-info">
                         <h2 id="profileName">User Name</h2>
                         <p id="profileEmail">user@example.com</p>
                         <p id="profilePhone">(864) 767-6188</p>
                         <span class="profile-role" id="profileRole">Owner</span>
+                        <button class="change-photo-btn" onclick="changePhoto()" style="margin-top: 10px; padding: 8px 16px; background: #1e3c72; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            <i class="fas fa-camera"></i> Change Photo
+                        </button>
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="uploadProfilePhoto(this)">
                     </div>
                 </div>
 
@@ -608,8 +615,59 @@
                 if (form.defaultView) form.defaultView.value = user.defaultView || 'dashboard';
                 if (form.emailNotifications) form.emailNotifications.value = user.emailNotifications || 'all';
                 if (form.timezone) form.timezone.value = user.timezone || 'America/New_York';
+
+                // Update profile photo
+                updateProfilePhoto(user);
             } catch (error) {
                 console.error('Error populating form:', error);
+            }
+        }
+
+        // Update profile photo display
+        function updateProfilePhoto(user) {
+            const profilePhoto = document.getElementById('profilePhoto');
+            const profileInitial = document.getElementById('profileInitial');
+            
+            if (user.photoUrl) {
+                profilePhoto.src = user.photoUrl;
+                profilePhoto.style.display = 'block';
+                profileInitial.style.display = 'none';
+            } else {
+                profilePhoto.style.display = 'none';
+                profileInitial.style.display = 'block';
+                profileInitial.textContent = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+            }
+        }
+
+        // Change photo function
+        function changePhoto() {
+            document.getElementById('photoInput').click();
+        }
+
+        // Upload profile photo
+        function uploadProfilePhoto(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const photoUrl = e.target.result;
+                    const currentUser = crm.getCurrentUser();
+                    
+                    if (currentUser) {
+                        crm.updateUserPhoto(currentUser.id, photoUrl);
+                        
+                        // Update display
+                        const profilePhoto = document.getElementById('profilePhoto');
+                        const profileInitial = document.getElementById('profileInitial');
+                        
+                        profilePhoto.src = photoUrl;
+                        profilePhoto.style.display = 'block';
+                        profileInitial.style.display = 'none';
+                        
+                        showSuccess('Profile photo updated successfully!');
+                    }
+                };
+                reader.readAsDataURL(file);
             }
         }
 

@@ -580,6 +580,11 @@
                             <th>STAGE</th>
                             <th>FEE PAID</th>
                             <th>INSURANCE</th>
+                            <th>CLAIM FILED</th>
+                            <th>APPROVED</th>
+                            <th>JOB COST</th>
+                            <th>PROFIT</th>
+                            <th>RATING</th>
                             <th>ACTIONS</th>
                         </tr>
                     </thead>
@@ -767,11 +772,34 @@
                         <td>${customer.feePaid || 'N/A'}</td>
                         <td>${customer.insuranceCompany || 'TBD'}</td>
                         <td>
+                            <span class="status-badge status-${customer.claimFiled === 'YES' ? 'yes' : 'no'}">
+                                ${customer.claimFiled || 'NO'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge status-${customer.approved === 'YES! :)' ? 'approved' : customer.approved === 'NO' ? 'denied' : 'pending'}">
+                                ${customer.approved || 'PENDING'}
+                            </span>
+                        </td>
+                        <td>$${(customer.jobCost || 0).toLocaleString()}</td>
+                        <td>$${(customer.profit || 0).toLocaleString()}</td>
+                        <td>
+                            <span class="rating">
+                                ${'★'.repeat(customer.googleRating || 0)}${'☆'.repeat(5 - (customer.googleRating || 0))}
+                            </span>
+                        </td>
+                        <td>
                             <button class="btn" onclick="editCustomer(${customer.id})">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="btn" onclick="viewCustomer(${customer.id})">
                                 <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn" onclick="manageDocuments(${customer.id})">
+                                <i class="fas fa-file"></i>
+                            </button>
+                            <button class="btn" onclick="managePhotos(${customer.id})">
+                                <i class="fas fa-camera"></i>
                             </button>
                         </td>
                     `;
@@ -801,6 +829,187 @@
             } catch (error) {
                 console.error('Error updating stage:', error);
             }
+        }
+
+        // Manage documents for customer
+        function manageDocuments(customerId) {
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 800px;">
+                    <div class="modal-header">
+                        <h3>Documents - ${customer.customerName}</h3>
+                        <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="upload-section">
+                            <h4>Upload New Document</h4>
+                            <div class="form-group">
+                                <label>Document Type</label>
+                                <select id="documentType" class="form-select">
+                                    ${crm.getDocumentFolders().map(folder => `<option value="${folder}">${folder}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Document Name</label>
+                                <input type="text" id="documentName" class="form-input" placeholder="Enter document name">
+                            </div>
+                            <div class="form-group">
+                                <label>Document URL</label>
+                                <input type="url" id="documentUrl" class="form-input" placeholder="Enter document URL">
+                            </div>
+                            <button class="btn btn-primary" onclick="uploadDocument(${customerId})">
+                                <i class="fas fa-upload"></i> Upload Document
+                            </button>
+                        </div>
+                        <div class="documents-list">
+                            <h4>Existing Documents</h4>
+                            <div id="documentsList">
+                                ${customer.documents.map(doc => `
+                                    <div class="document-item">
+                                        <i class="fas fa-file"></i>
+                                        <span>${doc.name}</span>
+                                        <span class="document-type">${doc.type}</span>
+                                        <a href="${doc.url}" target="_blank" class="btn btn-sm">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Upload document
+        function uploadDocument(customerId) {
+            const documentType = document.getElementById('documentType').value;
+            const documentName = document.getElementById('documentName').value;
+            const documentUrl = document.getElementById('documentUrl').value;
+
+            if (!documentName || !documentUrl) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const documentData = {
+                name: documentName,
+                type: documentType,
+                url: documentUrl
+            };
+
+            crm.addDocument(customerId, documentData);
+            alert('Document uploaded successfully!');
+            document.querySelector('.modal').remove();
+            loadCustomers();
+        }
+
+        // Manage photos for customer
+        function managePhotos(customerId) {
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 900px;">
+                    <div class="modal-header">
+                        <h3>Photos - ${customer.customerName}</h3>
+                        <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="upload-section">
+                            <h4>Upload New Photo</h4>
+                            <div class="form-group">
+                                <label>Photo Type</label>
+                                <select id="photoType" class="form-select">
+                                    <option value="before">Before</option>
+                                    <option value="after">After</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Photo Name</label>
+                                <input type="text" id="photoName" class="form-input" placeholder="Enter photo name">
+                            </div>
+                            <div class="form-group">
+                                <label>Photo URL</label>
+                                <input type="url" id="photoUrl" class="form-input" placeholder="Enter photo URL">
+                            </div>
+                            <div class="form-group">
+                                <label>Tags (comma separated)</label>
+                                <input type="text" id="photoTags" class="form-input" placeholder="roof, damage, repair">
+                            </div>
+                            <button class="btn btn-primary" onclick="uploadPhoto(${customerId})">
+                                <i class="fas fa-upload"></i> Upload Photo
+                            </button>
+                        </div>
+                        <div class="photos-grid">
+                            <div class="photo-section">
+                                <h4>Before Photos</h4>
+                                <div class="photos-list" id="beforePhotos">
+                                    ${customer.photos.before.map(photo => `
+                                        <div class="photo-item">
+                                            <img src="${photo.url}" alt="${photo.name}" class="photo-thumbnail">
+                                            <div class="photo-info">
+                                                <span>${photo.name}</span>
+                                                <div class="photo-tags">
+                                                    ${photo.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="photo-section">
+                                <h4>After Photos</h4>
+                                <div class="photos-list" id="afterPhotos">
+                                    ${customer.photos.after.map(photo => `
+                                        <div class="photo-item">
+                                            <img src="${photo.url}" alt="${photo.name}" class="photo-thumbnail">
+                                            <div class="photo-info">
+                                                <span>${photo.name}</span>
+                                                <div class="photo-tags">
+                                                    ${photo.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Upload photo
+        function uploadPhoto(customerId) {
+            const photoType = document.getElementById('photoType').value;
+            const photoName = document.getElementById('photoName').value;
+            const photoUrl = document.getElementById('photoUrl').value;
+            const photoTags = document.getElementById('photoTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+
+            if (!photoName || !photoUrl) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const photoData = {
+                name: photoName,
+                url: photoUrl,
+                tags: photoTags
+            };
+
+            crm.addPhoto(customerId, photoData, photoType);
+            alert('Photo uploaded successfully!');
+            document.querySelector('.modal').remove();
+            loadCustomers();
         }
 
         // Open add customer modal

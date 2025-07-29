@@ -504,6 +504,39 @@
                         <p>Revenue this month</p>
                     </div>
                 </div>
+
+                <div class="dashboard-card">
+                    <div class="card-title">
+                        <i class="fas fa-calendar-week"></i>
+                        This Week's Jobs
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-number" id="weeklyJobs">0</div>
+                        <p>Jobs sold this week</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-title">
+                        <i class="fas fa-trophy"></i>
+                        Weekly Record
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-number" id="weeklyRecord">0</div>
+                        <p>Best weekly performance</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Total Profit
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-number" id="totalProfit">$0</div>
+                        <p>Total profit from all jobs</p>
+                    </div>
+                </div>
             </div>
 
             <div class="quick-actions">
@@ -612,9 +645,85 @@
                     if (activeJobsEl) activeJobsEl.textContent = stats.activeJobs;
                     if (pendingTasksEl) pendingTasksEl.textContent = stats.pendingTasks;
                     if (monthlyRevenueEl) monthlyRevenueEl.textContent = '$' + stats.monthlyRevenue.toLocaleString();
+
+                    // Add weekly jobs tracking
+                    const weeklyJobsEl = document.getElementById('weeklyJobs');
+                    const weeklyRecordEl = document.getElementById('weeklyRecord');
+                    const totalProfitEl = document.getElementById('totalProfit');
+                    
+                    if (weeklyJobsEl) {
+                        const weeklyJobs = crm.getWeeklyJobsSold();
+                        weeklyJobsEl.textContent = weeklyJobs;
+                        
+                        // Check for new record
+                        const isNewRecord = crm.setWeeklyRecord(weeklyJobs);
+                        if (isNewRecord && weeklyJobs > 0) {
+                            showConfetti();
+                        }
+                    }
+                    
+                    if (weeklyRecordEl) {
+                        weeklyRecordEl.textContent = crm.getWeeklyRecord();
+                    }
+                    
+                    if (totalProfitEl) {
+                        const totalProfit = crm.data.leads.reduce((total, lead) => total + (lead.profit || 0), 0);
+                        totalProfitEl.textContent = '$' + totalProfit.toLocaleString();
+                    }
                 } catch (error) {
                     console.error('Error updating dashboard stats:', error);
                 }
+            }
+
+            // Show confetti animation
+            function showConfetti() {
+                const confettiContainer = document.createElement('div');
+                confettiContainer.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: 9999;
+                `;
+                document.body.appendChild(confettiContainer);
+
+                // Create confetti pieces
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.style.cssText = `
+                        position: absolute;
+                        width: 10px;
+                        height: 10px;
+                        background: ${['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'][Math.floor(Math.random() * 6)]};
+                        left: ${Math.random() * 100}%;
+                        animation: confetti-fall 3s linear forwards;
+                    `;
+                    confettiContainer.appendChild(confetti);
+                }
+
+                // Add CSS animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes confetti-fall {
+                        0% {
+                            transform: translateY(-100vh) rotate(0deg);
+                            opacity: 1;
+                        }
+                        100% {
+                            transform: translateY(100vh) rotate(720deg);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+
+                // Remove confetti after animation
+                setTimeout(() => {
+                    document.body.removeChild(confettiContainer);
+                    document.head.removeChild(style);
+                }, 3000);
             }
 
             // Load recent activities
