@@ -1964,8 +1964,21 @@
 
         // Manage documents for customer
         function manageDocuments(customerId) {
-            const customer = crm.data.leads.find(c => c.id === customerId);
-            if (!customer) return;
+            try {
+                console.log('Managing documents for customer:', customerId);
+                const customer = crm.data.leads.find(c => c.id === customerId);
+                if (!customer) {
+                    console.error('Customer not found:', customerId);
+                    alert('Customer not found. Please try again.');
+                    return;
+                }
+                
+                // Ensure documents array exists
+                if (!customer.documents) {
+                    customer.documents = [];
+                }
+                
+                console.log('Customer found:', customer.customerName);
 
             const modal = document.createElement('div');
             modal.className = 'modal';
@@ -2015,35 +2028,61 @@
                 </div>
             `;
             document.body.appendChild(modal);
+            } catch (error) {
+                console.error('Error managing documents:', error);
+                alert('An error occurred while managing documents. Please try again.');
+            }
         }
 
         // Upload document
         function uploadDocument(customerId) {
-            const documentType = document.getElementById('documentType').value;
-            const documentName = document.getElementById('documentName').value;
-            const documentUrl = document.getElementById('documentUrl').value;
+            try {
+                console.log('Uploading document for customer:', customerId);
+                
+                const documentType = document.getElementById('documentType').value;
+                const documentName = document.getElementById('documentName').value;
+                const documentUrl = document.getElementById('documentUrl').value;
 
-            if (!documentName || !documentUrl) {
-                alert('Please fill in all fields');
-                return;
+                if (!documentName || !documentUrl) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+
+                const documentData = {
+                    name: documentName,
+                    type: documentType,
+                    url: documentUrl
+                };
+
+                crm.addDocument(customerId, documentData);
+                alert('Document uploaded successfully!');
+                document.querySelector('.modal').remove();
+                loadCustomers();
+            } catch (error) {
+                console.error('Error uploading document:', error);
+                alert('An error occurred while uploading document. Please try again.');
             }
-
-            const documentData = {
-                name: documentName,
-                type: documentType,
-                url: documentUrl
-            };
-
-            crm.addDocument(customerId, documentData);
-            alert('Document uploaded successfully!');
-            document.querySelector('.modal').remove();
-            loadCustomers();
         }
 
         // Manage photos for customer
         function managePhotos(customerId) {
-            const customer = crm.data.leads.find(c => c.id === customerId);
-            if (!customer) return;
+            try {
+                console.log('Managing photos for customer:', customerId);
+                const customer = crm.data.leads.find(c => c.id === customerId);
+                if (!customer) {
+                    console.error('Customer not found:', customerId);
+                    alert('Customer not found. Please try again.');
+                    return;
+                }
+                
+                // Ensure photos object exists
+                if (!customer.photos) {
+                    customer.photos = { before: [], after: [] };
+                }
+                if (!customer.photos.before) customer.photos.before = [];
+                if (!customer.photos.after) customer.photos.after = [];
+                
+                console.log('Customer found:', customer.customerName);
 
             const modal = document.createElement('div');
             modal.className = 'modal';
@@ -2117,30 +2156,41 @@
                 </div>
             `;
             document.body.appendChild(modal);
+            } catch (error) {
+                console.error('Error managing photos:', error);
+                alert('An error occurred while managing photos. Please try again.');
+            }
         }
 
         // Upload photo
         function uploadPhoto(customerId) {
-            const photoType = document.getElementById('photoType').value;
-            const photoName = document.getElementById('photoName').value;
-            const photoUrl = document.getElementById('photoUrl').value;
-            const photoTags = document.getElementById('photoTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            try {
+                console.log('Uploading photo for customer:', customerId);
+                
+                const photoType = document.getElementById('photoType').value;
+                const photoName = document.getElementById('photoName').value;
+                const photoUrl = document.getElementById('photoUrl').value;
+                const photoTags = document.getElementById('photoTags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
 
-            if (!photoName || !photoUrl) {
-                alert('Please fill in all required fields');
-                return;
+                if (!photoName || !photoUrl) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+
+                const photoData = {
+                    name: photoName,
+                    url: photoUrl,
+                    tags: photoTags
+                };
+
+                crm.addPhoto(customerId, photoData, photoType);
+                alert('Photo uploaded successfully!');
+                document.querySelector('.modal').remove();
+                loadCustomers();
+            } catch (error) {
+                console.error('Error uploading photo:', error);
+                alert('An error occurred while uploading photo. Please try again.');
             }
-
-            const photoData = {
-                name: photoName,
-                url: photoUrl,
-                tags: photoTags
-            };
-
-            crm.addPhoto(customerId, photoData, photoType);
-            alert('Photo uploaded successfully!');
-            document.querySelector('.modal').remove();
-            loadCustomers();
         }
 
         // View customer details - Modern CRM style popup
@@ -2655,8 +2705,16 @@
 
         // Edit customer
         function editCustomer(customerId) {
-            const customer = crm.data.leads.find(c => c.id === customerId);
-            if (!customer) return;
+            try {
+                console.log('Editing customer:', customerId);
+                const customer = crm.data.leads.find(c => c.id === customerId);
+                if (!customer) {
+                    console.error('Customer not found:', customerId);
+                    alert('Customer not found. Please try again.');
+                    return;
+                }
+                
+                console.log('Customer found:', customer.customerName);
 
             document.getElementById('modalTitle').textContent = 'Edit Customer';
             const form = document.getElementById('customerForm');
@@ -2680,6 +2738,10 @@
             form.dataset.customerId = customerId;
             
             document.getElementById('customerModal').style.display = 'block';
+            } catch (error) {
+                console.error('Error editing customer:', error);
+                alert('An error occurred while editing customer. Please try again.');
+            }
         }
 
         // View customer details
@@ -2857,6 +2919,13 @@
                     console.log('Initializing CRM data...');
                     crm.initializeData();
                 }
+                
+                // Ensure all customers have required arrays
+                crm.data.leads.forEach(customer => {
+                    if (!customer.documents) customer.documents = [];
+                    if (!customer.photos) customer.photos = { before: [], after: [] };
+                    if (!customer.activities) customer.activities = [];
+                });
                 
                 console.log('CRM data loaded:', crm.data.leads.length, 'customers');
                 
