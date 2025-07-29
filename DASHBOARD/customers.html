@@ -21,6 +21,13 @@
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .dashboard-container {
@@ -253,6 +260,38 @@
         .action-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Touch-friendly styles for mobile */
+        @media (max-width: 768px) {
+            .action-btn {
+                min-width: 44px;
+                min-height: 44px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .action-btn:active {
+                transform: scale(0.95);
+            }
+
+            .status-badge {
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                touch-action: manipulation;
+            }
+
+            .user-chip {
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                touch-action: manipulation;
+            }
         }
 
         .action-btn.call {
@@ -1248,6 +1287,159 @@
             color: #666;
             font-style: italic;
             padding: 20px;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 15px;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .top-bar {
+                padding: 10px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .page-title {
+                font-size: 1.2rem;
+                text-align: center;
+            }
+
+            .filter-section {
+                padding: 10px;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .customer-table {
+                font-size: 0.7rem;
+                margin-top: 10px;
+            }
+
+            .customer-table th,
+            .customer-table td {
+                padding: 3px 4px;
+                font-size: 0.65rem;
+            }
+
+            .customer-table th {
+                font-size: 0.6rem;
+                padding: 4px 3px;
+            }
+
+            .header-cell {
+                gap: 2px;
+            }
+
+            .header-cell i {
+                font-size: 0.5rem;
+            }
+
+            .header-cell span {
+                font-size: 0.55rem;
+            }
+
+            .action-buttons {
+                gap: 1px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .action-btn {
+                width: 18px;
+                height: 18px;
+                font-size: 8px;
+                min-width: 18px;
+                flex-shrink: 0;
+            }
+
+            .status-badge {
+                padding: 1px 2px;
+                font-size: 0.55rem;
+            }
+
+            .user-chip {
+                padding: 1px 2px;
+                font-size: 0.55rem;
+            }
+
+            .mobile-menu-btn {
+                display: block !important;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 1000;
+                background: #1e3c72;
+                color: white;
+                border: none;
+                padding: 8px;
+                border-radius: 4px;
+                font-size: 1rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .customer-table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 5px;
+            }
+
+            .top-bar {
+                padding: 5px;
+            }
+
+            .filter-section {
+                padding: 5px;
+            }
+
+            .customer-table th,
+            .customer-table td {
+                padding: 2px 3px;
+                font-size: 0.6rem;
+            }
+
+            .action-btn {
+                width: 16px;
+                height: 16px;
+                font-size: 7px;
+            }
+
+            .status-badge {
+                font-size: 0.5rem;
+            }
+
+            .user-chip {
+                font-size: 0.5rem;
+            }
         }
 
         /* Modal Styles */
@@ -2587,63 +2779,79 @@
 
         // Call customer function - works on iOS and Android
         function callCustomer(phoneNumber) {
-            if (!phoneNumber || phoneNumber === 'N/A') {
-                alert('No phone number available for this customer.');
-                return;
-            }
+            try {
+                console.log('Calling customer:', phoneNumber);
+                
+                if (!phoneNumber || phoneNumber === 'N/A') {
+                    alert('No phone number available for this customer.');
+                    return;
+                }
 
-            // Clean the phone number
-            let cleanNumber = phoneNumber.replace(/[^\d+]/g, '');
-            
-            // Add +1 if it's a US number without country code
-            if (cleanNumber.length === 10) {
-                cleanNumber = '+1' + cleanNumber;
-            }
+                // Clean the phone number
+                let cleanNumber = phoneNumber.replace(/[^\d+]/g, '');
+                
+                // Add +1 if it's a US number without country code
+                if (cleanNumber.length === 10) {
+                    cleanNumber = '+1' + cleanNumber;
+                }
 
-            // Detect device type and use appropriate method
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // iOS device
-                window.location.href = `tel:${cleanNumber}`;
-            } else if (/android/i.test(userAgent)) {
-                // Android device
-                window.location.href = `tel:${cleanNumber}`;
-            } else {
-                // Desktop or other device
-                // Try to use the phone app if available, otherwise show the number
-                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    // Modern browser - try to initiate call
+                console.log('Cleaned phone number:', cleanNumber);
+
+                // Detect device type and use appropriate method
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                
+                if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                    // iOS device
+                    console.log('iOS device detected, using tel: protocol');
+                    window.location.href = `tel:${cleanNumber}`;
+                } else if (/android/i.test(userAgent)) {
+                    // Android device
+                    console.log('Android device detected, using tel: protocol');
                     window.location.href = `tel:${cleanNumber}`;
                 } else {
-                    // Fallback - show number to copy
-                    alert(`Phone number: ${cleanNumber}\n\nPlease copy and paste this number into your phone app.`);
+                    // Desktop or other device
+                    console.log('Desktop device detected, using tel: protocol');
+                    window.location.href = `tel:${cleanNumber}`;
                 }
+            } catch (error) {
+                console.error('Error calling customer:', error);
+                alert('Error making call. Please try again.');
             }
         }
 
         // Get directions function - works on iOS and Android
         function getDirections(address) {
-            if (!address || address === 'N/A') {
-                alert('No address available for this customer.');
-                return;
-            }
+            try {
+                console.log('Getting directions to:', address);
+                
+                if (!address || address === 'N/A') {
+                    alert('No address available for this customer.');
+                    return;
+                }
 
-            // Clean the address
-            const cleanAddress = encodeURIComponent(address.trim());
-            
-            // Detect device type and use appropriate method
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // iOS device - use Apple Maps
-                window.open(`http://maps.apple.com/?q=${cleanAddress}`, '_blank');
-            } else if (/android/i.test(userAgent)) {
-                // Android device - use Google Maps
-                window.open(`https://maps.google.com/maps?q=${cleanAddress}`, '_blank');
-            } else {
-                // Desktop or other device - use Google Maps
-                window.open(`https://maps.google.com/maps?q=${cleanAddress}`, '_blank');
+                // Clean the address
+                const cleanAddress = encodeURIComponent(address.trim());
+                console.log('Cleaned address:', cleanAddress);
+                
+                // Detect device type and use appropriate method
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                
+                if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                    // iOS device - use Apple Maps
+                    console.log('iOS device detected, using Apple Maps');
+                    window.open(`http://maps.apple.com/?q=${cleanAddress}`, '_blank');
+                } else if (/android/i.test(userAgent)) {
+                    // Android device - use Google Maps
+                    console.log('Android device detected, using Google Maps');
+                    window.open(`https://maps.google.com/maps?q=${cleanAddress}`, '_blank');
+                } else {
+                    // Desktop or other device - use Google Maps
+                    console.log('Desktop device detected, using Google Maps');
+                    window.open(`https://maps.google.com/maps?q=${cleanAddress}`, '_blank');
+                }
+            } catch (error) {
+                console.error('Error getting directions:', error);
+                alert('Error getting directions. Please try again.');
             }
         }
 
@@ -2874,8 +3082,30 @@
         });
 
         // Mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('sidebar').classList.toggle('active');
+        function toggleMobileMenu() {
+            try {
+                const sidebar = document.getElementById('sidebar');
+                const mobileBtn = document.getElementById('mobileMenuBtn');
+                
+                if (sidebar) {
+                    sidebar.classList.toggle('active');
+                    console.log('Mobile menu toggled');
+                }
+                
+                if (mobileBtn) {
+                    mobileBtn.classList.toggle('active');
+                }
+            } catch (error) {
+                console.error('Error toggling mobile menu:', error);
+            }
+        }
+
+        // Add event listener for mobile menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', toggleMobileMenu);
+            }
         });
 
         // Close modal when clicking outside
