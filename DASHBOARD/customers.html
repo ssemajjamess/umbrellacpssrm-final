@@ -230,7 +230,7 @@
 
         .action-buttons {
             display: flex;
-            gap: 3px;
+            gap: 2px;
             flex-wrap: wrap;
             justify-content: flex-start;
         }
@@ -239,15 +239,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 3px;
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
             border: none;
             cursor: pointer;
             transition: all 0.15s ease;
-            font-size: 10px;
+            font-size: 9px;
             color: white;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
         }
 
         .action-btn:hover {
@@ -290,19 +290,19 @@
             border-spacing: 0;
             margin-top: 16px;
             background: white;
-            border-radius: 6px;
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
             border: 1px solid #e9ecef;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .customer-table th,
         .customer-table td {
-            padding: 6px 8px;
+            padding: 4px 6px;
             text-align: left;
             border-bottom: 1px solid #f1f3f4;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             vertical-align: middle;
         }
 
@@ -310,10 +310,10 @@
             background: #f8f9fa;
             font-weight: 600;
             color: #495057;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
-            padding: 8px 6px;
+            letter-spacing: 0.2px;
+            padding: 6px 4px;
             position: relative;
             border-bottom: 2px solid #e9ecef;
         }
@@ -321,18 +321,18 @@
         .header-cell {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             justify-content: flex-start;
         }
 
         .header-cell i {
-            font-size: 0.6rem;
-            opacity: 0.7;
+            font-size: 0.55rem;
+            opacity: 0.6;
             color: #6c757d;
         }
 
         .header-cell span {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
             color: #495057;
         }
@@ -361,15 +361,15 @@
 
         /* Status Badges */
         .status-badge {
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-size: 0.65rem;
+            padding: 1px 3px;
+            border-radius: 2px;
+            font-size: 0.6rem;
             font-weight: 600;
             color: white;
             cursor: pointer;
             transition: all 0.15s ease;
             text-transform: uppercase;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.1px;
         }
 
         .status-lead { background: linear-gradient(135deg, #ffc107, #e0a800); }
@@ -388,14 +388,14 @@
 
         /* User Chip */
         .user-chip {
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-size: 0.65rem;
+            padding: 1px 3px;
+            border-radius: 2px;
+            font-size: 0.6rem;
             font-weight: 600;
             color: white;
             display: inline-block;
             text-transform: uppercase;
-            letter-spacing: 0.2px;
+            letter-spacing: 0.1px;
         }
 
         .user-james { background: linear-gradient(135deg, #007bff, #0056b3); }
@@ -1549,27 +1549,8 @@
                         </div>
                         <div class="filter-group">
                             <label class="filter-label">Insurance</label>
-                            <select class="filter-input" id="insuranceFilter">
+                            <select class="filter-input" id="insuranceFilter" onchange="applyFilters()">
                                 <option value="">All Insurance</option>
-                                <option value="ALLSTATE">ALLSTATE</option>
-                                <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
-                                <option value="FARM BUREAU">FARM BUREAU</option>
-                                <option value="FARMERS">FARMERS</option>
-                                <option value="FOREMOST">FOREMOST</option>
-                                <option value="GEICO">GEICO</option>
-                                <option value="HARTFORD">HARTFORD</option>
-                                <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
-                                <option value="HORACE MANN">HORACE MANN</option>
-                                <option value="THE GENERAL">THE GENERAL</option>
-                                <option value="KEMPER">KEMPER</option>
-                                <option value="NATIONWIDE">NATIONWIDE</option>
-                                <option value="PROGRESSIVE">PROGRESSIVE</option>
-                                <option value="SAGESURE">SAGESURE</option>
-                                <option value="STATEFARM">STATEFARM</option>
-                                <option value="SAFECO">SAFECO</option>
-                                <option value="TRAVELERS">TRAVELERS</option>
-                                <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
-                                <option value="USAA">USAA</option>
                             </select>
                         </div>
                     </div>
@@ -1579,91 +1560,91 @@
                 <table class="customer-table" id="customerTable">
                     <thead>
                         <tr>
-                            <th style="width: 120px;">
+                            <th style="width: 100px;">
                                 <div class="header-cell">
                                     <i class="fas fa-user-tie"></i>
                                     <span>SALES PERSON</span>
                                 </div>
                             </th>
-                            <th style="width: 140px;">
+                            <th style="width: 120px;">
                                 <div class="header-cell">
                                     <i class="fas fa-user"></i>
                                     <span>CUSTOMER NAME</span>
                                 </div>
                             </th>
-                            <th style="width: 120px;">
+                            <th style="width: 100px;">
                                 <div class="header-cell">
                                     <i class="fas fa-phone"></i>
                                     <span>PHONE</span>
                                 </div>
                             </th>
-                            <th style="width: 180px;">
+                            <th style="width: 140px;">
                                 <div class="header-cell">
                                     <i class="fas fa-envelope"></i>
                                     <span>EMAIL</span>
                                 </div>
                             </th>
-                            <th style="width: 200px;">
+                            <th style="width: 150px;">
                                 <div class="header-cell">
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span>ADDRESS</span>
                                 </div>
                             </th>
-                            <th style="width: 100px;">
+                            <th style="width: 80px;">
                                 <div class="header-cell">
                                     <i class="fas fa-chart-line"></i>
                                     <span>STAGE</span>
                                 </div>
                             </th>
-                            <th style="width: 80px;">
+                            <th style="width: 60px;">
                                 <div class="header-cell">
                                     <i class="fas fa-dollar-sign"></i>
                                     <span>FEE PAID</span>
                                 </div>
                             </th>
-                            <th style="width: 120px;">
+                            <th style="width: 100px;">
                                 <div class="header-cell">
                                     <i class="fas fa-shield-alt"></i>
                                     <span>INSURANCE</span>
                                 </div>
                             </th>
-                            <th style="width: 90px;">
+                            <th style="width: 70px;">
                                 <div class="header-cell">
                                     <i class="fas fa-file-contract"></i>
-                                    <span>CLAIM FILED</span>
+                                    <span>CLAIM</span>
                                 </div>
                             </th>
-                            <th style="width: 90px;">
+                            <th style="width: 70px;">
                                 <div class="header-cell">
                                     <i class="fas fa-check-circle"></i>
                                     <span>APPROVED</span>
                                 </div>
                             </th>
-                            <th style="width: 90px;">
+                            <th style="width: 70px;">
                                 <div class="header-cell">
                                     <i class="fas fa-tools"></i>
                                     <span>JOB COST</span>
                                 </div>
                             </th>
-                            <th style="width: 90px;">
+                            <th style="width: 70px;">
                                 <div class="header-cell">
                                     <i class="fas fa-boxes"></i>
-                                    <span>MATERIAL COST</span>
+                                    <span>MATERIAL</span>
                                 </div>
                             </th>
-                            <th style="width: 80px;">
+                            <th style="width: 60px;">
                                 <div class="header-cell">
                                     <i class="fas fa-chart-pie"></i>
                                     <span>PROFIT</span>
                                 </div>
                             </th>
-                            <th style="width: 80px;">
+                            <th style="width: 60px;">
                                 <div class="header-cell">
                                     <i class="fas fa-star"></i>
                                     <span>RATING</span>
                                 </div>
                             </th>
-                            <th style="width: 120px;">
+                            <th style="width: 100px;">
                                 <div class="header-cell">
                                     <i class="fas fa-cogs"></i>
                                     <span>ACTIONS</span>
@@ -2932,6 +2913,9 @@
                 
                 console.log('CRM data loaded:', crm.data.leads.length, 'customers');
                 
+                // Populate insurance dropdown
+                populateInsuranceDropdown();
+                
                 // Load customers
                 loadCustomers();
                 
@@ -2953,6 +2937,30 @@
             } catch (error) {
                 console.error('Error initializing customers page:', error);
                 alert('Error initializing page. Please refresh and try again.');
+            }
+        }
+
+        // Populate insurance dropdown from CRM data
+        function populateInsuranceDropdown() {
+            try {
+                const insuranceFilter = document.getElementById('insuranceFilter');
+                if (!insuranceFilter) return;
+                
+                // Clear existing options except the first one
+                insuranceFilter.innerHTML = '<option value="">All Insurance</option>';
+                
+                // Add insurance companies from CRM data
+                const insuranceCompanies = crm.getInsuranceCompanies();
+                insuranceCompanies.forEach(company => {
+                    const option = document.createElement('option');
+                    option.value = company;
+                    option.textContent = company;
+                    insuranceFilter.appendChild(option);
+                });
+                
+                console.log('Insurance dropdown populated with', insuranceCompanies.length, 'companies');
+            } catch (error) {
+                console.error('Error populating insurance dropdown:', error);
             }
         }
         
