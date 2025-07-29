@@ -928,6 +928,325 @@
             font-size: 0.8rem;
         }
 
+        /* Mobile Menu Button - Hidden on desktop */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #1e3c72;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: rgba(30, 60, 114, 0.1);
+        }
+
+        /* Hide mobile menu on desktop */
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+
+        /* Modern CRM Modal Styles */
+        .modern-crm-modal {
+            max-width: 1000px;
+            width: 90vw;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        .modern-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .customer-profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .customer-avatar {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .customer-info h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .customer-subtitle {
+            margin: 5px 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .customer-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-btn-header {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn-header:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .modern-body {
+            padding: 0;
+            max-height: 70vh;
+            overflow: hidden;
+        }
+
+        .crm-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e1e5e9;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #666;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: rgba(30, 60, 114, 0.1);
+            color: #1e3c72;
+        }
+
+        .tab.active {
+            background: white;
+            color: #1e3c72;
+            border-bottom: 3px solid #1e3c72;
+        }
+
+        .tab-content {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .info-grid, .status-grid, .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item, .status-item, .financial-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .info-item label, .status-item label, .financial-item label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .info-value, .status-value, .financial-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .financial-item.highlight {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .financial-item.highlight label {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .documents-section, .photos-section, .activities-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .document-card, .photo-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+        }
+
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            background: #1e3c72;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .document-info {
+            flex: 1;
+        }
+
+        .document-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .document-type {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .photo-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .photo-info {
+            flex: 1;
+        }
+
+        .photo-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .photo-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #1e3c72;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: #1e3c72;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -1826,8 +2145,15 @@
 
         // View customer details - Modern CRM style popup
         function viewCustomerDetails(customerId) {
-            const customer = crm.data.leads.find(c => c.id === customerId);
-            if (!customer) return;
+            try {
+                console.log('Viewing customer:', customerId);
+                const customer = crm.data.leads.find(c => c.id === customerId);
+                if (!customer) {
+                    console.error('Customer not found:', customerId);
+                    alert('Customer not found. Please try again.');
+                    return;
+                }
+                console.log('Customer found:', customer);
 
             const modal = document.createElement('div');
             modal.className = 'modal';
@@ -2095,6 +2421,10 @@
                 </div>
             `;
             document.body.appendChild(modal);
+            } catch (error) {
+                console.error('Error viewing customer details:', error);
+                alert('An error occurred while loading customer details. Please try again.');
+            }
         }
 
         // Update customer costs
@@ -2184,6 +2514,41 @@
                 document.querySelector('.modal').remove();
                 loadCustomers();
             }
+        }
+
+        // Switch tab function for customer details modal
+        function switchTab(tabElement, tabId) {
+            try {
+                // Remove active class from all tabs
+                document.querySelectorAll('.crm-tabs .tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                tabElement.classList.add('active');
+                
+                // Hide all tab panes
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                
+                // Show selected tab pane
+                const selectedPane = document.getElementById(tabId);
+                if (selectedPane) {
+                    selectedPane.classList.add('active');
+                }
+            } catch (error) {
+                console.error('Error switching tabs:', error);
+            }
+        }
+
+        // Message customer function
+        function messageCustomer(email) {
+            if (!email || email === 'N/A') {
+                alert('No email address available for this customer.');
+                return;
+            }
+            window.open(`mailto:${email}`, '_blank');
         }
 
         // Call customer function - works on iOS and Android
@@ -2476,6 +2841,49 @@
         }
 
         // Initialize page
+        function initializePage() {
+            try {
+                console.log('Initializing customers page...');
+                
+                // Ensure CRM is loaded
+                if (typeof crm === 'undefined') {
+                    console.error('CRM not loaded');
+                    alert('Error: CRM system not loaded. Please refresh the page.');
+                    return;
+                }
+                
+                // Initialize CRM data if needed
+                if (!crm.data || !crm.data.leads) {
+                    console.log('Initializing CRM data...');
+                    crm.initializeData();
+                }
+                
+                console.log('CRM data loaded:', crm.data.leads.length, 'customers');
+                
+                // Load customers
+                loadCustomers();
+                
+                // Set up user info
+                const userDisplayName = document.getElementById('userDisplayName');
+                const userAvatar = document.getElementById('userAvatar');
+                
+                if (userDisplayName) {
+                    const userName = localStorage.getItem('userName') || 'User Name';
+                    userDisplayName.textContent = userName;
+                }
+                
+                if (userAvatar) {
+                    const userEmail = localStorage.getItem('userEmail') || '';
+                    userAvatar.textContent = userEmail.charAt(0).toUpperCase();
+                }
+                
+                console.log('Customers page initialized successfully');
+            } catch (error) {
+                console.error('Error initializing customers page:', error);
+                alert('Error initializing page. Please refresh and try again.');
+            }
+        }
+        
         initializePage();
     </script>
 </body>
