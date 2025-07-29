@@ -205,6 +205,21 @@
             box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
         }
 
+        .btn-secondary { background: #6c757d; }
+        .btn-secondary:hover { background: #545b62; }
+        .btn-info { background: #17a2b8; }
+        .btn-info:hover { background: #117a8b; }
+        .btn-success { background: #28a745; }
+        .btn-success:hover { background: #1e7e34; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-warning:hover { background: #e0a800; }
+
+        .action-buttons {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
         .customer-table {
             width: 100%;
             border-collapse: collapse;
@@ -303,6 +318,120 @@
         .filter-input:focus {
             outline: none;
             border-color: #1e3c72;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.2);
+        }
+
+        .customer-details-modal {
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .customer-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detail-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .detail-section h4 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .document-item, .photo-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .document-item:hover, .photo-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .photo-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .photo-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .upload-section h4 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .photos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .photo-section h4 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .photos-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .profit-display {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .profit-display.negative {
+            color: #dc3545;
         }
 
         /* Modal Styles */
@@ -498,6 +627,68 @@
                 </div>
             </div>
 
+            <!-- Professional Filter System -->
+            <div class="filter-section">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Filter by Stage:</label>
+                        <select id="stageFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Stages</option>
+                            <option value="LEAD">LEAD</option>
+                            <option value="WAITING ADJUSTMENT">WAITING ADJUSTMENT</option>
+                            <option value="WAITING INS SCOPE">WAITING INS SCOPE</option>
+                            <option value="READY TO INSTALL">READY TO INSTALL</option>
+                            <option value="INVOICED WPAYMENT">INVOICED WPAYMENT</option>
+                            <option value="CLOSED-W NEW ROOF">CLOSED-W NEW ROOF</option>
+                            <option value="CLOSED-DEAD DENIED">CLOSED-DEAD DENIED</option>
+                            <option value="WAITING FEE">WAITING FEE</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Filter by Sales Person:</label>
+                        <select id="salesFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Sales</option>
+                            <option value="James Causey">James Causey</option>
+                            <option value="Daniel Pruiksma">Daniel Pruiksma</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Filter by Insurance:</label>
+                        <select id="insuranceFilter" class="filter-select" onchange="applyFilters()">
+                            <option value="">All Insurance</option>
+                            <option value="ALLSTATE">ALLSTATE</option>
+                            <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
+                            <option value="FARM BUREAU">FARM BUREAU</option>
+                            <option value="FARMERS">FARMERS</option>
+                            <option value="FOREMOST">FOREMOST</option>
+                            <option value="GEICO">GEICO</option>
+                            <option value="HARTFORD">HARTFORD</option>
+                            <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
+                            <option value="HORACE MANN">HORACE MANN</option>
+                            <option value="THE GENERAL">THE GENERAL</option>
+                            <option value="KEMPER">KEMPER</option>
+                            <option value="NATIONWIDE">NATIONWIDE</option>
+                            <option value="PROGRESSIVE">PROGRESSIVE</option>
+                            <option value="SAGESURE">SAGESURE</option>
+                            <option value="STATEFARM">STATEFARM</option>
+                            <option value="SAFECO">SAFECO</option>
+                            <option value="TRAVELERS">TRAVELERS</option>
+                            <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
+                            <option value="USAA">USAA</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Search:</label>
+                        <input type="text" id="searchFilter" class="filter-input" placeholder="Search customers..." onkeyup="applyFilters()">
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn btn-primary" onclick="clearFilters()">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="customer-table-container">
                 <div class="table-header">
                     <h2 class="table-title">UMBRELLA CUSTOMERS</h2>
@@ -583,6 +774,7 @@
                             <th>CLAIM FILED</th>
                             <th>APPROVED</th>
                             <th>JOB COST</th>
+                            <th>MATERIAL COST</th>
                             <th>PROFIT</th>
                             <th>RATING</th>
                             <th>ACTIONS</th>
@@ -736,15 +928,18 @@
             loadCustomers();
         }
 
-        // Load and display customers
+        // Load and display customers with filtering
         function loadCustomers() {
             try {
-                const customers = crm.data.leads;
+                let customers = crm.data.leads;
                 const tbody = document.getElementById('customerTableBody');
                 if (!tbody) {
                     console.error('Customer table body not found');
                     return;
                 }
+                
+                // Apply filters
+                customers = applyFiltersToData(customers);
                 
                 tbody.innerHTML = '';
 
@@ -752,6 +947,7 @@
                     const row = document.createElement('tr');
                     const userClass = customer.soldBy && customer.soldBy.toLowerCase().includes('james') ? 'james' : 'daniel';
                     const stageClass = customer.stage ? customer.stage.toLowerCase().replace(/\s+/g, '-') : 'lead';
+                    const profit = crm.calculateProfit(customer.jobCost, customer.laborCost, customer.materialCost);
                     
                     row.innerHTML = `
                         <td>
@@ -782,25 +978,31 @@
                             </span>
                         </td>
                         <td>$${(customer.jobCost || 0).toLocaleString()}</td>
-                        <td>$${(customer.profit || 0).toLocaleString()}</td>
+                        <td>$${(customer.materialCost || 0).toLocaleString()}</td>
+                        <td class="profit-display ${profit < 0 ? 'negative' : ''}">$${profit.toLocaleString()}</td>
                         <td>
                             <span class="rating">
                                 ${'★'.repeat(customer.googleRating || 0)}${'☆'.repeat(5 - (customer.googleRating || 0))}
                             </span>
                         </td>
                         <td>
-                            <button class="btn" onclick="editCustomer(${customer.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn" onclick="viewCustomer(${customer.id})">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn" onclick="manageDocuments(${customer.id})">
-                                <i class="fas fa-file"></i>
-                            </button>
-                            <button class="btn" onclick="managePhotos(${customer.id})">
-                                <i class="fas fa-camera"></i>
-                            </button>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" onclick="viewCustomerDetails(${customer.id})" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-secondary" onclick="editCustomer(${customer.id})" title="Edit Customer">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-info" onclick="manageDocuments(${customer.id})" title="Documents">
+                                    <i class="fas fa-file"></i>
+                                </button>
+                                <button class="btn btn-success" onclick="managePhotos(${customer.id})" title="Photos">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                                <button class="btn btn-warning" onclick="updateCosts(${customer.id})" title="Update Costs">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </button>
+                            </div>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -808,6 +1010,41 @@
             } catch (error) {
                 console.error('Error loading customers:', error);
             }
+        }
+
+        // Apply filters to data
+        function applyFiltersToData(customers) {
+            const stageFilter = document.getElementById('stageFilter').value;
+            const salesFilter = document.getElementById('salesFilter').value;
+            const insuranceFilter = document.getElementById('insuranceFilter').value;
+            const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+
+            return customers.filter(customer => {
+                const matchesStage = !stageFilter || customer.stage === stageFilter;
+                const matchesSales = !salesFilter || customer.soldBy === salesFilter;
+                const matchesInsurance = !insuranceFilter || customer.insuranceCompany === insuranceFilter;
+                const matchesSearch = !searchFilter || 
+                    customer.customerName?.toLowerCase().includes(searchFilter) ||
+                    customer.email?.toLowerCase().includes(searchFilter) ||
+                    customer.phone?.includes(searchFilter) ||
+                    customer.address?.toLowerCase().includes(searchFilter);
+
+                return matchesStage && matchesSales && matchesInsurance && matchesSearch;
+            });
+        }
+
+        // Apply filters function
+        function applyFilters() {
+            loadCustomers();
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('stageFilter').value = '';
+            document.getElementById('salesFilter').value = '';
+            document.getElementById('insuranceFilter').value = '';
+            document.getElementById('searchFilter').value = '';
+            loadCustomers();
         }
 
         // Update customer stage
@@ -1010,6 +1247,194 @@
             alert('Photo uploaded successfully!');
             document.querySelector('.modal').remove();
             loadCustomers();
+        }
+
+        // View customer details
+        function viewCustomerDetails(customerId) {
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content customer-details-modal">
+                    <div class="modal-header">
+                        <h3>Customer Details - ${customer.customerName}</h3>
+                        <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="customer-details-grid">
+                            <div class="detail-section">
+                                <h4><i class="fas fa-user"></i> Basic Information</h4>
+                                <p><strong>Name:</strong> ${customer.customerName}</p>
+                                <p><strong>Phone:</strong> ${customer.phone}</p>
+                                <p><strong>Email:</strong> ${customer.email}</p>
+                                <p><strong>Address:</strong> ${customer.address}</p>
+                                <p><strong>Sold By:</strong> ${customer.soldBy}</p>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4><i class="fas fa-chart-line"></i> Job Status</h4>
+                                <p><strong>Stage:</strong> <span class="status-badge status-${customer.stage?.toLowerCase().replace(/\s+/g, '-')}">${customer.stage}</span></p>
+                                <p><strong>Fee Paid:</strong> ${customer.feePaid}</p>
+                                <p><strong>Insurance:</strong> ${customer.insuranceCompany}</p>
+                                <p><strong>Claim Filed:</strong> ${customer.claimFiled}</p>
+                                <p><strong>Approved:</strong> ${customer.approved}</p>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4><i class="fas fa-dollar-sign"></i> Financial Information</h4>
+                                <p><strong>Job Cost:</strong> $${(customer.jobCost || 0).toLocaleString()}</p>
+                                <p><strong>Labor Cost:</strong> $${(customer.laborCost || 0).toLocaleString()}</p>
+                                <p><strong>Material Cost:</strong> $${(customer.materialCost || 0).toLocaleString()}</p>
+                                <p><strong>Profit:</strong> <span class="profit-display ${(customer.profit || 0) < 0 ? 'negative' : ''}">$${(customer.profit || 0).toLocaleString()}</span></p>
+                                <p><strong>Google Rating:</strong> ${'★'.repeat(customer.googleRating || 0)}${'☆'.repeat(5 - (customer.googleRating || 0))}</p>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4><i class="fas fa-file"></i> Documents (${customer.documents?.length || 0})</h4>
+                                ${customer.documents?.length > 0 ? 
+                                    customer.documents.map(doc => `
+                                        <div class="document-item">
+                                            <i class="fas fa-file"></i>
+                                            <span><strong>${doc.name}</strong></span>
+                                            <span class="document-type">${doc.type}</span>
+                                            <a href="${doc.url}" target="_blank" class="btn btn-sm">
+                                                <i class="fas fa-external-link-alt"></i> View
+                                            </a>
+                                        </div>
+                                    `).join('') : '<p>No documents uploaded</p>'
+                                }
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4><i class="fas fa-camera"></i> Photos</h4>
+                                <p><strong>Before Photos:</strong> ${customer.photos?.before?.length || 0}</p>
+                                <p><strong>After Photos:</strong> ${customer.photos?.after?.length || 0}</p>
+                                ${customer.photos?.before?.length > 0 || customer.photos?.after?.length > 0 ? 
+                                    `<button class="btn btn-success" onclick="managePhotos(${customerId})">
+                                        <i class="fas fa-camera"></i> View Photos
+                                    </button>` : '<p>No photos uploaded</p>'
+                                }
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4><i class="fas fa-notes-medical"></i> Additional Information</h4>
+                                <p><strong>Claim Number:</strong> ${customer.claimNumber || 'N/A'}</p>
+                                <p><strong>Adjuster Info:</strong> ${customer.adjusterInfo || 'N/A'}</p>
+                                <p><strong>Incident Date:</strong> ${customer.incidentDate || 'N/A'}</p>
+                                <p><strong>Property Type:</strong> ${customer.propertyType || 'N/A'}</p>
+                                <p><strong>Notes:</strong> ${customer.notes || 'N/A'}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; text-align: center;">
+                            <button class="btn btn-primary" onclick="editCustomer(${customerId})">
+                                <i class="fas fa-edit"></i> Edit Customer
+                            </button>
+                            <button class="btn btn-info" onclick="manageDocuments(${customerId})">
+                                <i class="fas fa-file"></i> Manage Documents
+                            </button>
+                            <button class="btn btn-success" onclick="managePhotos(${customerId})">
+                                <i class="fas fa-camera"></i> Manage Photos
+                            </button>
+                            <button class="btn btn-warning" onclick="updateCosts(${customerId})">
+                                <i class="fas fa-dollar-sign"></i> Update Costs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Update customer costs
+        function updateCosts(customerId) {
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Update Costs - ${customer.customerName}</h3>
+                        <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Job Cost ($)</label>
+                                <input type="number" id="jobCost" class="form-input" value="${customer.jobCost || 0}" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Labor Cost ($)</label>
+                                <input type="number" id="laborCost" class="form-input" value="${customer.laborCost || 0}" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Material Cost ($)</label>
+                                <input type="number" id="materialCost" class="form-input" value="${customer.materialCost || 0}" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Google Rating (1-5)</label>
+                                <input type="number" id="googleRating" class="form-input" value="${customer.googleRating || 0}" min="1" max="5">
+                            </div>
+                        </div>
+                        <div class="profit-preview" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <strong>Profit Preview: $<span id="profitPreview">0</span></strong>
+                        </div>
+                        <div style="text-align: center;">
+                            <button class="btn btn-primary" onclick="saveCustomerCosts(${customerId})">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Add event listeners for real-time profit calculation
+            const jobCostInput = document.getElementById('jobCost');
+            const laborCostInput = document.getElementById('laborCost');
+            const materialCostInput = document.getElementById('materialCost');
+            const profitPreview = document.getElementById('profitPreview');
+
+            function updateProfitPreview() {
+                const jobCost = parseFloat(jobCostInput.value) || 0;
+                const laborCost = parseFloat(laborCostInput.value) || 0;
+                const materialCost = parseFloat(materialCostInput.value) || 0;
+                const profit = crm.calculateProfit(jobCost, laborCost, materialCost);
+                profitPreview.textContent = profit.toLocaleString();
+                profitPreview.className = profit < 0 ? 'negative' : '';
+            }
+
+            jobCostInput.addEventListener('input', updateProfitPreview);
+            laborCostInput.addEventListener('input', updateProfitPreview);
+            materialCostInput.addEventListener('input', updateProfitPreview);
+            updateProfitPreview();
+        }
+
+        // Save customer costs
+        function saveCustomerCosts(customerId) {
+            const jobCost = parseFloat(document.getElementById('jobCost').value) || 0;
+            const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+            const materialCost = parseFloat(document.getElementById('materialCost').value) || 0;
+            const googleRating = parseInt(document.getElementById('googleRating').value) || 0;
+
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (customer) {
+                customer.jobCost = jobCost;
+                customer.laborCost = laborCost;
+                customer.materialCost = materialCost;
+                customer.googleRating = googleRating;
+                customer.profit = crm.calculateProfit(jobCost, laborCost, materialCost);
+                customer.updatedAt = new Date().toISOString();
+                crm.saveData();
+                
+                alert('Customer costs updated successfully!');
+                document.querySelector('.modal').remove();
+                loadCustomers();
+            }
         }
 
         // Open add customer modal
