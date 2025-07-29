@@ -16,9 +16,11 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .dashboard-container {
@@ -29,13 +31,15 @@
         /* Sidebar Styles */
         .sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 24px 0;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-header {
@@ -102,15 +106,17 @@
         }
 
         .top-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .page-title {
@@ -161,11 +167,13 @@
 
         /* Customer Table */
         .customer-table-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .table-header {
@@ -216,31 +224,100 @@
 
         .action-buttons {
             display: flex;
-            gap: 4px;
+            gap: 6px;
             flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .action-btn.call {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .action-btn.map {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+        }
+
+        .action-btn.view {
+            background: linear-gradient(135deg, #6c757d, #545b62);
+        }
+
+        .action-btn.edit {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: #212529;
+        }
+
+        .action-btn.documents {
+            background: linear-gradient(135deg, #17a2b8, #117a8b);
+        }
+
+        .action-btn.photos {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+        }
+
+        .action-btn.costs {
+            background: linear-gradient(135deg, #fd7e14, #e55a00);
         }
 
         .customer-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
         .customer-table th,
         .customer-table td {
-            padding: 12px;
+            padding: 16px 12px;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .customer-table th {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             font-weight: 600;
             color: #1e3c72;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .customer-table tr {
+            transition: all 0.3s ease;
         }
 
         .customer-table tr:hover {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            transform: scale(1.01);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .customer-table td {
+            font-size: 0.9rem;
+            color: #495057;
         }
 
         /* Status Badges */
@@ -283,10 +360,49 @@
 
         /* Filter Section */
         .filter-section {
-            background: #f8f9fa;
-            padding: 15px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select, .filter-input {
+            padding: 12px 16px;
+            border: 1px solid #e9ecef;
             border-radius: 8px;
-            margin-bottom: 20px;
+            font-size: 0.9rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+            transform: translateY(-1px);
         }
 
         .filter-row {
@@ -987,19 +1103,25 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn btn-primary" onclick="viewCustomerDetails(${customer.id})" title="View Details">
+                                <button class="action-btn call" onclick="callCustomer('${customer.phone}')" title="Call Customer">
+                                    <i class="fas fa-phone"></i>
+                                </button>
+                                <button class="action-btn map" onclick="getDirections('${customer.address}')" title="Get Directions">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </button>
+                                <button class="action-btn view" onclick="viewCustomerDetails(${customer.id})" title="View Details">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                <button class="btn btn-secondary" onclick="editCustomer(${customer.id})" title="Edit Customer">
+                                <button class="action-btn edit" onclick="editCustomer(${customer.id})" title="Edit Customer">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-info" onclick="manageDocuments(${customer.id})" title="Documents">
+                                <button class="action-btn documents" onclick="manageDocuments(${customer.id})" title="Documents">
                                     <i class="fas fa-file"></i>
                                 </button>
-                                <button class="btn btn-success" onclick="managePhotos(${customer.id})" title="Photos">
+                                <button class="action-btn photos" onclick="managePhotos(${customer.id})" title="Photos">
                                     <i class="fas fa-camera"></i>
                                 </button>
-                                <button class="btn btn-warning" onclick="updateCosts(${customer.id})" title="Update Costs">
+                                <button class="action-btn costs" onclick="updateCosts(${customer.id})" title="Update Costs">
                                     <i class="fas fa-dollar-sign"></i>
                                 </button>
                             </div>
@@ -1434,6 +1556,68 @@
                 alert('Customer costs updated successfully!');
                 document.querySelector('.modal').remove();
                 loadCustomers();
+            }
+        }
+
+        // Call customer function - works on iOS and Android
+        function callCustomer(phoneNumber) {
+            if (!phoneNumber || phoneNumber === 'N/A') {
+                alert('No phone number available for this customer.');
+                return;
+            }
+
+            // Clean the phone number
+            let cleanNumber = phoneNumber.replace(/[^\d+]/g, '');
+            
+            // Add +1 if it's a US number without country code
+            if (cleanNumber.length === 10) {
+                cleanNumber = '+1' + cleanNumber;
+            }
+
+            // Detect device type and use appropriate method
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                // iOS device
+                window.location.href = `tel:${cleanNumber}`;
+            } else if (/android/i.test(userAgent)) {
+                // Android device
+                window.location.href = `tel:${cleanNumber}`;
+            } else {
+                // Desktop or other device
+                // Try to use the phone app if available, otherwise show the number
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    // Modern browser - try to initiate call
+                    window.location.href = `tel:${cleanNumber}`;
+                } else {
+                    // Fallback - show number to copy
+                    alert(`Phone number: ${cleanNumber}\n\nPlease copy and paste this number into your phone app.`);
+                }
+            }
+        }
+
+        // Get directions function - works on iOS and Android
+        function getDirections(address) {
+            if (!address || address === 'N/A') {
+                alert('No address available for this customer.');
+                return;
+            }
+
+            // Clean the address
+            const cleanAddress = encodeURIComponent(address.trim());
+            
+            // Detect device type and use appropriate method
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                // iOS device - use Apple Maps
+                window.open(`http://maps.apple.com/?q=${cleanAddress}`, '_blank');
+            } else if (/android/i.test(userAgent)) {
+                // Android device - use Google Maps
+                window.open(`https://maps.google.com/maps?q=${cleanAddress}`, '_blank');
+            } else {
+                // Desktop or other device - use Google Maps
+                window.open(`https://maps.google.com/maps?q=${cleanAddress}`, '_blank');
             }
         }
 
