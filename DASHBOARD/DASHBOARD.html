@@ -601,39 +601,52 @@
 
             // Update dashboard stats with real data
             function updateDashboardStats() {
-                const stats = crm.getDashboardStats();
-                document.getElementById('activeLeads').textContent = stats.activeLeads;
-                document.getElementById('activeJobs').textContent = stats.activeJobs;
-                document.getElementById('pendingTasks').textContent = stats.pendingTasks;
-                document.getElementById('monthlyRevenue').textContent = '$' + stats.monthlyRevenue.toLocaleString();
+                try {
+                    const stats = crm.getDashboardStats();
+                    const activeLeadsEl = document.getElementById('activeLeads');
+                    const activeJobsEl = document.getElementById('activeJobs');
+                    const pendingTasksEl = document.getElementById('pendingTasks');
+                    const monthlyRevenueEl = document.getElementById('monthlyRevenue');
+                    
+                    if (activeLeadsEl) activeLeadsEl.textContent = stats.activeLeads;
+                    if (activeJobsEl) activeJobsEl.textContent = stats.activeJobs;
+                    if (pendingTasksEl) pendingTasksEl.textContent = stats.pendingTasks;
+                    if (monthlyRevenueEl) monthlyRevenueEl.textContent = '$' + stats.monthlyRevenue.toLocaleString();
+                } catch (error) {
+                    console.error('Error updating dashboard stats:', error);
+                }
             }
 
             // Load recent activities
             function loadRecentActivities() {
-                const activities = crm.getRecentActivities(4);
-                const activityContainer = document.querySelector('.recent-activity .card-content');
-                
-                if (activityContainer) {
-                    activityContainer.innerHTML = '';
-                    activities.forEach(activity => {
-                        const activityItem = document.createElement('div');
-                        activityItem.className = 'activity-item';
-                        
-                        let icon = '📝';
-                        if (activity.type === 'lead') icon = '👤';
-                        if (activity.type === 'job') icon = '🏠';
-                        if (activity.type === 'task') icon = '✅';
-                        if (activity.type === 'customer') icon = '👥';
-                        
-                        activityItem.innerHTML = `
-                            <div class="activity-icon">${icon}</div>
-                            <div>
-                                <div>${activity.description}</div>
-                                <small style="color: #666;">${new Date(activity.timestamp).toLocaleString()}</small>
-                            </div>
-                        `;
-                        activityContainer.appendChild(activityItem);
-                    });
+                try {
+                    const activities = crm.getRecentActivities(4);
+                    const activityContainer = document.querySelector('.recent-activity .card-content');
+                    
+                    if (activityContainer) {
+                        activityContainer.innerHTML = '';
+                        activities.forEach(activity => {
+                            const activityItem = document.createElement('div');
+                            activityItem.className = 'activity-item';
+                            
+                            let icon = '📝';
+                            if (activity.type === 'lead') icon = '👤';
+                            if (activity.type === 'job') icon = '🏠';
+                            if (activity.type === 'task') icon = '✅';
+                            if (activity.type === 'customer') icon = '👥';
+                            
+                            activityItem.innerHTML = `
+                                <div class="activity-icon">${icon}</div>
+                                <div>
+                                    <div>${activity.description || 'Activity'}</div>
+                                    <small style="color: #666;">${new Date(activity.timestamp).toLocaleString()}</small>
+                                </div>
+                            `;
+                            activityContainer.appendChild(activityItem);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading recent activities:', error);
                 }
             }
 

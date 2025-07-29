@@ -733,55 +733,74 @@
 
         // Load and display customers
         function loadCustomers() {
-            const customers = crm.data.leads;
-            const tbody = document.getElementById('customerTableBody');
-            tbody.innerHTML = '';
+            try {
+                const customers = crm.data.leads;
+                const tbody = document.getElementById('customerTableBody');
+                if (!tbody) {
+                    console.error('Customer table body not found');
+                    return;
+                }
+                
+                tbody.innerHTML = '';
 
-            customers.forEach(customer => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>
-                        <span class="user-chip user-${customer.soldBy.toLowerCase().includes('james') ? 'james' : 'daniel'}">
-                            ${customer.soldBy}
-                        </span>
-                    </td>
-                    <td>${customer.customerName}</td>
-                    <td>${customer.phone}</td>
-                    <td>${customer.email || 'N/A'}</td>
-                    <td>${customer.address}</td>
-                    <td>
-                        <span class="status-badge status-${customer.stage.toLowerCase().replace(/\s+/g, '-')}" 
-                              onclick="updateStage(${customer.id})">
-                            ${customer.stage}
-                        </span>
-                    </td>
-                    <td>${customer.feePaid}</td>
-                    <td>${customer.insuranceCompany || 'TBD'}</td>
-                    <td>
-                        <button class="btn" onclick="editCustomer(${customer.id})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn" onclick="viewCustomer(${customer.id})">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+                customers.forEach(customer => {
+                    const row = document.createElement('tr');
+                    const userClass = customer.soldBy && customer.soldBy.toLowerCase().includes('james') ? 'james' : 'daniel';
+                    const stageClass = customer.stage ? customer.stage.toLowerCase().replace(/\s+/g, '-') : 'lead';
+                    
+                    row.innerHTML = `
+                        <td>
+                            <span class="user-chip user-${userClass}">
+                                ${customer.soldBy || 'Unknown'}
+                            </span>
+                        </td>
+                        <td>${customer.customerName || 'N/A'}</td>
+                        <td>${customer.phone || 'N/A'}</td>
+                        <td>${customer.email || 'N/A'}</td>
+                        <td>${customer.address || 'N/A'}</td>
+                        <td>
+                            <span class="status-badge status-${stageClass}" 
+                                  onclick="updateStage(${customer.id})">
+                                ${customer.stage || 'LEAD'}
+                            </span>
+                        </td>
+                        <td>${customer.feePaid || 'N/A'}</td>
+                        <td>${customer.insuranceCompany || 'TBD'}</td>
+                        <td>
+                            <button class="btn" onclick="editCustomer(${customer.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn" onclick="viewCustomer(${customer.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading customers:', error);
+            }
         }
 
         // Update customer stage
         function updateStage(customerId) {
-            const customer = crm.data.leads.find(c => c.id === customerId);
-            if (!customer) return;
+            try {
+                const customer = crm.data.leads.find(c => c.id === customerId);
+                if (!customer) {
+                    console.error('Customer not found:', customerId);
+                    return;
+                }
 
-            const stages = crm.getStages();
-            const currentIndex = stages.indexOf(customer.stage);
-            const nextIndex = (currentIndex + 1) % stages.length;
-            const newStage = stages[nextIndex];
+                const stages = crm.getStages();
+                const currentIndex = stages.indexOf(customer.stage);
+                const nextIndex = (currentIndex + 1) % stages.length;
+                const newStage = stages[nextIndex];
 
-            crm.updateLeadStage(customerId, newStage);
-            loadCustomers();
+                crm.updateLeadStage(customerId, newStage);
+                loadCustomers();
+            } catch (error) {
+                console.error('Error updating stage:', error);
+            }
         }
 
         // Open add customer modal

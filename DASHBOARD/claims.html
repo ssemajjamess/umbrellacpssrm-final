@@ -716,42 +716,54 @@
 
         // Load and display claims
         function loadClaims() {
-            const claims = crm.data.leads.filter(lead => lead.insuranceCompany && lead.insuranceCompany !== 'TBD');
-            const tbody = document.getElementById('claimsTableBody');
-            tbody.innerHTML = '';
+            try {
+                const claims = crm.data.leads.filter(lead => lead.insuranceCompany && lead.insuranceCompany !== 'TBD');
+                const tbody = document.getElementById('claimsTableBody');
+                if (!tbody) {
+                    console.error('Claims table body not found');
+                    return;
+                }
+                
+                tbody.innerHTML = '';
 
-            claims.forEach(claim => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${claim.insuranceCompany}</td>
-                    <td>${claim.incidentDate || 'N/A'}</td>
-                    <td>
-                        <span class="status-badge status-${claim.claimFiled === 'YES' ? 'yes' : 'no'}">
-                            ${claim.claimFiled || 'NO'}
-                        </span>
-                    </td>
-                    <td>${claim.claimNumber || 'N/A'}</td>
-                    <td>
-                        <span class="status-badge status-${claim.approved === 'YES! :)' ? 'approved' : claim.approved === 'NO' ? 'denied' : 'pending'}">
-                            ${claim.approved || 'PENDING'}
-                        </span>
-                    </td>
-                    <td>${claim.adjusterInfo || 'N/A'}</td>
-                    <td>${claim.replacementType || 'N/A'}</td>
-                    <td>${claim.roofType || 'N/A'}</td>
-                    <td>${claim.propertyType || 'RESIDENTIAL'}</td>
-                    <td>${claim.customerName}</td>
-                    <td>
-                        <button class="btn" onclick="editClaim(${claim.id})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn" onclick="viewClaim(${claim.id})">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+                claims.forEach(claim => {
+                    const row = document.createElement('tr');
+                    const claimFiledStatus = claim.claimFiled === 'YES' ? 'yes' : 'no';
+                    const approvedStatus = claim.approved === 'YES! :)' ? 'approved' : claim.approved === 'NO' ? 'denied' : 'pending';
+                    
+                    row.innerHTML = `
+                        <td>${claim.insuranceCompany || 'N/A'}</td>
+                        <td>${claim.incidentDate || 'N/A'}</td>
+                        <td>
+                            <span class="status-badge status-${claimFiledStatus}">
+                                ${claim.claimFiled || 'NO'}
+                            </span>
+                        </td>
+                        <td>${claim.claimNumber || 'N/A'}</td>
+                        <td>
+                            <span class="status-badge status-${approvedStatus}">
+                                ${claim.approved || 'PENDING'}
+                            </span>
+                        </td>
+                        <td>${claim.adjusterInfo || 'N/A'}</td>
+                        <td>${claim.replacementType || 'N/A'}</td>
+                        <td>${claim.roofType || 'N/A'}</td>
+                        <td>${claim.propertyType || 'RESIDENTIAL'}</td>
+                        <td>${claim.customerName || 'N/A'}</td>
+                        <td>
+                            <button class="btn" onclick="editClaim(${claim.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn" onclick="viewClaim(${claim.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading claims:', error);
+            }
         }
 
         // Populate customer options in form

@@ -592,74 +592,99 @@
 
         // Populate form with user data
         function populateForm(user) {
-            const form = document.getElementById('profileForm');
-            form.name.value = user.name;
-            form.email.value = user.email;
-            form.phone.value = user.phone;
-            form.role.value = user.role;
-            
-            // Set default values for preferences
-            form.defaultView.value = user.defaultView || 'dashboard';
-            form.emailNotifications.value = user.emailNotifications || 'all';
-            form.timezone.value = user.timezone || 'America/New_York';
+            try {
+                const form = document.getElementById('profileForm');
+                if (!form) {
+                    console.error('Profile form not found');
+                    return;
+                }
+                
+                if (form.name) form.name.value = user.name || '';
+                if (form.email) form.email.value = user.email || '';
+                if (form.phone) form.phone.value = user.phone || '';
+                if (form.role) form.role.value = user.role || 'Owner';
+                
+                // Set default values for preferences
+                if (form.defaultView) form.defaultView.value = user.defaultView || 'dashboard';
+                if (form.emailNotifications) form.emailNotifications.value = user.emailNotifications || 'all';
+                if (form.timezone) form.timezone.value = user.timezone || 'America/New_York';
+            } catch (error) {
+                console.error('Error populating form:', error);
+            }
         }
 
         // Handle form submission
         document.getElementById('profileForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const formData = new FormData(this);
-            const profileData = Object.fromEntries(formData);
-            
-            // Validate password change
-            if (profileData.newPassword && profileData.newPassword !== profileData.confirmPassword) {
-                showError('New passwords do not match');
-                return;
-            }
-
-            // Update user profile
-            const currentUser = crm.getCurrentUser();
-            if (currentUser) {
-                // Update basic info
-                currentUser.name = profileData.name;
-                currentUser.email = profileData.email;
-                currentUser.phone = profileData.phone;
-                currentUser.role = profileData.role;
+            try {
+                const formData = new FormData(this);
+                const profileData = Object.fromEntries(formData);
                 
-                // Update preferences
-                currentUser.defaultView = profileData.defaultView;
-                currentUser.emailNotifications = profileData.emailNotifications;
-                currentUser.timezone = profileData.timezone;
-
-                // Update password if provided
-                if (profileData.newPassword) {
-                    // In a real app, you'd hash the password
-                    currentUser.password = profileData.newPassword;
+                // Validate password change
+                if (profileData.newPassword && profileData.newPassword !== profileData.confirmPassword) {
+                    showError('New passwords do not match');
+                    return;
                 }
 
-                // Save to CRM
-                crm.updateUserProfile(currentUser.id, currentUser);
-                
-                // Update localStorage
-                localStorage.setItem('userEmail', currentUser.email);
-                localStorage.setItem('userName', currentUser.name);
-                
-                // Update UI
-                document.getElementById('userDisplayName').textContent = currentUser.name;
-                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-                document.getElementById('userInfo').textContent = currentUser.name;
-                document.getElementById('profileName').textContent = currentUser.name;
-                document.getElementById('profileEmail').textContent = currentUser.email;
-                document.getElementById('profilePhone').textContent = currentUser.phone;
-                document.getElementById('profileRole').textContent = currentUser.role;
-                document.getElementById('profileAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+                // Update user profile
+                const currentUser = crm.getCurrentUser();
+                if (currentUser) {
+                    // Update basic info
+                    currentUser.name = profileData.name || currentUser.name;
+                    currentUser.email = profileData.email || currentUser.email;
+                    currentUser.phone = profileData.phone || currentUser.phone;
+                    currentUser.role = profileData.role || currentUser.role;
+                    
+                    // Update preferences
+                    currentUser.defaultView = profileData.defaultView || 'dashboard';
+                    currentUser.emailNotifications = profileData.emailNotifications || 'all';
+                    currentUser.timezone = profileData.timezone || 'America/New_York';
 
-                showSuccess('Profile updated successfully!');
-                
-                // Clear password fields
-                this.currentPassword.value = '';
-                this.newPassword.value = '';
-                this.confirmPassword.value = '';
+                    // Update password if provided
+                    if (profileData.newPassword) {
+                        // In a real app, you'd hash the password
+                        currentUser.password = profileData.newPassword;
+                    }
+
+                    // Save to CRM
+                    crm.updateUserProfile(currentUser.id, currentUser);
+                    
+                    // Update localStorage
+                    localStorage.setItem('userEmail', currentUser.email);
+                    localStorage.setItem('userName', currentUser.name);
+                    
+                    // Update UI
+                    const userDisplayNameEl = document.getElementById('userDisplayName');
+                    const userAvatarEl = document.getElementById('userAvatar');
+                    const userInfoEl = document.getElementById('userInfo');
+                    const profileNameEl = document.getElementById('profileName');
+                    const profileEmailEl = document.getElementById('profileEmail');
+                    const profilePhoneEl = document.getElementById('profilePhone');
+                    const profileRoleEl = document.getElementById('profileRole');
+                    const profileAvatarEl = document.getElementById('profileAvatar');
+                    
+                    if (userDisplayNameEl) userDisplayNameEl.textContent = currentUser.name;
+                    if (userAvatarEl) userAvatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
+                    if (userInfoEl) userInfoEl.textContent = currentUser.name;
+                    if (profileNameEl) profileNameEl.textContent = currentUser.name;
+                    if (profileEmailEl) profileEmailEl.textContent = currentUser.email;
+                    if (profilePhoneEl) profilePhoneEl.textContent = currentUser.phone;
+                    if (profileRoleEl) profileRoleEl.textContent = currentUser.role;
+                    if (profileAvatarEl) profileAvatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
+
+                    showSuccess('Profile updated successfully!');
+                    
+                    // Clear password fields
+                    if (this.currentPassword) this.currentPassword.value = '';
+                    if (this.newPassword) this.newPassword.value = '';
+                    if (this.confirmPassword) this.confirmPassword.value = '';
+                } else {
+                    showError('User not found');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showError('An error occurred while updating profile');
             }
         });
 

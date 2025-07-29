@@ -201,6 +201,30 @@ class UmbrellaCRM {
         return null;
     }
 
+    // Update lead data
+    updateLead(leadId, leadData) {
+        const lead = this.data.leads.find(l => l.id === leadId);
+        if (lead) {
+            Object.assign(lead, leadData);
+            lead.updatedAt = new Date().toISOString();
+            this.saveData();
+            return lead;
+        }
+        return null;
+    }
+
+    // Update job data
+    updateJob(jobId, jobData) {
+        const job = this.data.jobs.find(j => j.id === jobId);
+        if (job) {
+            Object.assign(job, jobData);
+            job.updatedAt = new Date().toISOString();
+            this.saveData();
+            return job;
+        }
+        return null;
+    }
+
     // Get current user
     getCurrentUser() {
         return this.data.currentUser;
