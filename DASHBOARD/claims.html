@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Umbrella Claims & Property Solutions - Claims Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #f0f0f0;
+            color: #1e3c72;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Claims Table */
+        .claims-table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .claims-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .claims-table th,
+        .claims-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .claims-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .claims-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .status-yes { background: #28a745; }
+        .status-no { background: #dc3545; }
+        .status-pending { background: #ffc107; color: #333; }
+        .status-approved { background: #28a745; }
+        .status-denied { background: #dc3545; }
+
+        /* Filter Section */
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        .form-select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .claims-table {
+                font-size: 0.7rem;
+            }
+
+            .claims-table th,
+            .claims-table td {
+                padding: 6px 2px;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="jobs.html" class="nav-link">
+                        <i class="fas fa-briefcase"></i>
+                        Jobs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="claims.html" class="nav-link active">
+                        <i class="fas fa-file-alt"></i>
+                        Claims
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Claims Management</h1>
+                <div class="user-menu">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <div class="user-profile">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span id="userDisplayName">User Name</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="claims-table-container">
+                <div class="table-header">
+                    <h2 class="table-title">INSURANCE CLAIMS</h2>
+                    <div class="table-actions">
+                        <button class="btn btn-primary" onclick="openAddClaimModal()">
+                            <i class="fas fa-plus"></i> Add Claim
+                        </button>
+                        <button class="btn btn-primary" onclick="exportClaims()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Search</label>
+                            <input type="text" class="filter-input" id="searchInput" placeholder="Search claims...">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Insurance Company</label>
+                            <select class="filter-input" id="insuranceFilter">
+                                <option value="">All Insurance</option>
+                                <option value="ALLSTATE">ALLSTATE</option>
+                                <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
+                                <option value="FARM BUREAU">FARM BUREAU</option>
+                                <option value="FARMERS">FARMERS</option>
+                                <option value="FOREMOST">FOREMOST</option>
+                                <option value="GEICO">GEICO</option>
+                                <option value="HARTFORD">HARTFORD</option>
+                                <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
+                                <option value="HORACE MANN">HORACE MANN</option>
+                                <option value="THE GENERAL">THE GENERAL</option>
+                                <option value="KEMPER">KEMPER</option>
+                                <option value="NATIONWIDE">NATIONWIDE</option>
+                                <option value="PROGRESSIVE">PROGRESSIVE</option>
+                                <option value="SAGESURE">SAGESURE</option>
+                                <option value="STATEFARM">STATEFARM</option>
+                                <option value="SAFECO">SAFECO</option>
+                                <option value="TRAVELERS">TRAVELERS</option>
+                                <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
+                                <option value="USAA">USAA</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Claim Filed</label>
+                            <select class="filter-input" id="claimFiledFilter">
+                                <option value="">All</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Approved</label>
+                            <select class="filter-input" id="approvedFilter">
+                                <option value="">All</option>
+                                <option value="YES! :)">YES! :)</option>
+                                <option value="NO">NO</option>
+                                <option value="PENDING">PENDING</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claims Table -->
+                <table class="claims-table" id="claimsTable">
+                    <thead>
+                        <tr>
+                            <th>INSURANCE COMPANY</th>
+                            <th>DATE OF LOSS</th>
+                            <th>CLAIM FILED?</th>
+                            <th>CLAIM NUMBER</th>
+                            <th>APPROVED?</th>
+                            <th>ADJUSTERS INFO</th>
+                            <th>FULL REPLACEMENT OR LAYOVER</th>
+                            <th>TYPE OF ROOF</th>
+                            <th>COM/RESIDENTIAL</th>
+                            <th>CUSTOMER</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="claimsTableBody">
+                        <!-- Claims data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Claim Modal -->
+    <div id="claimModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Claim</h3>
+                <span class="close" onclick="closeClaimModal()">&times;</span>
+            </div>
+            <form id="claimForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Customer *</label>
+                        <select class="form-select" name="customerName" required>
+                            <option value="">Select Customer</option>
+                            <!-- Customer options will be populated -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Insurance Company *</label>
+                        <select class="form-select" name="insuranceCompany" required>
+                            <option value="">Select Insurance Company</option>
+                            <option value="ALLSTATE">ALLSTATE</option>
+                            <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
+                            <option value="FARM BUREAU">FARM BUREAU</option>
+                            <option value="FARMERS">FARMERS</option>
+                            <option value="FOREMOST">FOREMOST</option>
+                            <option value="GEICO">GEICO</option>
+                            <option value="HARTFORD">HARTFORD</option>
+                            <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
+                            <option value="HORACE MANN">HORACE MANN</option>
+                            <option value="THE GENERAL">THE GENERAL</option>
+                            <option value="KEMPER">KEMPER</option>
+                            <option value="NATIONWIDE">NATIONWIDE</option>
+                            <option value="PROGRESSIVE">PROGRESSIVE</option>
+                            <option value="SAGESURE">SAGESURE</option>
+                            <option value="STATEFARM">STATEFARM</option>
+                            <option value="SAFECO">SAFECO</option>
+                            <option value="TRAVELERS">TRAVELERS</option>
+                            <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
+                            <option value="USAA">USAA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date of Loss</label>
+                        <input type="date" class="form-input" name="dateOfLoss">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Claim Filed?</label>
+                        <select class="form-select" name="claimFiled">
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Claim Number</label>
+                        <input type="text" class="form-input" name="claimNumber" placeholder="Enter claim number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Approved?</label>
+                        <select class="form-select" name="approved">
+                            <option value="PENDING">PENDING</option>
+                            <option value="YES! :)">YES! :)</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adjusters Info</label>
+                        <input type="text" class="form-input" name="adjustersInfo" placeholder="Adjuster name and contact">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Replacement Type</label>
+                        <select class="form-select" name="replacementType">
+                            <option value="">Select Type</option>
+                            <option value="FULL REPLACEMENT">FULL REPLACEMENT</option>
+                            <option value="LAYOVER">LAYOVER</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type of Roof</label>
+                        <select class="form-select" name="roofType">
+                            <option value="">Select Roof Type</option>
+                            <option value="ASPHALT 30 YEAR">ASPHALT 30 YEAR</option>
+                            <option value="ASPHALT 25 YEAR">ASPHALT 25 YEAR</option>
+                            <option value="ASPHALT 20 YEAR">ASPHALT 20 YEAR</option>
+                            <option value="METAL">METAL</option>
+                            <option value="TILE">TILE</option>
+                            <option value="WOOD SHAKE">WOOD SHAKE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Property Type</label>
+                        <select class="form-select" name="propertyType">
+                            <option value="RESIDENTIAL">RESIDENTIAL</option>
+                            <option value="COMMERCIAL">COMMERCIAL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-input" name="notes" rows="3" placeholder="Additional claim notes..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn" onclick="closeClaimModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Claim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Initialize page
+        function initializePage() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userInfo').textContent = currentUser.name;
+
+            // Load claims
+            loadClaims();
+            populateCustomerOptions();
+        }
+
+        // Load and display claims
+        function loadClaims() {
+            const claims = crm.data.leads.filter(lead => lead.insuranceCompany && lead.insuranceCompany !== 'TBD');
+            const tbody = document.getElementById('claimsTableBody');
+            tbody.innerHTML = '';
+
+            claims.forEach(claim => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${claim.insuranceCompany}</td>
+                    <td>${claim.incidentDate || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${claim.claimFiled === 'YES' ? 'yes' : 'no'}">
+                            ${claim.claimFiled || 'NO'}
+                        </span>
+                    </td>
+                    <td>${claim.claimNumber || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${claim.approved === 'YES! :)' ? 'approved' : claim.approved === 'NO' ? 'denied' : 'pending'}">
+                            ${claim.approved || 'PENDING'}
+                        </span>
+                    </td>
+                    <td>${claim.adjusterInfo || 'N/A'}</td>
+                    <td>${claim.replacementType || 'N/A'}</td>
+                    <td>${claim.roofType || 'N/A'}</td>
+                    <td>${claim.propertyType || 'RESIDENTIAL'}</td>
+                    <td>${claim.customerName}</td>
+                    <td>
+                        <button class="btn" onclick="editClaim(${claim.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn" onclick="viewClaim(${claim.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Populate customer options in form
+        function populateCustomerOptions() {
+            const customers = crm.data.leads;
+            const select = document.querySelector('select[name="customerName"]');
+            
+            customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.customerName;
+                option.textContent = customer.customerName;
+                select.appendChild(option);
+            });
+        }
+
+        // Open add claim modal
+        function openAddClaimModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Claim';
+            document.getElementById('claimForm').reset();
+            document.getElementById('claimModal').style.display = 'block';
+        }
+
+        // Close claim modal
+        function closeClaimModal() {
+            document.getElementById('claimModal').style.display = 'none';
+        }
+
+        // Edit claim
+        function editClaim(claimId) {
+            const claim = crm.data.leads.find(c => c.id === claimId);
+            if (!claim) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Claim';
+            const form = document.getElementById('claimForm');
+            
+            // Populate form with claim data
+            form.customerName.value = claim.customerName;
+            form.insuranceCompany.value = claim.insuranceCompany || '';
+            form.dateOfLoss.value = claim.incidentDate || '';
+            form.claimFiled.value = claim.claimFiled || 'NO';
+            form.claimNumber.value = claim.claimNumber || '';
+            form.approved.value = claim.approved || 'PENDING';
+            form.adjustersInfo.value = claim.adjusterInfo || '';
+            form.replacementType.value = claim.replacementType || '';
+            form.roofType.value = claim.roofType || '';
+            form.propertyType.value = claim.propertyType || 'RESIDENTIAL';
+            form.notes.value = claim.notes || '';
+
+            // Store claim ID for update
+            form.dataset.claimId = claimId;
+            
+            document.getElementById('claimModal').style.display = 'block';
+        }
+
+        // View claim details
+        function viewClaim(claimId) {
+            const claim = crm.data.leads.find(c => c.id === claimId);
+            if (!claim) return;
+
+            alert(`Claim Details:\n\nCustomer: ${claim.customerName}\nInsurance: ${claim.insuranceCompany}\nDate of Loss: ${claim.incidentDate || 'N/A'}\nClaim Filed: ${claim.claimFiled || 'NO'}\nClaim Number: ${claim.claimNumber || 'N/A'}\nApproved: ${claim.approved || 'PENDING'}\nAdjuster: ${claim.adjusterInfo || 'N/A'}\nReplacement: ${claim.replacementType || 'N/A'}\nRoof Type: ${claim.roofType || 'N/A'}`);
+        }
+
+        // Handle form submission
+        document.getElementById('claimForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const claimData = Object.fromEntries(formData);
+            const claimId = this.dataset.claimId;
+
+            if (claimId) {
+                // Update existing claim
+                const claim = crm.data.leads.find(c => c.id === parseInt(claimId));
+                if (claim) {
+                    Object.assign(claim, claimData);
+                    crm.saveData();
+                    crm.addActivity('claim', 'updated', `Claim for ${claimData.customerName} updated`);
+                }
+            } else {
+                // Add new claim
+                const customer = crm.data.leads.find(c => c.customerName === claimData.customerName);
+                if (customer) {
+                    Object.assign(customer, claimData);
+                    crm.saveData();
+                    crm.addActivity('claim', 'created', `New claim created for ${claimData.customerName}`);
+                }
+            }
+
+            closeClaimModal();
+            loadClaims();
+        });
+
+        // Filter functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            filterClaims();
+        });
+
+        document.getElementById('insuranceFilter').addEventListener('change', function() {
+            filterClaims();
+        });
+
+        document.getElementById('claimFiledFilter').addEventListener('change', function() {
+            filterClaims();
+        });
+
+        document.getElementById('approvedFilter').addEventListener('change', function() {
+            filterClaims();
+        });
+
+        function filterClaims() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const insuranceFilter = document.getElementById('insuranceFilter').value;
+            const claimFiledFilter = document.getElementById('claimFiledFilter').value;
+            const approvedFilter = document.getElementById('approvedFilter').value;
+
+            const claims = crm.data.leads.filter(claim => {
+                if (!claim.insuranceCompany || claim.insuranceCompany === 'TBD') return false;
+                
+                const matchesSearch = claim.customerName.toLowerCase().includes(searchTerm) ||
+                                    claim.claimNumber?.toLowerCase().includes(searchTerm);
+                const matchesInsurance = !insuranceFilter || claim.insuranceCompany === insuranceFilter;
+                const matchesClaimFiled = !claimFiledFilter || claim.claimFiled === claimFiledFilter;
+                const matchesApproved = !approvedFilter || claim.approved === approvedFilter;
+
+                return matchesSearch && matchesInsurance && matchesClaimFiled && matchesApproved;
+            });
+
+            displayFilteredClaims(claims);
+        }
+
+        function displayFilteredClaims(claims) {
+            const tbody = document.getElementById('claimsTableBody');
+            tbody.innerHTML = '';
+
+            claims.forEach(claim => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${claim.insuranceCompany}</td>
+                    <td>${claim.incidentDate || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${claim.claimFiled === 'YES' ? 'yes' : 'no'}">
+                            ${claim.claimFiled || 'NO'}
+                        </span>
+                    </td>
+                    <td>${claim.claimNumber || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${claim.approved === 'YES! :)' ? 'approved' : claim.approved === 'NO' ? 'denied' : 'pending'}">
+                            ${claim.approved || 'PENDING'}
+                        </span>
+                    </td>
+                    <td>${claim.adjusterInfo || 'N/A'}</td>
+                    <td>${claim.replacementType || 'N/A'}</td>
+                    <td>${claim.roofType || 'N/A'}</td>
+                    <td>${claim.propertyType || 'RESIDENTIAL'}</td>
+                    <td>${claim.customerName}</td>
+                    <td>
+                        <button class="btn" onclick="editClaim(${claim.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn" onclick="viewClaim(${claim.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Export claims
+        function exportClaims() {
+            const claims = crm.data.leads.filter(lead => lead.insuranceCompany && lead.insuranceCompany !== 'TBD');
+            const csvContent = [
+                ['Customer', 'Insurance Company', 'Date of Loss', 'Claim Filed', 'Claim Number', 'Approved', 'Adjusters Info', 'Replacement Type', 'Roof Type', 'Property Type'],
+                ...claims.map(c => [
+                    c.customerName,
+                    c.insuranceCompany,
+                    c.incidentDate || '',
+                    c.claimFiled || 'NO',
+                    c.claimNumber || '',
+                    c.approved || 'PENDING',
+                    c.adjusterInfo || '',
+                    c.replacementType || '',
+                    c.roofType || '',
+                    c.propertyType || 'RESIDENTIAL'
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'umbrella_claims.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('claimModal');
+            if (event.target === modal) {
+                closeClaimModal();
+            }
+        }
+
+        // Initialize page
+        initializePage();
+    </script>
+</body>
+</html> 

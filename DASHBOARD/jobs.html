@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Umbrella Claims & Property Solutions - Job Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #f0f0f0;
+            color: #1e3c72;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Job Table */
+        .job-table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .job-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .job-table th,
+        .job-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .job-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .job-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .status-active { background: #28a745; }
+        .status-completed { background: #007bff; }
+        .status-pending { background: #ffc107; color: #333; }
+        .status-cancelled { background: #dc3545; }
+
+        /* Cost Display */
+        .cost-display {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        /* Rating Stars */
+        .rating {
+            color: #ffc107;
+            font-size: 1rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        .form-select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .job-table {
+                font-size: 0.7rem;
+            }
+
+            .job-table th,
+            .job-table td {
+                padding: 6px 2px;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="jobs.html" class="nav-link active">
+                        <i class="fas fa-briefcase"></i>
+                        Jobs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Job Management</h1>
+                <div class="user-menu">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <div class="user-profile">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span id="userDisplayName">User Name</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="job-table-container">
+                <div class="table-header">
+                    <h2 class="table-title">JOB TRACKING</h2>
+                    <div class="table-actions">
+                        <button class="btn btn-primary" onclick="openAddJobModal()">
+                            <i class="fas fa-plus"></i> Add Job
+                        </button>
+                        <button class="btn btn-primary" onclick="exportJobs()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Search</label>
+                            <input type="text" class="filter-input" id="searchInput" placeholder="Search jobs...">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select class="filter-input" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Crew</label>
+                            <select class="filter-input" id="crewFilter">
+                                <option value="">All Crews</option>
+                                <option value="BROM ROOFING">BROM ROOFING</option>
+                                <option value="UMBRELLA CREW">UMBRELLA CREW</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Table -->
+                <table class="job-table" id="jobTable">
+                    <thead>
+                        <tr>
+                            <th>CREWS</th>
+                            <th>CUSTOMER</th>
+                            <th>JOB COST</th>
+                            <th>LABOR COST</th>
+                            <th>MATERIAL COST</th>
+                            <th>GOOGLE RATING</th>
+                            <th>JOB NOTES</th>
+                            <th>DOCUMENTS</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobTableBody">
+                        <!-- Job data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Job Modal -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Job</h3>
+                <span class="close" onclick="closeJobModal()">&times;</span>
+            </div>
+            <form id="jobForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Customer *</label>
+                        <select class="form-select" name="customerName" required>
+                            <option value="">Select Customer</option>
+                            <!-- Customer options will be populated -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Crew *</label>
+                        <select class="form-select" name="crew" required>
+                            <option value="">Select Crew</option>
+                            <option value="BROM ROOFING">BROM ROOFING</option>
+                            <option value="UMBRELLA CREW">UMBRELLA CREW</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Job Cost</label>
+                        <input type="number" class="form-input" name="jobCost" placeholder="$">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Labor Cost</label>
+                        <input type="number" class="form-input" name="laborCost" placeholder="$">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Material Cost</label>
+                        <input type="number" class="form-input" name="materialCost" placeholder="$">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Google Rating (1-5)</label>
+                        <select class="form-select" name="googleRating">
+                            <option value="">Select Rating</option>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="status" required>
+                            <option value="Active">Active</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-input" name="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Completion Date</label>
+                        <input type="date" class="form-input" name="completionDate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Job Notes</label>
+                    <textarea class="form-input" name="jobNotes" rows="4" placeholder="Enter job notes..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Document Link</label>
+                    <input type="url" class="form-input" name="documentLink" placeholder="https://drive.google.com/...">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn" onclick="closeJobModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Initialize page
+        function initializePage() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userInfo').textContent = currentUser.name;
+
+            // Load jobs
+            loadJobs();
+            populateCustomerOptions();
+        }
+
+        // Load and display jobs
+        function loadJobs() {
+            const jobs = crm.data.jobs;
+            const tbody = document.getElementById('jobTableBody');
+            tbody.innerHTML = '';
+
+            jobs.forEach(job => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${job.crew || 'BROM ROOFING'}</td>
+                    <td>${job.customerName}</td>
+                    <td class="cost-display">$${job.jobCost || 0}</td>
+                    <td class="cost-display">$${job.laborCost || 0}</td>
+                    <td class="cost-display">$${job.materialCost || 0}</td>
+                    <td>
+                        <span class="rating">
+                            ${'★'.repeat(job.googleRating || 0)}${'☆'.repeat(5 - (job.googleRating || 0))}
+                        </span>
+                    </td>
+                    <td>${job.jobNotes || 'N/A'}</td>
+                    <td>
+                        ${job.documentLink ? `<a href="${job.documentLink}" target="_blank">View</a>` : 'N/A'}
+                    </td>
+                    <td>
+                        <span class="status-badge status-${job.status.toLowerCase()}">
+                            ${job.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn" onclick="editJob(${job.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn" onclick="viewJob(${job.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Populate customer options in form
+        function populateCustomerOptions() {
+            const customers = crm.data.leads;
+            const select = document.querySelector('select[name="customerName"]');
+            
+            customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.customerName;
+                option.textContent = customer.customerName;
+                select.appendChild(option);
+            });
+        }
+
+        // Open add job modal
+        function openAddJobModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Job';
+            document.getElementById('jobForm').reset();
+            document.getElementById('jobModal').style.display = 'block';
+        }
+
+        // Close job modal
+        function closeJobModal() {
+            document.getElementById('jobModal').style.display = 'none';
+        }
+
+        // Edit job
+        function editJob(jobId) {
+            const job = crm.data.jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Job';
+            const form = document.getElementById('jobForm');
+            
+            // Populate form with job data
+            form.customerName.value = job.customerName;
+            form.crew.value = job.crew || 'BROM ROOFING';
+            form.jobCost.value = job.jobCost || '';
+            form.laborCost.value = job.laborCost || '';
+            form.materialCost.value = job.materialCost || '';
+            form.googleRating.value = job.googleRating || '';
+            form.status.value = job.status;
+            form.startDate.value = job.startDate || '';
+            form.completionDate.value = job.completionDate || '';
+            form.jobNotes.value = job.jobNotes || '';
+            form.documentLink.value = job.documentLink || '';
+
+            // Store job ID for update
+            form.dataset.jobId = jobId;
+            
+            document.getElementById('jobModal').style.display = 'block';
+        }
+
+        // View job details
+        function viewJob(jobId) {
+            const job = crm.data.jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            alert(`Job Details:\n\nCustomer: ${job.customerName}\nCrew: ${job.crew || 'BROM ROOFING'}\nJob Cost: $${job.jobCost || 0}\nLabor Cost: $${job.laborCost || 0}\nMaterial Cost: $${job.materialCost || 0}\nGoogle Rating: ${job.googleRating || 0}/5\nStatus: ${job.status}\nNotes: ${job.jobNotes || 'N/A'}`);
+        }
+
+        // Handle form submission
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const jobData = Object.fromEntries(formData);
+            const jobId = this.dataset.jobId;
+
+            if (jobId) {
+                // Update existing job
+                const job = crm.data.jobs.find(j => j.id === parseInt(jobId));
+                if (job) {
+                    Object.assign(job, jobData);
+                    crm.saveData();
+                    crm.addActivity('job', 'updated', `Job for ${jobData.customerName} updated`);
+                }
+            } else {
+                // Add new job
+                crm.addJob(jobData);
+            }
+
+            closeJobModal();
+            loadJobs();
+        });
+
+        // Filter functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            filterJobs();
+        });
+
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            filterJobs();
+        });
+
+        document.getElementById('crewFilter').addEventListener('change', function() {
+            filterJobs();
+        });
+
+        function filterJobs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const crewFilter = document.getElementById('crewFilter').value;
+
+            const jobs = crm.data.jobs.filter(job => {
+                const matchesSearch = job.customerName.toLowerCase().includes(searchTerm) ||
+                                    (job.jobNotes && job.jobNotes.toLowerCase().includes(searchTerm));
+                const matchesStatus = !statusFilter || job.status === statusFilter;
+                const matchesCrew = !crewFilter || job.crew === crewFilter;
+
+                return matchesSearch && matchesStatus && matchesCrew;
+            });
+
+            displayFilteredJobs(jobs);
+        }
+
+        function displayFilteredJobs(jobs) {
+            const tbody = document.getElementById('jobTableBody');
+            tbody.innerHTML = '';
+
+            jobs.forEach(job => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${job.crew || 'BROM ROOFING'}</td>
+                    <td>${job.customerName}</td>
+                    <td class="cost-display">$${job.jobCost || 0}</td>
+                    <td class="cost-display">$${job.laborCost || 0}</td>
+                    <td class="cost-display">$${job.materialCost || 0}</td>
+                    <td>
+                        <span class="rating">
+                            ${'★'.repeat(job.googleRating || 0)}${'☆'.repeat(5 - (job.googleRating || 0))}
+                        </span>
+                    </td>
+                    <td>${job.jobNotes || 'N/A'}</td>
+                    <td>
+                        ${job.documentLink ? `<a href="${job.documentLink}" target="_blank">View</a>` : 'N/A'}
+                    </td>
+                    <td>
+                        <span class="status-badge status-${job.status.toLowerCase()}">
+                            ${job.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn" onclick="editJob(${job.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn" onclick="viewJob(${job.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Export jobs
+        function exportJobs() {
+            const jobs = crm.data.jobs;
+            const csvContent = [
+                ['Customer', 'Crew', 'Job Cost', 'Labor Cost', 'Material Cost', 'Google Rating', 'Status', 'Job Notes', 'Document Link'],
+                ...jobs.map(j => [
+                    j.customerName,
+                    j.crew || 'BROM ROOFING',
+                    j.jobCost || 0,
+                    j.laborCost || 0,
+                    j.materialCost || 0,
+                    j.googleRating || 0,
+                    j.status,
+                    j.jobNotes || '',
+                    j.documentLink || ''
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'umbrella_jobs.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('jobModal');
+            if (event.target === modal) {
+                closeJobModal();
+            }
+        }
+
+        // Initialize page
+        initializePage();
+    </script>
+</body>
+</html> 

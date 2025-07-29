@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Umbrella Claims & Property Solutions - Customer Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: #f0f0f0;
+            color: #1e3c72;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Customer Table */
+        .customer-table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .customer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .customer-table th,
+        .customer-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .customer-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .customer-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-lead { background: #ffc107; }
+        .status-waiting-adjustment { background: #fd7e14; }
+        .status-waiting-ins-scope { background: #6f42c1; }
+        .status-ready-to-install { background: #007bff; }
+        .status-invoiced { background: #e83e8c; }
+        .status-closed-new-roof { background: #28a745; }
+        .status-closed-dead-denied { background: #dc3545; }
+        .status-waiting-fee { background: #6c757d; }
+
+        .status-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* User Chip */
+        .user-chip {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+            display: inline-block;
+        }
+
+        .user-james { background: #007bff; }
+        .user-daniel { background: #28a745; }
+
+        /* Filter Section */
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+        }
+
+        .form-select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .customer-table {
+                font-size: 0.8rem;
+            }
+
+            .customer-table th,
+            .customer-table td {
+                padding: 8px 4px;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link active">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Customer Management</h1>
+                <div class="user-menu">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <div class="user-profile">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span id="userDisplayName">User Name</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="customer-table-container">
+                <div class="table-header">
+                    <h2 class="table-title">UMBRELLA CUSTOMERS</h2>
+                    <div class="table-actions">
+                        <button class="btn btn-primary" onclick="openAddCustomerModal()">
+                            <i class="fas fa-plus"></i> Add Customer
+                        </button>
+                        <button class="btn btn-primary" onclick="exportCustomers()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Search</label>
+                            <input type="text" class="filter-input" id="searchInput" placeholder="Search customers...">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Stage</label>
+                            <select class="filter-input" id="stageFilter">
+                                <option value="">All Stages</option>
+                                <option value="LEAD">LEAD</option>
+                                <option value="WAITING ADJUSTMENT">WAITING ADJUSTMENT</option>
+                                <option value="WAITING INS SCOPE">WAITING INS SCOPE</option>
+                                <option value="READY TO INSTALL">READY TO INSTALL</option>
+                                <option value="INVOICED WPAYMENT">INVOICED WPAYMENT</option>
+                                <option value="CLOSED-W NEW ROOF">CLOSED-W NEW ROOF</option>
+                                <option value="CLOSED-DEAD DENIED">CLOSED-DEAD DENIED</option>
+                                <option value="WAITING FEE">WAITING FEE</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Sold By</label>
+                            <select class="filter-input" id="userFilter">
+                                <option value="">All Users</option>
+                                <option value="James Causey">James Causey</option>
+                                <option value="Daniel Pruiksma">Daniel Pruiksma</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Insurance</label>
+                            <select class="filter-input" id="insuranceFilter">
+                                <option value="">All Insurance</option>
+                                <option value="ALLSTATE">ALLSTATE</option>
+                                <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
+                                <option value="FARM BUREAU">FARM BUREAU</option>
+                                <option value="FARMERS">FARMERS</option>
+                                <option value="FOREMOST">FOREMOST</option>
+                                <option value="GEICO">GEICO</option>
+                                <option value="HARTFORD">HARTFORD</option>
+                                <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
+                                <option value="HORACE MANN">HORACE MANN</option>
+                                <option value="THE GENERAL">THE GENERAL</option>
+                                <option value="KEMPER">KEMPER</option>
+                                <option value="NATIONWIDE">NATIONWIDE</option>
+                                <option value="PROGRESSIVE">PROGRESSIVE</option>
+                                <option value="SAGESURE">SAGESURE</option>
+                                <option value="STATEFARM">STATEFARM</option>
+                                <option value="SAFECO">SAFECO</option>
+                                <option value="TRAVELERS">TRAVELERS</option>
+                                <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
+                                <option value="USAA">USAA</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Table -->
+                <table class="customer-table" id="customerTable">
+                    <thead>
+                        <tr>
+                            <th>WHO SOLD THIS JOB</th>
+                            <th>CUSTOMER NAME</th>
+                            <th>PHONE</th>
+                            <th>EMAIL</th>
+                            <th>ADDRESS</th>
+                            <th>STAGE</th>
+                            <th>FEE PAID</th>
+                            <th>INSURANCE</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTableBody">
+                        <!-- Customer data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Customer</h3>
+                <span class="close" onclick="closeCustomerModal()">&times;</span>
+            </div>
+            <form id="customerForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Customer Name *</label>
+                        <input type="text" class="form-input" name="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone *</label>
+                        <input type="tel" class="form-input" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Address *</label>
+                        <input type="text" class="form-input" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sold By *</label>
+                        <select class="form-select" name="soldBy" required>
+                            <option value="">Select User</option>
+                            <option value="James Causey">James Causey</option>
+                            <option value="Daniel Pruiksma">Daniel Pruiksma</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stage *</label>
+                        <select class="form-select" name="stage" required>
+                            <option value="">Select Stage</option>
+                            <option value="LEAD">LEAD</option>
+                            <option value="WAITING ADJUSTMENT">WAITING ADJUSTMENT</option>
+                            <option value="WAITING INS SCOPE">WAITING INS SCOPE</option>
+                            <option value="READY TO INSTALL">READY TO INSTALL</option>
+                            <option value="INVOICED WPAYMENT">INVOICED WPAYMENT</option>
+                            <option value="CLOSED-W NEW ROOF">CLOSED-W NEW ROOF</option>
+                            <option value="CLOSED-DEAD DENIED">CLOSED-DEAD DENIED</option>
+                            <option value="WAITING FEE">WAITING FEE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fee Paid</label>
+                        <select class="form-select" name="feePaid">
+                            <option value="N/A">N/A</option>
+                            <option value="YES! :)">YES! :)</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Insurance Company</label>
+                        <select class="form-select" name="insuranceCompany">
+                            <option value="">Select Insurance</option>
+                            <option value="ALLSTATE">ALLSTATE</option>
+                            <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
+                            <option value="FARM BUREAU">FARM BUREAU</option>
+                            <option value="FARMERS">FARMERS</option>
+                            <option value="FOREMOST">FOREMOST</option>
+                            <option value="GEICO">GEICO</option>
+                            <option value="HARTFORD">HARTFORD</option>
+                            <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
+                            <option value="HORACE MANN">HORACE MANN</option>
+                            <option value="THE GENERAL">THE GENERAL</option>
+                            <option value="KEMPER">KEMPER</option>
+                            <option value="NATIONWIDE">NATIONWIDE</option>
+                            <option value="PROGRESSIVE">PROGRESSIVE</option>
+                            <option value="SAGESURE">SAGESURE</option>
+                            <option value="STATEFARM">STATEFARM</option>
+                            <option value="SAFECO">SAFECO</option>
+                            <option value="TRAVELERS">TRAVELERS</option>
+                            <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
+                            <option value="USAA">USAA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Claim Number</label>
+                        <input type="text" class="form-input" name="claimNumber">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adjuster Info</label>
+                        <input type="text" class="form-input" name="adjusterInfo">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Roof Type</label>
+                        <input type="text" class="form-input" name="roofType">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Replacement Type</label>
+                        <select class="form-select" name="replacementType">
+                            <option value="">Select Type</option>
+                            <option value="FULL REPLACEMENT">FULL REPLACEMENT</option>
+                            <option value="LAYOVER">LAYOVER</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-input" name="notes" rows="3"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn" onclick="closeCustomerModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Initialize page
+        function initializePage() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userInfo').textContent = currentUser.name;
+
+            // Load customers
+            loadCustomers();
+        }
+
+        // Load and display customers
+        function loadCustomers() {
+            const customers = crm.data.leads;
+            const tbody = document.getElementById('customerTableBody');
+            tbody.innerHTML = '';
+
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <span class="user-chip user-${customer.soldBy.toLowerCase().includes('james') ? 'james' : 'daniel'}">
+                            ${customer.soldBy}
+                        </span>
+                    </td>
+                    <td>${customer.customerName}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.email || 'N/A'}</td>
+                    <td>${customer.address}</td>
+                    <td>
+                        <span class="status-badge status-${customer.stage.toLowerCase().replace(/\s+/g, '-')}" 
+                              onclick="updateStage(${customer.id})">
+                            ${customer.stage}
+                        </span>
+                    </td>
+                    <td>${customer.feePaid}</td>
+                    <td>${customer.insuranceCompany || 'TBD'}</td>
+                    <td>
+                        <button class="btn" onclick="editCustomer(${customer.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn" onclick="viewCustomer(${customer.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update customer stage
+        function updateStage(customerId) {
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (!customer) return;
+
+            const stages = crm.getStages();
+            const currentIndex = stages.indexOf(customer.stage);
+            const nextIndex = (currentIndex + 1) % stages.length;
+            const newStage = stages[nextIndex];
+
+            crm.updateLeadStage(customerId, newStage);
+            loadCustomers();
+        }
+
+        // Open add customer modal
+        function openAddCustomerModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Customer';
+            document.getElementById('customerForm').reset();
+            document.getElementById('customerModal').style.display = 'block';
+        }
+
+        // Close customer modal
+        function closeCustomerModal() {
+            document.getElementById('customerModal').style.display = 'none';
+        }
+
+        // Edit customer
+        function editCustomer(customerId) {
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (!customer) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Customer';
+            const form = document.getElementById('customerForm');
+            
+            // Populate form with customer data
+            form.customerName.value = customer.customerName;
+            form.phone.value = customer.phone;
+            form.email.value = customer.email || '';
+            form.address.value = customer.address;
+            form.soldBy.value = customer.soldBy;
+            form.stage.value = customer.stage;
+            form.feePaid.value = customer.feePaid;
+            form.insuranceCompany.value = customer.insuranceCompany || '';
+            form.claimNumber.value = customer.claimNumber || '';
+            form.adjusterInfo.value = customer.adjusterInfo || '';
+            form.roofType.value = customer.roofType || '';
+            form.replacementType.value = customer.replacementType || '';
+            form.notes.value = customer.notes || '';
+
+            // Store customer ID for update
+            form.dataset.customerId = customerId;
+            
+            document.getElementById('customerModal').style.display = 'block';
+        }
+
+        // View customer details
+        function viewCustomer(customerId) {
+            const customer = crm.data.leads.find(c => c.id === customerId);
+            if (!customer) return;
+
+            alert(`Customer Details:\n\nName: ${customer.customerName}\nPhone: ${customer.phone}\nEmail: ${customer.email || 'N/A'}\nAddress: ${customer.address}\nStage: ${customer.stage}\nInsurance: ${customer.insuranceCompany || 'TBD'}\nClaim Number: ${customer.claimNumber || 'N/A'}\nAdjuster: ${customer.adjusterInfo || 'N/A'}`);
+        }
+
+        // Handle form submission
+        document.getElementById('customerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const customerData = Object.fromEntries(formData);
+            const customerId = this.dataset.customerId;
+
+            if (customerId) {
+                // Update existing customer
+                const customer = crm.data.leads.find(c => c.id === parseInt(customerId));
+                if (customer) {
+                    Object.assign(customer, customerData);
+                    crm.saveData();
+                    crm.addActivity('customer', 'updated', `Customer ${customerData.customerName} updated`);
+                }
+            } else {
+                // Add new customer
+                crm.addLead(customerData);
+            }
+
+            closeCustomerModal();
+            loadCustomers();
+        });
+
+        // Filter functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            filterCustomers();
+        });
+
+        document.getElementById('stageFilter').addEventListener('change', function() {
+            filterCustomers();
+        });
+
+        document.getElementById('userFilter').addEventListener('change', function() {
+            filterCustomers();
+        });
+
+        document.getElementById('insuranceFilter').addEventListener('change', function() {
+            filterCustomers();
+        });
+
+        function filterCustomers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const stageFilter = document.getElementById('stageFilter').value;
+            const userFilter = document.getElementById('userFilter').value;
+            const insuranceFilter = document.getElementById('insuranceFilter').value;
+
+            const customers = crm.data.leads.filter(customer => {
+                const matchesSearch = customer.customerName.toLowerCase().includes(searchTerm) ||
+                                    customer.phone.includes(searchTerm) ||
+                                    (customer.email && customer.email.toLowerCase().includes(searchTerm));
+                const matchesStage = !stageFilter || customer.stage === stageFilter;
+                const matchesUser = !userFilter || customer.soldBy === userFilter;
+                const matchesInsurance = !insuranceFilter || customer.insuranceCompany === insuranceFilter;
+
+                return matchesSearch && matchesStage && matchesUser && matchesInsurance;
+            });
+
+            displayFilteredCustomers(customers);
+        }
+
+        function displayFilteredCustomers(customers) {
+            const tbody = document.getElementById('customerTableBody');
+            tbody.innerHTML = '';
+
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <span class="user-chip user-${customer.soldBy.toLowerCase().includes('james') ? 'james' : 'daniel'}">
+                            ${customer.soldBy}
+                        </span>
+                    </td>
+                    <td>${customer.customerName}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.email || 'N/A'}</td>
+                    <td>${customer.address}</td>
+                    <td>
+                        <span class="status-badge status-${customer.stage.toLowerCase().replace(/\s+/g, '-')}" 
+                              onclick="updateStage(${customer.id})">
+                            ${customer.stage}
+                        </span>
+                    </td>
+                    <td>${customer.feePaid}</td>
+                    <td>${customer.insuranceCompany || 'TBD'}</td>
+                    <td>
+                        <button class="btn" onclick="editCustomer(${customer.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn" onclick="viewCustomer(${customer.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Export customers
+        function exportCustomers() {
+            const customers = crm.data.leads;
+            const csvContent = [
+                ['Customer Name', 'Phone', 'Email', 'Address', 'Sold By', 'Stage', 'Fee Paid', 'Insurance Company', 'Claim Number', 'Adjuster Info'],
+                ...customers.map(c => [
+                    c.customerName,
+                    c.phone,
+                    c.email || '',
+                    c.address,
+                    c.soldBy,
+                    c.stage,
+                    c.feePaid,
+                    c.insuranceCompany || '',
+                    c.claimNumber || '',
+                    c.adjusterInfo || ''
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'umbrella_customers.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('customerModal');
+            if (event.target === modal) {
+                closeCustomerModal();
+            }
+        }
+
+        // Initialize page
+        initializePage();
+    </script>
+</body>
+</html> 
