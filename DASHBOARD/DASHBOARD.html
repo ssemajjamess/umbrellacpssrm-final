@@ -389,6 +389,12 @@
                                 <a href="REMINDER.html" class="dropdown-item">New Reminder</a>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a href="SETTINGS.html" class="nav-link">
+                                <i class="fas fa-sliders-h"></i>
+                                Settings
+                            </a>
+                        </li>
                     </ul>
                 </nav>
 
@@ -536,27 +542,52 @@
             console.error('Error initializing CRM:', error);
         }
 
-        // Update dashboard stats
+        // Update dashboard stats - FIXED VERSION
         function updateDashboardStats() {
             try {
                 if (crm && crm.data) {
                     const stats = crm.getDashboardStats();
                     
-                    document.getElementById('activeLeads').textContent = stats.activeLeads || 24;
-                    document.getElementById('activeJobs').textContent = stats.activeJobs || 12;
-                    document.getElementById('pendingTasks').textContent = stats.pendingTasks || 8;
-                    document.getElementById('monthlyRevenue').textContent = '$' + (stats.monthlyRevenue || 45250).toLocaleString();
+                    // Use actual data, not fallback values
+                    document.getElementById('activeLeads').textContent = stats.activeLeads || 0;
+                    document.getElementById('activeJobs').textContent = stats.activeJobs || 0;
+                    document.getElementById('pendingTasks').textContent = stats.pendingTasks || 0;
+                    document.getElementById('monthlyRevenue').textContent = '$' + (stats.monthlyRevenue || 0).toLocaleString();
                     
-                    // Weekly jobs
-                    const weeklyJobs = crm.getWeeklyJobsSold ? crm.getWeeklyJobsSold() : 5;
+                    // Weekly jobs - actual count
+                    const weeklyJobs = crm.getWeeklyJobsSold ? crm.getWeeklyJobsSold() : 0;
                     document.getElementById('weeklyJobs').textContent = weeklyJobs;
                     
-                    // Weekly record
-                    const weeklyRecord = crm.getWeeklyRecord ? crm.getWeeklyRecord() : 12;
+                    // Weekly record - actual record
+                    const weeklyRecord = crm.getWeeklyRecord ? crm.getWeeklyRecord() : 0;
                     document.getElementById('weeklyRecord').textContent = weeklyRecord;
+                    
+                    console.log('Dashboard stats updated:', {
+                        activeLeads: stats.activeLeads,
+                        activeJobs: stats.activeJobs,
+                        pendingTasks: stats.pendingTasks,
+                        monthlyRevenue: stats.monthlyRevenue,
+                        weeklyJobs: weeklyJobs,
+                        weeklyRecord: weeklyRecord
+                    });
+                } else {
+                    console.log('CRM not loaded, setting all stats to 0');
+                    document.getElementById('activeLeads').textContent = '0';
+                    document.getElementById('activeJobs').textContent = '0';
+                    document.getElementById('pendingTasks').textContent = '0';
+                    document.getElementById('monthlyRevenue').textContent = '$0';
+                    document.getElementById('weeklyJobs').textContent = '0';
+                    document.getElementById('weeklyRecord').textContent = '0';
                 }
             } catch (error) {
                 console.error('Error updating dashboard stats:', error);
+                // Set all to 0 on error
+                document.getElementById('activeLeads').textContent = '0';
+                document.getElementById('activeJobs').textContent = '0';
+                document.getElementById('pendingTasks').textContent = '0';
+                document.getElementById('monthlyRevenue').textContent = '$0';
+                document.getElementById('weeklyJobs').textContent = '0';
+                document.getElementById('weeklyRecord').textContent = '0';
             }
         }
 
@@ -638,6 +669,22 @@
         // Update stats every 30 seconds
         setInterval(updateDashboardStats, 30000);
         setInterval(loadRecentActivities, 60000);
+
+        // Listen for storage changes to update stats
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'umbrellaCRM') {
+                console.log('CRM data changed, updating dashboard...');
+                updateDashboardStats();
+                loadRecentActivities();
+            }
+        });
+
+        // Update stats when window gains focus
+        window.addEventListener('focus', function() {
+            console.log('Window focused, updating dashboard...');
+            updateDashboardStats();
+            loadRecentActivities();
+        });
     </script>
 </body>
 </html> 

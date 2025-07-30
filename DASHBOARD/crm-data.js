@@ -741,32 +741,51 @@ class UmbrellaCRM {
 
     // Get dashboard statistics
     getDashboardStats() {
-        // Active leads (not closed)
-        const activeLeads = this.data.leads.filter(l => 
-            l.stage !== 'CLOSED-W NEW ROOF' && 
-            l.stage !== 'CLOSED-DEAD DENIED' &&
-            l.stage !== 'INVOICED WPAYMENT'
-        ).length;
+        try {
+            // Active leads (not closed)
+            const activeLeads = this.data.leads.filter(l => 
+                l.stage !== 'CLOSED-W NEW ROOF' && 
+                l.stage !== 'CLOSED-DEAD DENIED' &&
+                l.stage !== 'INVOICED WPAYMENT'
+            ).length;
 
-        // Active jobs (in progress stages)
-        const activeJobs = this.data.leads.filter(l => 
-            l.stage === 'READY TO INSTALL' || 
-            l.stage === 'WAITING ADJUSTMENT' ||
-            l.stage === 'WAITING INS SCOPE'
-        ).length;
+            // Active jobs (in progress stages)
+            const activeJobs = this.data.leads.filter(l => 
+                l.stage === 'READY TO INSTALL' || 
+                l.stage === 'WAITING ADJUSTMENT' ||
+                l.stage === 'WAITING INS SCOPE'
+            ).length;
 
-        // Pending tasks
-        const pendingTasks = this.data.tasks.filter(t => t.status === 'Pending').length;
+            // Pending tasks (ensure tasks array exists)
+            const pendingTasks = this.data.tasks ? this.data.tasks.filter(t => t.status === 'Pending').length : 0;
 
-        // Monthly revenue calculation
-        const monthlyRevenue = this.calculateMonthlyRevenue();
+            // Monthly revenue calculation
+            const monthlyRevenue = this.calculateMonthlyRevenue();
 
-        return {
-            activeLeads,
-            activeJobs,
-            pendingTasks,
-            monthlyRevenue
-        };
+            console.log('Dashboard stats calculated:', {
+                activeLeads,
+                activeJobs,
+                pendingTasks,
+                monthlyRevenue,
+                totalLeads: this.data.leads.length,
+                totalTasks: this.data.tasks ? this.data.tasks.length : 0
+            });
+
+            return {
+                activeLeads,
+                activeJobs,
+                pendingTasks,
+                monthlyRevenue
+            };
+        } catch (error) {
+            console.error('Error calculating dashboard stats:', error);
+            return {
+                activeLeads: 0,
+                activeJobs: 0,
+                pendingTasks: 0,
+                monthlyRevenue: 0
+            };
+        }
     }
 
     // Calculate monthly revenue
