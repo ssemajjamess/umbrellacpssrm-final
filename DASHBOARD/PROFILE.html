@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Umbrella Claims & Property Solutions - User Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .company-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0 25px 25px 0;
+            margin-right: 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        .profile-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .profile-photo-section {
+            text-align: center;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #1e3c72;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .photo-upload-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .photo-upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .profile-role {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+
+        .notification {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .notification.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .role-manager {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+
+        .role-sales {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .role-user {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+        }
+
+        .permissions-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .permission-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .permission-item:last-child {
+            border-bottom: none;
+        }
+
+        .permission-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .permission-status {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .recent-activity {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .password-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .password-warning {
+            color: #856404;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CALENDAR.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        Calendar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="INVOICE MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Invoices
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="API INTEGRATION.html" class="nav-link">
+                        <i class="fas fa-plug"></i>
+                        API Integration
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="SETTINGS.html" class="nav-link">
+                        <i class="fas fa-sliders-h"></i>
+                        System Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="PROFILE.html" class="nav-link active">
+                        <i class="fas fa-user"></i>
+                        My Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Notifications -->
+            <div id="notification" class="notification"></div>
+
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-photo-section">
+                    <img src="" alt="Profile Photo" class="profile-photo" id="profilePhoto" onclick="uploadPhoto()">
+                    <button class="photo-upload-btn" onclick="uploadPhoto()">
+                        <i class="fas fa-camera"></i>
+                        Change Photo
+                    </button>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                </div>
+                <div class="profile-info">
+                    <h1 class="profile-name" id="profileName">Loading...</h1>
+                    <div class="profile-role">
+                        <span class="role-badge" id="roleBadge">Loading...</span>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="myLeads">0</div>
+                            <div class="stat-label">My Leads</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="myJobs">0</div>
+                            <div class="stat-label">My Jobs</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="myRevenue">$0</div>
+                            <div class="stat-label">My Revenue</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Grid -->
+            <div class="profile-grid">
+                <!-- Personal Information -->
+                <div class="profile-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-user"></i>
+                        Personal Information
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="fullName" class="form-input" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="email" class="form-input" placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Job Title</label>
+                        <input type="text" id="jobTitle" class="form-input" placeholder="Enter your job title">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <select id="department" class="form-select">
+                            <option value="Sales">Sales</option>
+                            <option value="Management">Management</option>
+                            <option value="Administration">Administration</option>
+                            <option value="Operations">Operations</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea id="bio" class="form-input" rows="4" placeholder="Tell us about yourself"></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="savePersonalInfo()">
+                        <i class="fas fa-save"></i>
+                        Save Personal Information
+                    </button>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="profile-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Security Settings
+                    </h2>
+                    
+                    <div class="password-section">
+                        <div class="password-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Change your password regularly to keep your account secure.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-input" placeholder="Enter current password">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" id="newPassword" class="form-input" placeholder="Enter new password">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Two-Factor Authentication</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="twoFactorAuth">
+                            <label for="twoFactorAuth">Enable two-factor authentication</label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-warning" onclick="changePassword()">
+                        <i class="fas fa-key"></i>
+                        Change Password
+                    </button>
+                </div>
+
+                <!-- Role & Permissions -->
+                <div class="profile-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-user-shield"></i>
+                        Role & Permissions
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Current Role</label>
+                        <div id="currentRole" style="font-weight: 600; margin-bottom: 15px;">Loading...</div>
+                    </div>
+
+                    <div class="permissions-section">
+                        <h4>Your Permissions</h4>
+                        <div id="permissionsList">
+                            <!-- Permissions will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Request Role Change</label>
+                        <select id="requestedRole" class="form-select">
+                            <option value="">Select new role</option>
+                            <option value="Sales">Sales Representative</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Administrator">Administrator</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-info" onclick="requestRoleChange()">
+                        <i class="fas fa-paper-plane"></i>
+                        Request Role Change
+                    </button>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="profile-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-history"></i>
+                        Recent Activity
+                    </h2>
+                    
+                    <div class="recent-activity" id="recentActivity">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Management (Admin/Manager Only) -->
+            <div id="teamManagement" style="display: none;">
+                <div class="profile-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-users"></i>
+                        Team Management
+                    </h2>
+                    
+                    <div id="teamMembers">
+                        <!-- Team members will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Initialize CRM
+        let crm = null;
+        let currentUser = null;
+        
+        try {
+            crm = new UmbrellaCRM();
+            console.log('CRM initialized successfully');
+        } catch (error) {
+            console.error('Error initializing CRM:', error);
+        }
+
+        // Check authentication
+        const isLoggedIn = localStorage.getItem('userLoggedIn');
+        if (isLoggedIn !== 'true') {
+            window.location.href = '../index.html';
+        }
+
+        // Load user profile
+        function loadUserProfile() {
+            try {
+                const userEmail = localStorage.getItem('userEmail');
+                const userName = localStorage.getItem('userName');
+                
+                // Find current user in CRM
+                currentUser = crm.data.users.find(u => u.email === userEmail) || {
+                    id: Date.now(),
+                    name: userName || 'User',
+                    email: userEmail,
+                    role: 'User',
+                    phone: '',
+                    jobTitle: '',
+                    department: 'Sales',
+                    bio: '',
+                    photoUrl: '',
+                    permissions: getDefaultPermissions('User'),
+                    createdAt: new Date().toISOString()
+                };
+
+                // Update CRM if user doesn't exist
+                if (!crm.data.users.find(u => u.email === userEmail)) {
+                    crm.data.users.push(currentUser);
+                    crm.saveData();
+                }
+
+                // Load profile data
+                document.getElementById('profileName').textContent = currentUser.name;
+                document.getElementById('roleBadge').textContent = currentUser.role;
+                document.getElementById('roleBadge').className = `role-badge role-${currentUser.role.toLowerCase()}`;
+                
+                document.getElementById('fullName').value = currentUser.name;
+                document.getElementById('email').value = currentUser.email;
+                document.getElementById('phone').value = currentUser.phone || '';
+                document.getElementById('jobTitle').value = currentUser.jobTitle || '';
+                document.getElementById('department').value = currentUser.department || 'Sales';
+                document.getElementById('bio').value = currentUser.bio || '';
+
+                // Load profile photo
+                if (currentUser.photoUrl) {
+                    document.getElementById('profilePhoto').src = currentUser.photoUrl;
+                } else {
+                    document.getElementById('profilePhoto').src = `https://ui-avatars.com/api/?name=${currentUser.name}&size=150&background=1e3c72&color=fff`;
+                }
+
+                // Load user stats
+                loadUserStats();
+                loadPermissions();
+                loadRecentActivity();
+                loadTeamManagement();
+
+                showNotification('Profile loaded successfully', 'success');
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+                showNotification('Error loading profile', 'error');
+            }
+        }
+
+        // Get default permissions based on role
+        function getDefaultPermissions(role) {
+            const permissions = {
+                'Administrator': {
+                    viewAllCustomers: true,
+                    editAllCustomers: true,
+                    deleteCustomers: true,
+                    manageUsers: true,
+                    manageSettings: true,
+                    viewReports: true,
+                    manageTeam: true,
+                    viewOwnData: true,
+                    editOwnData: true
+                },
+                'Manager': {
+                    viewAllCustomers: true,
+                    editAllCustomers: true,
+                    deleteCustomers: false,
+                    manageUsers: false,
+                    manageSettings: false,
+                    viewReports: true,
+                    manageTeam: true,
+                    viewOwnData: true,
+                    editOwnData: true
+                },
+                'Sales': {
+                    viewAllCustomers: false,
+                    editAllCustomers: false,
+                    deleteCustomers: false,
+                    manageUsers: false,
+                    manageSettings: false,
+                    viewReports: false,
+                    manageTeam: false,
+                    viewOwnData: true,
+                    editOwnData: true
+                },
+                'User': {
+                    viewAllCustomers: false,
+                    editAllCustomers: false,
+                    deleteCustomers: false,
+                    manageUsers: false,
+                    manageSettings: false,
+                    viewReports: false,
+                    manageTeam: false,
+                    viewOwnData: true,
+                    editOwnData: true
+                }
+            };
+            return permissions[role] || permissions['User'];
+        }
+
+        // Load user statistics
+        function loadUserStats() {
+            try {
+                if (crm && crm.data) {
+                    const userEmail = currentUser.email;
+                    
+                    // Count user's leads
+                    const myLeads = crm.data.leads.filter(lead => lead.soldBy === currentUser.name).length;
+                    
+                    // Count user's active jobs
+                    const myJobs = crm.data.leads.filter(lead => 
+                        lead.soldBy === currentUser.name && 
+                        (lead.stage === 'READY TO INSTALL' || lead.stage === 'WAITING ADJUSTMENT' || lead.stage === 'WAITING INS SCOPE')
+                    ).length;
+                    
+                    // Calculate user's revenue
+                    const myRevenue = crm.data.leads
+                        .filter(lead => lead.soldBy === currentUser.name && lead.stage === 'CLOSED-W NEW ROOF')
+                        .reduce((total, lead) => total + (lead.jobCost || 0), 0);
+
+                    document.getElementById('myLeads').textContent = myLeads;
+                    document.getElementById('myJobs').textContent = myJobs;
+                    document.getElementById('myRevenue').textContent = '$' + myRevenue.toLocaleString();
+                }
+            } catch (error) {
+                console.error('Error loading user stats:', error);
+            }
+        }
+
+        // Load permissions
+        function loadPermissions() {
+            try {
+                const permissions = currentUser.permissions || getDefaultPermissions(currentUser.role);
+                const permissionsList = document.getElementById('permissionsList');
+                
+                permissionsList.innerHTML = '';
+                
+                const permissionLabels = {
+                    viewAllCustomers: 'View All Customers',
+                    editAllCustomers: 'Edit All Customers',
+                    deleteCustomers: 'Delete Customers',
+                    manageUsers: 'Manage Users',
+                    manageSettings: 'Manage Settings',
+                    viewReports: 'View Reports',
+                    manageTeam: 'Manage Team',
+                    viewOwnData: 'View Own Data',
+                    editOwnData: 'Edit Own Data'
+                };
+
+                Object.entries(permissions).forEach(([permission, hasPermission]) => {
+                    const permissionItem = document.createElement('div');
+                    permissionItem.className = 'permission-item';
+                    permissionItem.innerHTML = `
+                        <span class="permission-name">${permissionLabels[permission]}</span>
+                        <span class="permission-status">${hasPermission ? '✓ Allowed' : '✗ Denied'}</span>
+                    `;
+                    permissionsList.appendChild(permissionItem);
+                });
+            } catch (error) {
+                console.error('Error loading permissions:', error);
+            }
+        }
+
+        // Load recent activity
+        function loadRecentActivity() {
+            try {
+                if (crm && crm.data) {
+                    const userActivities = crm.data.activities
+                        .filter(activity => activity.userEmail === currentUser.email)
+                        .slice(0, 10);
+
+                    const activityContainer = document.getElementById('recentActivity');
+                    activityContainer.innerHTML = '';
+
+                    if (userActivities.length === 0) {
+                        activityContainer.innerHTML = '<p style="text-align: center; color: #666;">No recent activity</p>';
+                        return;
+                    }
+
+                    userActivities.forEach(activity => {
+                        const activityItem = document.createElement('div');
+                        activityItem.className = 'activity-item';
+                        
+                        let icon = 'A';
+                        if (activity.type === 'lead') icon = 'L';
+                        if (activity.type === 'job') icon = 'J';
+                        if (activity.type === 'task') icon = 'T';
+                        if (activity.type === 'customer') icon = 'C';
+                        
+                        activityItem.innerHTML = `
+                            <div class="activity-icon">${icon}</div>
+                            <div class="activity-content">
+                                <div class="activity-title">${activity.description || 'Activity'}</div>
+                                <div class="activity-time">${new Date(activity.timestamp).toLocaleString()}</div>
+                            </div>
+                        `;
+                        activityContainer.appendChild(activityItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+            }
+        }
+
+        // Load team management (for admins and managers)
+        function loadTeamManagement() {
+            try {
+                if (currentUser.role === 'Administrator' || currentUser.role === 'Manager') {
+                    document.getElementById('teamManagement').style.display = 'block';
+                    
+                    const teamMembers = crm.data.users.filter(user => {
+                        if (currentUser.role === 'Administrator') return true;
+                        if (currentUser.role === 'Manager') return user.role === 'Sales';
+                        return false;
+                    });
+
+                    const teamContainer = document.getElementById('teamMembers');
+                    teamContainer.innerHTML = '<h3>Team Members</h3>';
+                    
+                    teamMembers.forEach(member => {
+                        const memberDiv = document.createElement('div');
+                        memberDiv.style.cssText = 'padding: 15px; border: 1px solid #e1e5e9; border-radius: 8px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center;';
+                        memberDiv.innerHTML = `
+                            <div>
+                                <strong>${member.name}</strong>
+                                <span class="role-badge role-${member.role.toLowerCase()}" style="margin-left: 10px;">${member.role}</span>
+                                <br><small>${member.email}</small>
+                            </div>
+                            <div>
+                                <button class="btn btn-info" onclick="viewMemberProfile('${member.email}')" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                ${currentUser.role === 'Administrator' ? `
+                                    <button class="btn btn-warning" onclick="editMemberRole('${member.email}')" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="removeMember('${member.email}')" style="padding: 5px 10px; font-size: 12px;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `;
+                        teamContainer.appendChild(memberDiv);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading team management:', error);
+            }
+        }
+
+        // Save personal information
+        function savePersonalInfo() {
+            try {
+                const updatedUser = {
+                    ...currentUser,
+                    name: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    jobTitle: document.getElementById('jobTitle').value,
+                    department: document.getElementById('department').value,
+                    bio: document.getElementById('bio').value
+                };
+
+                // Update user in CRM
+                const userIndex = crm.data.users.findIndex(u => u.email === currentUser.email);
+                if (userIndex !== -1) {
+                    crm.data.users[userIndex] = updatedUser;
+                    currentUser = updatedUser;
+                    crm.saveData();
+                    
+                    // Update localStorage
+                    localStorage.setItem('userName', updatedUser.name);
+                    localStorage.setItem('userEmail', updatedUser.email);
+                    
+                    // Update profile display
+                    document.getElementById('profileName').textContent = updatedUser.name;
+                    
+                    showNotification('Personal information saved successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Error saving personal info:', error);
+                showNotification('Error saving personal information', 'error');
+            }
+        }
+
+        // Change password
+        function changePassword() {
+            try {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showNotification('Please fill in all password fields', 'error');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showNotification('Password must be at least 6 characters long', 'error');
+                    return;
+                }
+
+                // In a real application, you would verify the current password
+                // For demo purposes, we'll just update it
+                localStorage.setItem('userPassword', newPassword);
+                
+                // Clear password fields
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+                showNotification('Password changed successfully', 'success');
+            } catch (error) {
+                console.error('Error changing password:', error);
+                showNotification('Error changing password', 'error');
+            }
+        }
+
+        // Upload photo
+        function uploadPhoto() {
+            document.getElementById('photoInput').click();
+        }
+
+        // Handle photo upload
+        function handlePhotoUpload(event) {
+            try {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const photoUrl = e.target.result;
+                        document.getElementById('profilePhoto').src = photoUrl;
+                        
+                        // Save photo URL to user profile
+                        currentUser.photoUrl = photoUrl;
+                        const userIndex = crm.data.users.findIndex(u => u.email === currentUser.email);
+                        if (userIndex !== -1) {
+                            crm.data.users[userIndex] = currentUser;
+                            crm.saveData();
+                        }
+                        
+                        showNotification('Profile photo updated successfully', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } catch (error) {
+                console.error('Error uploading photo:', error);
+                showNotification('Error uploading photo', 'error');
+            }
+        }
+
+        // Request role change
+        function requestRoleChange() {
+            try {
+                const requestedRole = document.getElementById('requestedRole').value;
+                if (!requestedRole) {
+                    showNotification('Please select a role', 'error');
+                    return;
+                }
+
+                // In a real application, this would send a request to an administrator
+                showNotification(`Role change request sent for ${requestedRole}`, 'info');
+                document.getElementById('requestedRole').value = '';
+            } catch (error) {
+                console.error('Error requesting role change:', error);
+                showNotification('Error requesting role change', 'error');
+            }
+        }
+
+        // Team management functions
+        function viewMemberProfile(email) {
+            alert(`Viewing profile for ${email}`);
+        }
+
+        function editMemberRole(email) {
+            const newRole = prompt('Enter new role (Administrator/Manager/Sales/User):');
+            if (newRole) {
+                try {
+                    const member = crm.data.users.find(u => u.email === email);
+                    if (member) {
+                        member.role = newRole;
+                        member.permissions = getDefaultPermissions(newRole);
+                        crm.saveData();
+                        loadTeamManagement();
+                        showNotification(`Role updated for ${member.name}`, 'success');
+                    }
+                } catch (error) {
+                    console.error('Error updating member role:', error);
+                    showNotification('Error updating member role', 'error');
+                }
+            }
+        }
+
+        function removeMember(email) {
+            if (confirm('Are you sure you want to remove this team member?')) {
+                try {
+                    crm.data.users = crm.data.users.filter(u => u.email !== email);
+                    crm.saveData();
+                    loadTeamManagement();
+                    showNotification('Team member removed successfully', 'success');
+                } catch (error) {
+                    console.error('Error removing team member:', error);
+                    showNotification('Error removing team member', 'error');
+                }
+            }
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+        });
+    </script>
+</body>
+</html> 

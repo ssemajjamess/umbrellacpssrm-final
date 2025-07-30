@@ -23,15 +23,47 @@ class UmbrellaCRM {
                         id: 1,
                         name: 'James Causey',
                         email: 'james@roofsbyumbrella.com',
-                        role: 'Owner',
-                        phone: '(864) 767-6188'
+                        role: 'Administrator',
+                        phone: '(864) 767-6188',
+                        jobTitle: 'Owner',
+                        department: 'Management',
+                        bio: 'Founder and CEO of Umbrella Claims & Property Solutions',
+                        photoUrl: '',
+                        permissions: {
+                            viewAllCustomers: true,
+                            editAllCustomers: true,
+                            deleteCustomers: true,
+                            manageUsers: true,
+                            manageSettings: true,
+                            viewReports: true,
+                            manageTeam: true,
+                            viewOwnData: true,
+                            editOwnData: true
+                        },
+                        createdAt: new Date().toISOString()
                     },
                     {
                         id: 2,
                         name: 'Daniel Pruiksma',
                         email: 'daniel@roofsbyumbrella.com',
-                        role: 'Sales',
-                        phone: '(864) 767-6188'
+                        role: 'Manager',
+                        phone: '(864) 767-6188',
+                        jobTitle: 'Sales Manager',
+                        department: 'Sales',
+                        bio: 'Experienced sales manager with focus on customer relationships',
+                        photoUrl: '',
+                        permissions: {
+                            viewAllCustomers: true,
+                            editAllCustomers: true,
+                            deleteCustomers: false,
+                            manageUsers: false,
+                            manageSettings: false,
+                            viewReports: true,
+                            manageTeam: true,
+                            viewOwnData: true,
+                            editOwnData: true
+                        },
+                        createdAt: new Date().toISOString()
                     }
                 ],
                 insuranceCompanies: [
@@ -937,6 +969,133 @@ class UmbrellaCRM {
     setCurrentUser(user) {
         this.data.currentUser = user;
         this.saveData();
+    }
+
+    // Get user by email
+    getUserByEmail(email) {
+        return this.data.users.find(user => user.email === email);
+    }
+
+    // Get user permissions
+    getUserPermissions(email) {
+        const user = this.getUserByEmail(email);
+        return user ? user.permissions : null;
+    }
+
+    // Check if user has permission
+    hasPermission(email, permission) {
+        const user = this.getUserByEmail(email);
+        return user && user.permissions && user.permissions[permission];
+    }
+
+    // Get customers based on user role
+    getCustomersForUser(email) {
+        const user = this.getUserByEmail(email);
+        if (!user) return [];
+
+        if (user.role === 'Administrator' || user.role === 'Manager') {
+            return this.data.leads;
+        } else {
+            // Sales reps only see their own customers
+            return this.data.leads.filter(lead => lead.soldBy === user.name);
+        }
+    }
+
+    // Get team members for manager
+    getTeamMembers(managerEmail) {
+        const manager = this.getUserByEmail(managerEmail);
+        if (!manager || manager.role !== 'Manager') return [];
+
+        return this.data.users.filter(user => user.role === 'Sales');
+    }
+
+    // Add new user
+    addUser(userData) {
+        const newUser = {
+            id: Date.now(),
+            name: userData.name,
+            email: userData.email,
+            role: userData.role || 'Sales',
+            phone: userData.phone || '',
+            jobTitle: userData.jobTitle || '',
+            department: userData.department || 'Sales',
+            bio: userData.bio || '',
+            photoUrl: userData.photoUrl || '',
+            permissions: this.getDefaultPermissions(userData.role || 'Sales'),
+            createdAt: new Date().toISOString()
+        };
+
+        this.data.users.push(newUser);
+        this.saveData();
+        return newUser;
+    }
+
+    // Update user
+    updateUser(email, userData) {
+        const userIndex = this.data.users.findIndex(u => u.email === email);
+        if (userIndex !== -1) {
+            this.data.users[userIndex] = { ...this.data.users[userIndex], ...userData };
+            this.saveData();
+            return this.data.users[userIndex];
+        }
+        return null;
+    }
+
+    // Remove user
+    removeUser(email) {
+        this.data.users = this.data.users.filter(u => u.email !== email);
+        this.saveData();
+    }
+
+    // Get default permissions for role
+    getDefaultPermissions(role) {
+        const permissions = {
+            'Administrator': {
+                viewAllCustomers: true,
+                editAllCustomers: true,
+                deleteCustomers: true,
+                manageUsers: true,
+                manageSettings: true,
+                viewReports: true,
+                manageTeam: true,
+                viewOwnData: true,
+                editOwnData: true
+            },
+            'Manager': {
+                viewAllCustomers: true,
+                editAllCustomers: true,
+                deleteCustomers: false,
+                manageUsers: false,
+                manageSettings: false,
+                viewReports: true,
+                manageTeam: true,
+                viewOwnData: true,
+                editOwnData: true
+            },
+            'Sales': {
+                viewAllCustomers: false,
+                editAllCustomers: false,
+                deleteCustomers: false,
+                manageUsers: false,
+                manageSettings: false,
+                viewReports: false,
+                manageTeam: false,
+                viewOwnData: true,
+                editOwnData: true
+            },
+            'User': {
+                viewAllCustomers: false,
+                editAllCustomers: false,
+                deleteCustomers: false,
+                manageUsers: false,
+                manageSettings: false,
+                viewReports: false,
+                manageTeam: false,
+                viewOwnData: true,
+                editOwnData: true
+            }
+        };
+        return permissions[role] || permissions['User'];
     }
 
     // Get all insurance companies

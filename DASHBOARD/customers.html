@@ -1864,6 +1864,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="PROFILE.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        My Profile
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out
@@ -2915,7 +2921,13 @@
                     crm.initializeData();
                 }
                 
-                let customers = crm.data.leads;
+                // Get current user email
+                const userEmail = localStorage.getItem('userEmail');
+                
+                // Get customers based on user role
+                let customers = crm.getCustomersForUser(userEmail);
+                console.log(`Loading ${customers.length} customers for user ${userEmail}`);
+                
                 const tbody = document.getElementById('customerTableBody');
                 const mobileContainer = document.getElementById('mobileCustomersContainer');
                 
