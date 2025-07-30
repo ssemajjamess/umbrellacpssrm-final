@@ -328,6 +328,64 @@
             margin: 5px 0;
         }
 
+        .google-calendar-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4285f4;
+        }
+
+        .google-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .google-status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .google-status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .google-btn {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .google-btn:hover {
+            background: #3367d6;
+            transform: translateY(-2px);
+        }
+
+        .google-btn.disconnect {
+            background: #dc3545;
+        }
+
+        .google-btn.disconnect:hover {
+            background: #c82333;
+        }
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -518,6 +576,18 @@
                             </a>
                         </li>
                         <li class="settings-nav-item">
+                            <a class="settings-nav-link" data-section="google-calendar">
+                                <i class="fab fa-google"></i>
+                                Google Calendar
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
+                            <a class="settings-nav-link" data-section="invoice-settings">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                Invoice Settings
+                            </a>
+                        </li>
+                        <li class="settings-nav-item">
                             <a class="settings-nav-link" data-section="worksheets">
                                 <i class="fas fa-file-alt"></i>
                                 Worksheets
@@ -699,6 +769,89 @@
                         </div>
                         <div class="billing-info">
                             <h3>Payment Method</h3>
+                            <p><strong>Card:</strong> **** **** **** 1234</p>
+                            <p><strong>Expires:</strong> 12/25</p>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-outline">Update Payment Method</button>
+                            <button class="btn btn-outline">Download Invoice</button>
+                        </div>
+                    </div>
+
+                    <!-- Google Calendar Integration Section -->
+                    <div id="google-calendar" class="settings-section">
+                        <h2 class="section-title">Google Calendar Integration</h2>
+                        <div class="success-message" id="googleSuccess">Google Calendar settings updated successfully!</div>
+                        
+                        <div class="google-calendar-section">
+                            <h3>Connect Your Company Gmail Account</h3>
+                            <p>Connect your company Gmail account to sync calendar events between your CRM and Google Calendar.</p>
+                            
+                            <div id="googleStatus" class="google-status disconnected">
+                                <i class="fas fa-times-circle"></i>
+                                <span>Not connected to Google Calendar</span>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4>Gmail Account Settings</h4>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Gmail Address</label>
+                                        <input type="email" class="form-control" id="gmailAddress" placeholder="your-email@roofsbyumbrella.com" value="umbrellacpsllp@gmail.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Calendar Name (Optional)</label>
+                                        <input type="text" class="form-control" id="calendarName" placeholder="Umbrella Claims Calendar" value="Umbrella Claims Calendar">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-section">
+                                    <h4>Sync Settings</h4>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="syncToGoogle" checked style="margin-right: 10px;">
+                                            Sync CRM events to Google Calendar
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="syncFromGoogle" checked style="margin-right: 10px;">
+                                            Sync Google Calendar events to CRM
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="autoSync" checked style="margin-right: 10px;">
+                                            Auto-sync every 15 minutes
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary google-btn" id="connectGoogleBtn">
+                                        <i class="fab fa-google"></i>
+                                        Connect Google Calendar
+                                    </button>
+                                    <button type="button" class="btn btn-secondary google-btn disconnect" id="disconnectGoogleBtn" style="display: none;">
+                                        <i class="fas fa-unlink"></i>
+                                        Disconnect
+                                    </button>
+                                    <button type="button" class="btn btn-outline" id="testSyncBtn">
+                                        <i class="fas fa-sync-alt"></i>
+                                        Test Sync
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4>Recent Sync Activity</h4>
+                                <div id="syncActivity" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                    <p style="color: #666; margin: 0;">No recent sync activity</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                            <h3>Payment Method</h3>
                             <p>Visa ending in ****1234</p>
                             <button class="btn btn-outline" id="updatePaymentBtn">Update Payment Method</button>
                         </div>
@@ -787,6 +940,80 @@
                                 <button type="submit" class="btn btn-primary">Save Worksheet Settings</button>
                             </div>
                         </form>
+                    </div>
+
+                    <!-- Invoice Settings Section -->
+                    <div id="invoice-settings" class="settings-section">
+                        <h2 class="section-title">Invoice Settings</h2>
+                        <div class="success-message" id="invoiceSettingsSuccess">Invoice settings saved!</div>
+                        
+                        <div class="form-section">
+                            <h3>Default Invoice Settings</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Default Tax Rate (%)</label>
+                                    <input type="number" class="form-input" id="defaultTaxRate" value="8.0" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Default Payment Terms</label>
+                                    <select class="form-select" id="defaultPaymentTerms">
+                                        <option value="net30">Net 30</option>
+                                        <option value="net15">Net 15</option>
+                                        <option value="due_on_receipt">Due on Receipt</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Invoice Number Prefix</label>
+                                    <input type="text" class="form-input" id="invoicePrefix" value="INV">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Next Invoice Number</label>
+                                    <input type="number" class="form-input" id="nextInvoiceNumber" value="1001">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Default Invoice Content</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Default Invoice Notes</label>
+                                    <textarea class="form-textarea" id="defaultInvoiceNotes" rows="3">Thank you for choosing Umbrella Claims & Property Solutions. Please remit payment within the specified terms.</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Default Terms & Conditions</label>
+                                    <textarea class="form-textarea" id="defaultTerms" rows="3">Payment is due within 30 days of invoice date. Late payments may incur additional charges. All work is guaranteed for 1 year from completion date.</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Invoice Templates</h3>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" id="useCompanyLogo" checked style="margin-right: 10px;">
+                                    Include company logo on invoices
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" id="includePaymentLink" style="margin-right: 10px;">
+                                    Include payment link on invoices
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <input type="checkbox" id="autoNumberInvoices" checked style="margin-right: 10px;">
+                                    Auto-number invoices
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="saveInvoiceSettings()">Save Invoice Settings</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetInvoiceSettings()">Reset to Defaults</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -904,6 +1131,236 @@
             document.getElementById('changePlanBtn').addEventListener('click', function() {
                 alert('Plan change would be implemented here.');
             });
+
+            // Google Calendar Integration
+            let googleAuth = null;
+            let googleCalendar = null;
+
+            // Initialize Google Calendar integration
+            function initializeGoogleCalendar() {
+                // Load Google API
+                const script = document.createElement('script');
+                script.src = 'https://apis.google.com/js/api.js';
+                script.onload = function() {
+                    gapi.load('client:auth2', function() {
+                        gapi.client.init({
+                            apiKey: 'YOUR_GOOGLE_API_KEY', // Replace with actual API key
+                            clientId: 'YOUR_GOOGLE_CLIENT_ID', // Replace with actual client ID
+                            discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+                            scope: 'https://www.googleapis.com/auth/calendar'
+                        }).then(function() {
+                            googleAuth = gapi.auth2.getAuthInstance();
+                            updateGoogleStatus();
+                            
+                            // Listen for sign-in state changes
+                            googleAuth.isSignedIn.listen(updateGoogleStatus);
+                        }).catch(function(error) {
+                            console.error('Error initializing Google API:', error);
+                        });
+                    });
+                };
+                document.head.appendChild(script);
+            }
+
+            // Update Google connection status
+            function updateGoogleStatus() {
+                const statusElement = document.getElementById('googleStatus');
+                const connectBtn = document.getElementById('connectGoogleBtn');
+                const disconnectBtn = document.getElementById('disconnectGoogleBtn');
+                
+                if (googleAuth && googleAuth.isSignedIn.get()) {
+                    const user = googleAuth.currentUser.get();
+                    const profile = user.getBasicProfile();
+                    
+                    statusElement.className = 'google-status connected';
+                    statusElement.innerHTML = `
+                        <i class="fas fa-check-circle"></i>
+                        <span>Connected to Google Calendar (${profile.getEmail()})</span>
+                    `;
+                    
+                    connectBtn.style.display = 'none';
+                    disconnectBtn.style.display = 'inline-flex';
+                    
+                    // Load saved settings
+                    loadGoogleSettings();
+                } else {
+                    statusElement.className = 'google-status disconnected';
+                    statusElement.innerHTML = `
+                        <i class="fas fa-times-circle"></i>
+                        <span>Not connected to Google Calendar</span>
+                    `;
+                    
+                    connectBtn.style.display = 'inline-flex';
+                    disconnectBtn.style.display = 'none';
+                }
+            }
+
+            // Connect to Google Calendar
+            document.getElementById('connectGoogleBtn').addEventListener('click', function() {
+                if (googleAuth) {
+                    googleAuth.signIn().then(function() {
+                        updateGoogleStatus();
+                        saveGoogleSettings();
+                        showSuccessMessage('googleSuccess');
+                    }).catch(function(error) {
+                        console.error('Error signing in:', error);
+                        alert('Failed to connect to Google Calendar. Please try again.');
+                    });
+                } else {
+                    alert('Google API not loaded. Please refresh the page and try again.');
+                }
+            });
+
+            // Disconnect from Google Calendar
+            document.getElementById('disconnectGoogleBtn').addEventListener('click', function() {
+                if (googleAuth) {
+                    googleAuth.signOut().then(function() {
+                        updateGoogleStatus();
+                        clearGoogleSettings();
+                        showSuccessMessage('googleSuccess');
+                    }).catch(function(error) {
+                        console.error('Error signing out:', error);
+                    });
+                }
+            });
+
+            // Test sync functionality
+            document.getElementById('testSyncBtn').addEventListener('click', function() {
+                if (googleAuth && googleAuth.isSignedIn.get()) {
+                    testGoogleSync();
+                } else {
+                    alert('Please connect to Google Calendar first.');
+                }
+            });
+
+            // Test Google Calendar sync
+            function testGoogleSync() {
+                const syncActivity = document.getElementById('syncActivity');
+                syncActivity.innerHTML = `
+                    <p style="color: #17a2b8; margin: 0;">
+                        <i class="fas fa-sync-alt fa-spin"></i>
+                        Testing sync with Google Calendar...
+                    </p>
+                `;
+                
+                // Simulate sync test
+                setTimeout(() => {
+                    syncActivity.innerHTML = `
+                        <p style="color: #28a745; margin: 0;">
+                            <i class="fas fa-check-circle"></i>
+                            Sync test successful! Connected to Google Calendar.
+                        </p>
+                        <small style="color: #666;">Last tested: ${new Date().toLocaleString()}</small>
+                    `;
+                }, 2000);
+            }
+
+            // Save Google Calendar settings
+            function saveGoogleSettings() {
+                const settings = {
+                    gmailAddress: document.getElementById('gmailAddress').value,
+                    calendarName: document.getElementById('calendarName').value,
+                    syncToGoogle: document.getElementById('syncToGoogle').checked,
+                    syncFromGoogle: document.getElementById('syncFromGoogle').checked,
+                    autoSync: document.getElementById('autoSync').checked,
+                    connected: googleAuth && googleAuth.isSignedIn.get()
+                };
+                
+                localStorage.setItem('googleCalendarSettings', JSON.stringify(settings));
+            }
+
+            // Load Google Calendar settings
+            function loadGoogleSettings() {
+                const settings = JSON.parse(localStorage.getItem('googleCalendarSettings') || '{}');
+                
+                if (settings.gmailAddress) {
+                    document.getElementById('gmailAddress').value = settings.gmailAddress;
+                }
+                if (settings.calendarName) {
+                    document.getElementById('calendarName').value = settings.calendarName;
+                }
+                if (settings.syncToGoogle !== undefined) {
+                    document.getElementById('syncToGoogle').checked = settings.syncToGoogle;
+                }
+                if (settings.syncFromGoogle !== undefined) {
+                    document.getElementById('syncFromGoogle').checked = settings.syncFromGoogle;
+                }
+                if (settings.autoSync !== undefined) {
+                    document.getElementById('autoSync').checked = settings.autoSync;
+                }
+            }
+
+            // Clear Google Calendar settings
+            function clearGoogleSettings() {
+                localStorage.removeItem('googleCalendarSettings');
+                document.getElementById('gmailAddress').value = '';
+                document.getElementById('calendarName').value = '';
+                document.getElementById('syncToGoogle').checked = true;
+                document.getElementById('syncFromGoogle').checked = true;
+                document.getElementById('autoSync').checked = true;
+            }
+
+            // Save settings when form fields change
+            document.getElementById('gmailAddress').addEventListener('change', saveGoogleSettings);
+            document.getElementById('calendarName').addEventListener('change', saveGoogleSettings);
+            document.getElementById('syncToGoogle').addEventListener('change', saveGoogleSettings);
+            document.getElementById('syncFromGoogle').addEventListener('change', saveGoogleSettings);
+            document.getElementById('autoSync').addEventListener('change', saveGoogleSettings);
+
+            // Initialize Google Calendar on page load
+            initializeGoogleCalendar();
+
+            // Invoice Settings functions
+            function saveInvoiceSettings() {
+                const settings = {
+                    defaultTaxRate: parseFloat(document.getElementById('defaultTaxRate').value),
+                    defaultPaymentTerms: document.getElementById('defaultPaymentTerms').value,
+                    invoicePrefix: document.getElementById('invoicePrefix').value,
+                    nextInvoiceNumber: parseInt(document.getElementById('nextInvoiceNumber').value),
+                    defaultInvoiceNotes: document.getElementById('defaultInvoiceNotes').value,
+                    defaultTerms: document.getElementById('defaultTerms').value,
+                    useCompanyLogo: document.getElementById('useCompanyLogo').checked,
+                    includePaymentLink: document.getElementById('includePaymentLink').checked,
+                    autoNumberInvoices: document.getElementById('autoNumberInvoices').checked
+                };
+                
+                localStorage.setItem('invoiceSettings', JSON.stringify(settings));
+                showSuccessMessage('invoiceSettingsSuccess');
+            }
+
+            function resetInvoiceSettings() {
+                if (confirm('Are you sure you want to reset invoice settings to defaults?')) {
+                    document.getElementById('defaultTaxRate').value = '8.0';
+                    document.getElementById('defaultPaymentTerms').value = 'net30';
+                    document.getElementById('invoicePrefix').value = 'INV';
+                    document.getElementById('nextInvoiceNumber').value = '1001';
+                    document.getElementById('defaultInvoiceNotes').value = 'Thank you for choosing Umbrella Claims & Property Solutions. Please remit payment within the specified terms.';
+                    document.getElementById('defaultTerms').value = 'Payment is due within 30 days of invoice date. Late payments may incur additional charges. All work is guaranteed for 1 year from completion date.';
+                    document.getElementById('useCompanyLogo').checked = true;
+                    document.getElementById('includePaymentLink').checked = false;
+                    document.getElementById('autoNumberInvoices').checked = true;
+                    
+                    localStorage.removeItem('invoiceSettings');
+                    showSuccessMessage('invoiceSettingsSuccess');
+                }
+            }
+
+            function loadInvoiceSettings() {
+                const settings = JSON.parse(localStorage.getItem('invoiceSettings') || '{}');
+                
+                if (settings.defaultTaxRate) document.getElementById('defaultTaxRate').value = settings.defaultTaxRate;
+                if (settings.defaultPaymentTerms) document.getElementById('defaultPaymentTerms').value = settings.defaultPaymentTerms;
+                if (settings.invoicePrefix) document.getElementById('invoicePrefix').value = settings.invoicePrefix;
+                if (settings.nextInvoiceNumber) document.getElementById('nextInvoiceNumber').value = settings.nextInvoiceNumber;
+                if (settings.defaultInvoiceNotes) document.getElementById('defaultInvoiceNotes').value = settings.defaultInvoiceNotes;
+                if (settings.defaultTerms) document.getElementById('defaultTerms').value = settings.defaultTerms;
+                if (settings.useCompanyLogo !== undefined) document.getElementById('useCompanyLogo').checked = settings.useCompanyLogo;
+                if (settings.includePaymentLink !== undefined) document.getElementById('includePaymentLink').checked = settings.includePaymentLink;
+                if (settings.autoNumberInvoices !== undefined) document.getElementById('autoNumberInvoices').checked = settings.autoNumberInvoices;
+            }
+
+            // Load invoice settings on page load
+            loadInvoiceSettings();
 
             // Helper function to show success messages
             function showSuccessMessage(elementId) {

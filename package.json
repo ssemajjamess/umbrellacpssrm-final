@@ -6,12 +6,20 @@
   "scripts": {
     "start": "npx serve .",
     "build": "echo 'Static site - no build required'",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "deploy:force": "vercel --prod --force",
+    "dev": "npx serve .",
+    "vercel:dev": "vercel dev",
+    "vercel:ls": "vercel ls",
+    "vercel:logs": "vercel logs"
   },
   "keywords": ["crm", "umbrella", "claims", "property", "management"],
   "author": "Umbrella Claims & Property Solutions",
   "license": "MIT",
   "devDependencies": {
     "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 } 

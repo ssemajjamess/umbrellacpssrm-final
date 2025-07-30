@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claims Management - Umbrella Claims & Property Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .company-logo {
+            max-width: 120px;
+            height: auto;
+        }
+
+        .company-name {
+            font-size: 0.9rem;
+            color: #1e3c72;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .user-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            margin: 0;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #1e3c72;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-info {
+            color: white;
+        }
+
+        .claims-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .claims-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .claims-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .claims-table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            background: #1e3c72;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .claims-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .claims-table th,
+        .claims-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .claims-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .claims-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-lead { background: #e3f2fd; color: #1976d2; }
+        .status-waiting-adjustment { background: #fff3e0; color: #f57c00; }
+        .status-waiting-ins-scope { background: #f3e5f5; color: #7b1fa2; }
+        .status-ready-to-install { background: #e8f5e8; color: #388e3c; }
+        .status-invoiced-wpayment { background: #fff8e1; color: #fbc02d; }
+        .status-closed-w-new-roof { background: #e8f5e8; color: #388e3c; }
+        .status-closed-dead-denied { background: #ffebee; color: #d32f2f; }
+        .status-waiting-fee { background: #fff3e0; color: #f57c00; }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.call { background: #28a745; color: white; }
+        .action-btn.map { background: #17a2b8; color: white; }
+        .action-btn.view { background: #6f42c1; color: white; }
+        .action-btn.edit { background: #ffc107; color: white; }
+        .action-btn.documents { background: #fd7e14; color: white; }
+        .action-btn.photos { background: #e83e8c; color: white; }
+        .action-btn.costs { background: #20c997; color: white; }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .claims-table {
+                overflow-x: auto;
+            }
+
+            .claims-table table {
+                font-size: 0.8rem;
+            }
+
+            .claims-table th,
+            .claims-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CLAIMS MANAGEMENT.html" class="nav-link active">
+                        <i class="fas fa-file-contract"></i>
+                        Claims Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Claims Management</h1>
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div id="userDisplayName">User</div>
+                        <div id="userEmail">user@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="claims-header">
+                <h2 class="claims-title">Insurance Claims</h2>
+                <p class="claims-subtitle">Manage all insurance claims with claim numbers</p>
+                
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label class="filter-label">Search Claims</label>
+                        <input type="text" class="filter-input" id="searchInput" placeholder="Search by customer name, claim number...">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Insurance Company</label>
+                        <select class="filter-input" id="insuranceFilter">
+                            <option value="">All Insurance</option>
+                            <option value="ALLSTATE">ALLSTATE</option>
+                            <option value="AMERICAN FAMILY">AMERICAN FAMILY</option>
+                            <option value="FARM BUREAU">FARM BUREAU</option>
+                            <option value="FARMERS">FARMERS</option>
+                            <option value="FOREMOST">FOREMOST</option>
+                            <option value="GEICO">GEICO</option>
+                            <option value="HARTFORD">HARTFORD</option>
+                            <option value="HOMEFIRST AGENCY">HOMEFIRST AGENCY</option>
+                            <option value="HORACE MANN">HORACE MANN</option>
+                            <option value="THE GENERAL">THE GENERAL</option>
+                            <option value="KEMPER">KEMPER</option>
+                            <option value="NATIONWIDE">NATIONWIDE</option>
+                            <option value="PROGRESSIVE">PROGRESSIVE</option>
+                            <option value="SAGESURE">SAGESURE</option>
+                            <option value="STATEFARM">STATEFARM</option>
+                            <option value="SAFECO">SAFECO</option>
+                            <option value="TRAVELERS">TRAVELERS</option>
+                            <option value="UNIVERSAL CASUALTY">UNIVERSAL CASUALTY</option>
+                            <option value="USAA">USAA</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Claim Status</label>
+                        <select class="filter-input" id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="LEAD">LEAD</option>
+                            <option value="WAITING ADJUSTMENT">WAITING ADJUSTMENT</option>
+                            <option value="WAITING INS SCOPE">WAITING INS SCOPE</option>
+                            <option value="READY TO INSTALL">READY TO INSTALL</option>
+                            <option value="INVOICED WPAYMENT">INVOICED WPAYMENT</option>
+                            <option value="CLOSED-W NEW ROOF">CLOSED-W NEW ROOF</option>
+                            <option value="CLOSED-DEAD DENIED">CLOSED-DEAD DENIED</option>
+                            <option value="WAITING FEE">WAITING FEE</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="claims-table">
+                <div class="table-header">
+                    <h3 class="table-title">Claims with Claim Numbers</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-primary" onclick="exportClaims()">
+                            <i class="fas fa-download"></i> Export Claims
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Claim Number</th>
+                            <th>Insurance Company</th>
+                            <th>Status</th>
+                            <th>Adjuster Info</th>
+                            <th>Job Cost</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="claimsTableBody">
+                        <!-- Claims data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Initialize page
+        function initializePage() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            const userRole = localStorage.getItem('userRole') || 'Owner';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userInfo').textContent = currentUser.name;
+
+            // Initialize mobile menu
+            initializeMobileMenu();
+
+            // Load claims
+            loadClaims();
+        }
+
+        // Mobile menu functionality
+        function initializeMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Load and display claims
+        function loadClaims() {
+            try {
+                // Get only customers with claim numbers
+                const claims = crm.data.leads.filter(customer => 
+                    customer.claimNumber && customer.claimNumber.trim() !== ''
+                );
+                
+                const tbody = document.getElementById('claimsTableBody');
+                if (!tbody) {
+                    console.error('Claims table body not found');
+                    return;
+                }
+                
+                tbody.innerHTML = '';
+
+                claims.forEach(claim => {
+                    const row = document.createElement('tr');
+                    const stageClass = claim.stage ? claim.stage.toLowerCase().replace(/\s+/g, '-') : 'lead';
+                    
+                    row.innerHTML = `
+                        <td>${claim.customerName || 'N/A'}</td>
+                        <td><strong>${claim.claimNumber}</strong></td>
+                        <td>${claim.insuranceCompany || 'N/A'}</td>
+                        <td>
+                            <span class="status-badge status-${stageClass}">
+                                ${claim.stage || 'LEAD'}
+                            </span>
+                        </td>
+                        <td>${claim.adjusterInfo || 'N/A'}</td>
+                        <td>$${(claim.jobCost || 0).toLocaleString()}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn call" onclick="callCustomer('${claim.phone}')" title="Call Customer">
+                                    <i class="fas fa-phone"></i>
+                                </button>
+                                <button class="action-btn map" onclick="getDirections('${claim.address}')" title="Get Directions">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </button>
+                                <button class="action-btn view" onclick="viewCustomerDetails(${claim.id})" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn edit" onclick="editCustomer(${claim.id})" title="Edit Claim">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn documents" onclick="manageDocuments(${claim.id})" title="Documents">
+                                    <i class="fas fa-file"></i>
+                                </button>
+                                <button class="action-btn photos" onclick="takePhoto(${claim.id})" title="Photos">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                                <button class="action-btn costs" onclick="updateCosts(${claim.id})" title="Update Costs">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                console.log(`Loaded ${claims.length} claims`);
+            } catch (error) {
+                console.error('Error loading claims:', error);
+            }
+        }
+
+        // Filter claims
+        function filterClaims() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const insuranceFilter = document.getElementById('insuranceFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const claims = crm.data.leads.filter(customer => {
+                if (!customer.claimNumber || customer.claimNumber.trim() === '') return false;
+                
+                const matchesSearch = !searchTerm || 
+                    customer.customerName?.toLowerCase().includes(searchTerm) ||
+                    customer.claimNumber?.toLowerCase().includes(searchTerm);
+                
+                const matchesInsurance = !insuranceFilter || customer.insuranceCompany === insuranceFilter;
+                const matchesStatus = !statusFilter || customer.stage === statusFilter;
+
+                return matchesSearch && matchesInsurance && matchesStatus;
+            });
+
+            displayFilteredClaims(claims);
+        }
+
+        // Display filtered claims
+        function displayFilteredClaims(claims) {
+            const tbody = document.getElementById('claimsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+
+            claims.forEach(claim => {
+                const row = document.createElement('tr');
+                const stageClass = claim.stage ? claim.stage.toLowerCase().replace(/\s+/g, '-') : 'lead';
+                
+                row.innerHTML = `
+                    <td>${claim.customerName || 'N/A'}</td>
+                    <td><strong>${claim.claimNumber}</strong></td>
+                    <td>${claim.insuranceCompany || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${stageClass}">
+                            ${claim.stage || 'LEAD'}
+                        </span>
+                    </td>
+                    <td>${claim.adjusterInfo || 'N/A'}</td>
+                    <td>$${(claim.jobCost || 0).toLocaleString()}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn call" onclick="callCustomer('${claim.phone}')" title="Call Customer">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="action-btn map" onclick="getDirections('${claim.address}')" title="Get Directions">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </button>
+                            <button class="action-btn view" onclick="viewCustomerDetails(${claim.id})" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit" onclick="editCustomer(${claim.id})" title="Edit Claim">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn documents" onclick="manageDocuments(${claim.id})" title="Documents">
+                                <i class="fas fa-file"></i>
+                            </button>
+                            <button class="action-btn photos" onclick="takePhoto(${claim.id})" title="Photos">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <button class="action-btn costs" onclick="updateCosts(${claim.id})" title="Update Costs">
+                                <i class="fas fa-dollar-sign"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Export claims
+        function exportClaims() {
+            try {
+                const claims = crm.data.leads.filter(customer => 
+                    customer.claimNumber && customer.claimNumber.trim() !== ''
+                );
+                
+                const csvContent = [
+                    ['Customer Name', 'Claim Number', 'Insurance Company', 'Status', 'Adjuster Info', 'Job Cost', 'Phone', 'Address'],
+                    ...claims.map(c => [
+                        c.customerName,
+                        c.claimNumber,
+                        c.insuranceCompany || '',
+                        c.stage,
+                        c.adjusterInfo || '',
+                        c.jobCost || 0,
+                        c.phone,
+                        c.address
+                    ])
+                ].map(row => row.join(',')).join('\n');
+
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `umbrella_claims_${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                crm.showNotification('Claims exported successfully!', 'success');
+            } catch (error) {
+                console.error('Error exporting claims:', error);
+                crm.showNotification('Error exporting claims. Please try again.', 'error');
+            }
+        }
+
+        // Action functions (imported from customers.html)
+        function callCustomer(phoneNumber) {
+            try {
+                if (!phoneNumber || phoneNumber === 'N/A') {
+                    crm.showNotification('No phone number available for this customer.', 'error');
+                    return;
+                }
+
+                let cleanNumber = phoneNumber.replace(/[^\d+]/g, '');
+                if (cleanNumber.length === 10) {
+                    cleanNumber = '+1' + cleanNumber;
+                }
+
+                window.location.href = `tel:${cleanNumber}`;
+                crm.showNotification('Initiating call...', 'success');
+            } catch (error) {
+                console.error('Error calling customer:', error);
+                crm.showNotification('Error making call. Please try again.', 'error');
+            }
+        }
+
+        function getDirections(address) {
+            try {
+                if (!address || address === 'N/A') {
+                    crm.showNotification('No address available for this customer.', 'error');
+                    return;
+                }
+
+                const cleanAddress = encodeURIComponent(address.trim());
+                window.open(`https://maps.google.com/maps?q=${cleanAddress}`, '_blank');
+                crm.showNotification('Opening directions...', 'success');
+            } catch (error) {
+                console.error('Error getting directions:', error);
+                crm.showNotification('Error getting directions. Please try again.', 'error');
+            }
+        }
+
+        function viewCustomerDetails(customerId) {
+            try {
+                const customer = crm.data.leads.find(c => c.id === customerId);
+                if (!customer) {
+                    crm.showNotification('Customer not found.', 'error');
+                    return;
+                }
+
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 800px;">
+                        <div class="modal-header">
+                            <h3>Claim Details - ${customer.customerName}</h3>
+                            <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div>
+                                    <h4>Claim Information</h4>
+                                    <p><strong>Claim Number:</strong> ${customer.claimNumber}</p>
+                                    <p><strong>Insurance Company:</strong> ${customer.insuranceCompany || 'N/A'}</p>
+                                    <p><strong>Adjuster Info:</strong> ${customer.adjusterInfo || 'N/A'}</p>
+                                    <p><strong>Status:</strong> ${customer.stage}</p>
+                                </div>
+                                <div>
+                                    <h4>Customer Information</h4>
+                                    <p><strong>Name:</strong> ${customer.customerName}</p>
+                                    <p><strong>Phone:</strong> ${customer.phone}</p>
+                                    <p><strong>Email:</strong> ${customer.email || 'N/A'}</p>
+                                    <p><strong>Address:</strong> ${customer.address}</p>
+                                </div>
+                                <div>
+                                    <h4>Financial Information</h4>
+                                    <p><strong>Job Cost:</strong> $${(customer.jobCost || 0).toLocaleString()}</p>
+                                    <p><strong>Labor Cost:</strong> $${(customer.laborCost || 0).toLocaleString()}</p>
+                                    <p><strong>Material Cost:</strong> $${(customer.materialCost || 0).toLocaleString()}</p>
+                                    <p><strong>Profit:</strong> $${(customer.profit || 0).toLocaleString()}</p>
+                                </div>
+                                <div>
+                                    <h4>Additional Information</h4>
+                                    <p><strong>Roof Type:</strong> ${customer.roofType || 'N/A'}</p>
+                                    <p><strong>Replacement Type:</strong> ${customer.replacementType || 'N/A'}</p>
+                                    <p><strong>Notes:</strong> ${customer.notes || 'N/A'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.style.display = 'block';
+            } catch (error) {
+                console.error('Error viewing customer details:', error);
+                crm.showNotification('Error viewing customer details. Please try again.', 'error');
+            }
+        }
+
+        function editCustomer(customerId) {
+            window.location.href = `customers.html?edit=${customerId}`;
+        }
+
+        function manageDocuments(customerId) {
+            window.location.href = `customers.html?documents=${customerId}`;
+        }
+
+        function takePhoto(customerId) {
+            window.location.href = `customers.html?photos=${customerId}`;
+        }
+
+        function updateCosts(customerId) {
+            window.location.href = `customers.html?costs=${customerId}`;
+        }
+
+        // Add event listeners
+        document.getElementById('searchInput').addEventListener('input', filterClaims);
+        document.getElementById('insuranceFilter').addEventListener('change', filterClaims);
+        document.getElementById('statusFilter').addEventListener('change', filterClaims);
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userRole');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Initialize page
+        initializePage();
+    </script>
+</body>
+</html> 

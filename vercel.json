@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "*.html",
-      "use": "@vercel/static"
-    },
-    {
       "src": "**/*",
       "use": "@vercel/static"
     }
@@ -14,18 +10,6 @@
     {
       "src": "/",
       "dest": "/index.html"
-    },
-    {
-      "src": "/DASHBOARD/(.*)",
-      "dest": "/DASHBOARD/$1"
-    },
-    {
-      "src": "/ACCOUNT SETTINGS/(.*)",
-      "dest": "/ACCOUNT SETTINGS/$1"
-    },
-    {
-      "src": "/LOGOS/(.*)",
-      "dest": "/LOGOS/$1"
     },
     {
       "src": "/(.*)",

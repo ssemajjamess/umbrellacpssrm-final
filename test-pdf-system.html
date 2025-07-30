@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF System Test - Umbrella CRM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .info { color: #17a2b8; }
+        button {
+            background: #1e3c72;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2a5298;
+        }
+        .log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PDF Processing System Test</h1>
+        
+        <div class="test-section">
+            <h3>System Components Test</h3>
+            <button onclick="testCRM()">Test CRM System</button>
+            <button onclick="testPDFProcessor()">Test PDF Processor</button>
+            <button onclick="testPDFJS()">Test PDF.js Library</button>
+            <button onclick="testModal()">Test Modal System</button>
+            <div id="testResults" class="log"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>PDF Upload Test</h3>
+            <input type="file" id="testPdfFile" accept=".pdf" style="display: none;">
+            <button onclick="document.getElementById('testPdfFile').click()">Select Test PDF</button>
+            <button onclick="testPDFUpload()" id="testUploadBtn" style="display: none;">Test PDF Upload</button>
+            <div id="uploadResults" class="log"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Customer Management Test</h3>
+            <button onclick="testCustomerCreation()">Test Customer Creation</button>
+            <button onclick="testDataValidation()">Test Data Validation</button>
+            <div id="customerResults" class="log"></div>
+        </div>
+    </div>
+
+    <script src="DASHBOARD/crm-data.js"></script>
+    <script src="API/pdf-processor.js"></script>
+    <script>
+        let crm = null;
+        let pdfProcessor = null;
+        let testFile = null;
+
+        // Initialize test environment
+        function initializeTest() {
+            try {
+                crm = new UmbrellaCRM();
+                pdfProcessor = new PDFProcessor(crm);
+                log('Test environment initialized successfully', 'success');
+            } catch (error) {
+                log('Error initializing test environment: ' + error.message, 'error');
+            }
+        }
+
+        // Log function for test results
+        function log(message, type = 'info') {
+            const results = document.getElementById('testResults');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}\n`;
+            results.textContent += logEntry;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        // Test CRM system
+        function testCRM() {
+            try {
+                log('Testing CRM system...', 'info');
+                
+                if (!crm) {
+                    log('CRM not initialized', 'error');
+                    return;
+                }
+                
+                // Test basic CRM functions
+                const stats = crm.getDashboardStats();
+                log('CRM stats: ' + JSON.stringify(stats), 'success');
+                
+                const companies = crm.getInsuranceCompanies();
+                log('Insurance companies loaded: ' + companies.length, 'success');
+                
+                const stages = crm.getStages();
+                log('Stages loaded: ' + stages.length, 'success');
+                
+                log('CRM system test completed successfully', 'success');
+            } catch (error) {
+                log('CRM test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Test PDF processor
+        function testPDFProcessor() {
+            try {
+                log('Testing PDF processor...', 'info');
+                
+                if (!pdfProcessor) {
+                    log('PDF processor not initialized', 'error');
+                    return;
+                }
+                
+                log('PDF processor initialized successfully', 'success');
+                
+                // Test pattern matching
+                const testText = "Customer: John Doe\nPhone: (555) 123-4567\nInsurance: STATEFARM";
+                const extracted = pdfProcessor.extractCustomerInfo(testText);
+                log('Pattern matching test: ' + JSON.stringify(extracted), 'success');
+                
+                log('PDF processor test completed successfully', 'success');
+            } catch (error) {
+                log('PDF processor test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Test PDF.js library
+        function testPDFJS() {
+            try {
+                log('Testing PDF.js library...', 'info');
+                
+                if (typeof window.pdfjsLib !== 'undefined') {
+                    log('PDF.js library loaded successfully', 'success');
+                } else {
+                    log('PDF.js library not loaded yet', 'warning');
+                }
+                
+                log('PDF.js test completed', 'info');
+            } catch (error) {
+                log('PDF.js test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Test modal system
+        function testModal() {
+            try {
+                log('Testing modal system...', 'info');
+                
+                // Check if modal elements exist
+                const modal = document.getElementById('pdfUploadModal');
+                if (modal) {
+                    log('Modal element found', 'success');
+                } else {
+                    log('Modal element not found (expected in customers.html)', 'warning');
+                }
+                
+                log('Modal system test completed', 'info');
+            } catch (error) {
+                log('Modal test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Test PDF upload
+        function testPDFUpload() {
+            try {
+                log('Testing PDF upload...', 'info');
+                
+                if (!testFile) {
+                    log('No test file selected', 'error');
+                    return;
+                }
+                
+                if (!pdfProcessor) {
+                    log('PDF processor not available', 'error');
+                    return;
+                }
+                
+                log('Processing test PDF: ' + testFile.name, 'info');
+                
+                // Test extraction only
+                pdfProcessor.extractCustomerInfoFromFile(testFile).then(result => {
+                    if (result.success) {
+                        log('PDF extraction successful: ' + JSON.stringify(result.customerInfo), 'success');
+                    } else {
+                        log('PDF extraction failed: ' + result.error, 'error');
+                    }
+                }).catch(error => {
+                    log('PDF upload test failed: ' + error.message, 'error');
+                });
+                
+            } catch (error) {
+                log('PDF upload test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Test customer creation
+        function testCustomerCreation() {
+            try {
+                log('Testing customer creation...', 'info');
+                
+                if (!crm) {
+                    log('CRM not available', 'error');
+                    return;
+                }
+                
+                const testCustomer = {
+                    customerName: 'Test Customer',
+                    phone: '(555) 123-4567',
+                    email: 'test@example.com',
+                    address: '123 Test St, Test City, SC 29611',
+                    insuranceCompany: 'STATEFARM',
+                    stage: 'LEAD'
+                };
+                
+                const newCustomer = crm.addLead(testCustomer);
+                log('Customer created successfully: ' + newCustomer.customerName, 'success');
+                
+                // Clean up test customer
+                const index = crm.data.leads.findIndex(c => c.id === newCustomer.id);
+                if (index > -1) {
+                    crm.data.leads.splice(index, 1);
+                    crm.saveData();
+                    log('Test customer cleaned up', 'info');
+                }
+                
+            } catch (error) {
+                log('Customer creation test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Test data validation
+        function testDataValidation() {
+            try {
+                log('Testing data validation...', 'info');
+                
+                if (!crm) {
+                    log('CRM not available', 'error');
+                    return;
+                }
+                
+                // Test email validation
+                const validEmail = crm.isValidEmail('test@example.com');
+                const invalidEmail = crm.isValidEmail('invalid-email');
+                log('Email validation - Valid: ' + validEmail + ', Invalid: ' + invalidEmail, 'info');
+                
+                // Test phone validation
+                const validPhone = crm.isValidPhone('(555) 123-4567');
+                const invalidPhone = crm.isValidPhone('invalid-phone');
+                log('Phone validation - Valid: ' + validPhone + ', Invalid: ' + invalidPhone, 'info');
+                
+                log('Data validation test completed', 'success');
+                
+            } catch (error) {
+                log('Data validation test failed: ' + error.message, 'error');
+            }
+        }
+
+        // Handle file selection for testing
+        document.getElementById('testPdfFile').addEventListener('change', function(e) {
+            testFile = e.target.files[0];
+            if (testFile) {
+                log('Test file selected: ' + testFile.name, 'success');
+                document.getElementById('testUploadBtn').style.display = 'inline-block';
+            }
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTest();
+        });
+    </script>
+</body>
+</html> 

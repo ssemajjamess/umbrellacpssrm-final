@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - Umbrella Claims & Property Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .company-logo {
+            max-width: 120px;
+            height: auto;
+        }
+
+        .company-name {
+            font-size: 0.9rem;
+            color: #1e3c72;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .user-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            margin: 0;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #1e3c72;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-info {
+            color: white;
+        }
+
+        .calendar-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .calendar-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .calendar-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .calendar-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+        }
+
+        .calendar-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .calendar-nav-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #1e3c72;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .calendar-view-btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-view-btn:hover {
+            background: #2a5298;
+        }
+
+        .calendar-view-btn.active {
+            background: #28a745;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background: #1e3c72;
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            background: white;
+            min-height: 120px;
+            padding: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: #f8f9fa;
+        }
+
+        .calendar-day.today {
+            background: #e3f2fd;
+            border: 2px solid #1e3c72;
+        }
+
+        .calendar-day.other-month {
+            background: #f8f9fa;
+            color: #999;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .calendar-event {
+            background: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            margin-bottom: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .calendar-event:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .calendar-event.appointment {
+            background: #17a2b8;
+        }
+
+        .calendar-event.inspection {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .calendar-event.installation {
+            background: #dc3545;
+        }
+
+        .calendar-event.follow-up {
+            background: #6f42c1;
+        }
+
+        .event-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .quick-add-event {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .quick-add-event:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .calendar-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .calendar-toolbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .calendar-nav {
+                justify-content: center;
+            }
+
+            .calendar-day {
+                min-height: 80px;
+                font-size: 0.8rem;
+            }
+
+            .calendar-event {
+                font-size: 0.6rem;
+                padding: 1px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CLAIMS MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-file-contract"></i>
+                        Claims Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="DOCUMENT MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-folder-open"></i>
+                        Documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CALENDAR.html" class="nav-link active">
+                        <i class="fas fa-calendar-alt"></i>
+                        Calendar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="INVOICE MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Invoices
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="API INTEGRATION.html" class="nav-link">
+                        <i class="fas fa-plug"></i>
+                        API Integration
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Calendar</h1>
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div id="userDisplayName">User</div>
+                        <div id="userEmail">user@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calendar-header">
+                <h2 class="calendar-title">Schedule Management</h2>
+                <p class="calendar-subtitle">Manage appointments, inspections, installations, and customer follow-ups</p>
+                
+                <div class="calendar-controls">
+                    <button class="btn btn-primary" onclick="openEventModal()">
+                        <i class="fas fa-plus"></i>
+                        Add Event
+                    </button>
+                                    <button class="btn btn-secondary" onclick="syncWithGoogle()">
+                    <i class="fas fa-sync-alt"></i>
+                    Sync with Google
+                </button>
+                <button class="btn btn-info" onclick="window.location.href='../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html#google-calendar'">
+                    <i class="fas fa-cog"></i>
+                    Calendar Settings
+                </button>
+                    <button class="btn btn-info" onclick="exportCalendar()">
+                        <i class="fas fa-download"></i>
+                        Export Calendar
+                    </button>
+                    <div id="googleSignIn"></div>
+                </div>
+            </div>
+
+            <div class="calendar-container">
+                <div class="calendar-toolbar">
+                    <div class="calendar-nav">
+                        <button class="calendar-nav-btn" onclick="previousMonth()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h3 id="currentMonth">January 2024</h3>
+                        <button class="calendar-nav-btn" onclick="nextMonth()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button class="calendar-view-btn" onclick="setView('month')">Month</button>
+                        <button class="calendar-view-btn" onclick="setView('week')">Week</button>
+                        <button class="calendar-view-btn" onclick="setView('day')">Day</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Add Event Button -->
+    <button class="quick-add-event" onclick="openQuickEventModal()" title="Quick Add Event">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Event Modal -->
+    <div id="eventModal" class="event-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="eventModalTitle">Add New Event</h3>
+                <span class="close" onclick="closeEventModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label class="form-label">Event Title</label>
+                        <input type="text" class="form-input" id="eventTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Event Type</label>
+                        <select class="form-select" id="eventType" required>
+                            <option value="">Select type...</option>
+                            <option value="appointment">Appointment</option>
+                            <option value="inspection">Inspection</option>
+                            <option value="installation">Installation</option>
+                            <option value="follow-up">Follow-up</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Customer (optional)</label>
+                        <select class="form-select" id="eventCustomer">
+                            <option value="">Select customer...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="eventDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Start Time</label>
+                        <input type="time" class="form-input" id="eventStartTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">End Time</label>
+                        <input type="time" class="form-input" id="eventEndTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" id="eventLocation" placeholder="Enter location or address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="eventDescription" placeholder="Enter event description..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Reminder</label>
+                        <select class="form-select" id="eventReminder">
+                            <option value="none">No reminder</option>
+                            <option value="15">15 minutes before</option>
+                            <option value="30">30 minutes before</option>
+                            <option value="60">1 hour before</option>
+                            <option value="1440">1 day before</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeEventModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Calendar state
+        let currentDate = new Date();
+        let currentView = 'month';
+        let events = [];
+        let googleCalendar = null;
+
+        // Initialize page
+        function initializePage() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            const userRole = localStorage.getItem('userRole') || 'Owner';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userInfo').textContent = currentUser.name;
+
+            // Initialize mobile menu
+            initializeMobileMenu();
+
+            // Load events and render calendar
+            loadEvents();
+            renderCalendar();
+
+            // Initialize Google Calendar
+            initializeGoogleCalendar();
+        }
+
+        // Mobile menu functionality
+        function initializeMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Load events from CRM
+        function loadEvents() {
+            events = crm.getCalendarEvents() || [];
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const monthYear = document.getElementById('currentMonth');
+            
+            if (currentView === 'month') {
+                renderMonthView(grid, monthYear);
+            } else if (currentView === 'week') {
+                renderWeekView(grid, monthYear);
+            } else {
+                renderDayView(grid, monthYear);
+            }
+        }
+
+        // Render month view
+        function renderMonthView(grid, monthYear) {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            monthYear.textContent = new Date(year, month).toLocaleDateString('en-US', { 
+                month: 'long', 
+                year: 'numeric' 
+            });
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            grid.innerHTML = '';
+
+            // Add day headers
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            days.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+
+            // Add calendar days
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                if (date.getMonth() !== month) {
+                    dayElement.classList.add('other-month');
+                }
+                
+                if (isToday(date)) {
+                    dayElement.classList.add('today');
+                }
+
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = date.getDate();
+                dayElement.appendChild(dayNumber);
+
+                // Add events for this day
+                const dayEvents = getEventsForDate(date);
+                dayEvents.forEach(event => {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `calendar-event ${event.type}`;
+                    eventElement.textContent = event.title;
+                    eventElement.onclick = () => viewEvent(event.id);
+                    dayElement.appendChild(eventElement);
+                });
+
+                dayElement.onclick = () => selectDate(date);
+                grid.appendChild(dayElement);
+            }
+        }
+
+        // Render week view
+        function renderWeekView(grid, monthYear) {
+            const weekStart = getWeekStart(currentDate);
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+
+            monthYear.textContent = `${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()}`;
+
+            grid.innerHTML = '';
+
+            // Add day headers
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            days.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+
+            // Add week days
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(weekStart);
+                date.setDate(weekStart.getDate() + i);
+
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                if (isToday(date)) {
+                    dayElement.classList.add('today');
+                }
+
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = `${date.toLocaleDateString('en-US', { weekday: 'short' })} ${date.getDate()}`;
+                dayElement.appendChild(dayNumber);
+
+                // Add events for this day
+                const dayEvents = getEventsForDate(date);
+                dayEvents.forEach(event => {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `calendar-event ${event.type}`;
+                    eventElement.textContent = event.title;
+                    eventElement.onclick = () => viewEvent(event.id);
+                    dayElement.appendChild(eventElement);
+                });
+
+                dayElement.onclick = () => selectDate(date);
+                grid.appendChild(dayElement);
+            }
+        }
+
+        // Render day view
+        function renderDayView(grid, monthYear) {
+            monthYear.textContent = currentDate.toLocaleDateString('en-US', { 
+                weekday: 'long',
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            grid.innerHTML = '';
+
+            // Add time slots
+            for (let hour = 0; hour < 24; hour++) {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'calendar-day';
+                timeSlot.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    padding: 10px;
+                    border-bottom: 1px solid #eee;
+                    min-height: 60px;
+                `;
+
+                const timeLabel = document.createElement('div');
+                timeLabel.style.cssText = `
+                    width: 80px;
+                    font-weight: bold;
+                    color: #666;
+                `;
+                timeLabel.textContent = `${hour.toString().padStart(2, '0')}:00`;
+                timeSlot.appendChild(timeLabel);
+
+                // Add events for this hour
+                const hourEvents = getEventsForHour(currentDate, hour);
+                hourEvents.forEach(event => {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `calendar-event ${event.type}`;
+                    eventElement.textContent = event.title;
+                    eventElement.onclick = () => viewEvent(event.id);
+                    timeSlot.appendChild(eventElement);
+                });
+
+                grid.appendChild(timeSlot);
+            }
+        }
+
+        // Helper functions
+        function isToday(date) {
+            const today = new Date();
+            return date.toDateString() === today.toDateString();
+        }
+
+        function getWeekStart(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day;
+            return new Date(d.setDate(diff));
+        }
+
+        function getEventsForDate(date) {
+            return events.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate.toDateString() === date.toDateString();
+            });
+        }
+
+        function getEventsForHour(date, hour) {
+            return events.filter(event => {
+                const eventDate = new Date(event.date);
+                const eventHour = new Date(event.startTime).getHours();
+                return eventDate.toDateString() === date.toDateString() && eventHour === hour;
+            });
+        }
+
+        function selectDate(date) {
+            currentDate = date;
+            openEventModal();
+            document.getElementById('eventDate').value = date.toISOString().split('T')[0];
+        }
+
+        // Navigation functions
+        function previousMonth() {
+            if (currentView === 'month') {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+            } else if (currentView === 'week') {
+                currentDate.setDate(currentDate.getDate() - 7);
+            } else {
+                currentDate.setDate(currentDate.getDate() - 1);
+            }
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            if (currentView === 'month') {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+            } else if (currentView === 'week') {
+                currentDate.setDate(currentDate.getDate() + 7);
+            } else {
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            renderCalendar();
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.calendar-view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderCalendar();
+        }
+
+        // Event modal functions
+        function openEventModal(eventId = null) {
+            const modal = document.getElementById('eventModal');
+            const title = document.getElementById('eventModalTitle');
+            
+            if (eventId) {
+                const event = events.find(e => e.id === eventId);
+                if (event) {
+                    title.textContent = 'Edit Event';
+                    populateEventForm(event);
+                }
+            } else {
+                title.textContent = 'Add New Event';
+                document.getElementById('eventForm').reset();
+                document.getElementById('eventDate').value = currentDate.toISOString().split('T')[0];
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeEventModal() {
+            document.getElementById('eventModal').style.display = 'none';
+        }
+
+        function openQuickEventModal() {
+            openEventModal();
+        }
+
+        function populateEventForm(event) {
+            document.getElementById('eventTitle').value = event.title;
+            document.getElementById('eventType').value = event.type;
+            document.getElementById('eventCustomer').value = event.customerId || '';
+            document.getElementById('eventDate').value = event.date;
+            document.getElementById('eventStartTime').value = event.startTime;
+            document.getElementById('eventEndTime').value = event.endTime;
+            document.getElementById('eventLocation').value = event.location || '';
+            document.getElementById('eventDescription').value = event.description || '';
+            document.getElementById('eventReminder').value = event.reminder || 'none';
+        }
+
+        function viewEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            if (event) {
+                alert(`Event: ${event.title}\nDate: ${event.date}\nTime: ${event.startTime} - ${event.endTime}\nLocation: ${event.location || 'N/A'}\nDescription: ${event.description || 'N/A'}`);
+            }
+        }
+
+        // Form submission
+        document.getElementById('eventForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const eventData = {
+                title: formData.get('eventTitle'),
+                type: formData.get('eventType'),
+                customerId: formData.get('eventCustomer'),
+                date: formData.get('eventDate'),
+                startTime: formData.get('eventStartTime'),
+                endTime: formData.get('eventEndTime'),
+                location: formData.get('eventLocation'),
+                description: formData.get('eventDescription'),
+                reminder: formData.get('eventReminder'),
+                createdBy: crm.getCurrentUser().name,
+                createdAt: new Date().toISOString()
+            };
+            
+            crm.addCalendarEvent(eventData);
+            closeEventModal();
+            loadEvents();
+            renderCalendar();
+            crm.showNotification('Event added successfully!', 'success');
+        });
+
+        // Google Calendar integration
+        function initializeGoogleCalendar() {
+            // Load saved Google settings
+            const googleSettings = JSON.parse(localStorage.getItem('googleCalendarSettings') || '{}');
+            
+            gapi.load('client:auth2', function() {
+                gapi.client.init({
+                    apiKey: 'YOUR_GOOGLE_API_KEY', // Replace with actual API key
+                    clientId: 'YOUR_GOOGLE_CLIENT_ID', // Replace with actual client ID
+                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+                    scope: 'https://www.googleapis.com/auth/calendar'
+                }).then(function() {
+                    googleAuth = gapi.auth2.getAuthInstance();
+                    
+                    // Check if user is already signed in
+                    if (googleAuth.isSignedIn.get()) {
+                        updateGoogleStatus();
+                    }
+                    
+                    // Listen for sign-in state changes
+                    googleAuth.isSignedIn.listen(updateGoogleStatus);
+                }).catch(function(error) {
+                    console.error('Error initializing Google API:', error);
+                });
+            });
+        }
+
+        function updateGoogleStatus() {
+            if (googleAuth && googleAuth.isSignedIn.get()) {
+                const user = googleAuth.currentUser.get();
+                const profile = user.getBasicProfile();
+                console.log('Connected to Google Calendar:', profile.getEmail());
+                googleCalendar = gapi.client.calendar;
+            }
+        }
+
+        function updateSigninStatus(isSignedIn) {
+            if (isSignedIn) {
+                googleCalendar = gapi.client.calendar;
+                crm.showNotification('Connected to Google Calendar!', 'success');
+            }
+        }
+
+        function syncWithGoogle() {
+            const googleSettings = JSON.parse(localStorage.getItem('googleCalendarSettings') || '{}');
+            
+            if (googleCalendar && googleSettings.connected) {
+                // Sync events with Google Calendar
+                events.forEach(event => {
+                    const googleEvent = {
+                        'summary': event.title,
+                        'description': event.description || '',
+                        'start': {
+                            'dateTime': `${event.date}T${event.startTime}:00`,
+                            'timeZone': 'America/New_York'
+                        },
+                        'end': {
+                            'dateTime': `${event.date}T${event.endTime}:00`,
+                            'timeZone': 'America/New_York'
+                        },
+                        'location': event.location || '',
+                        'reminders': {
+                            'useDefault': false,
+                            'overrides': [
+                                {
+                                    'method': 'email',
+                                    'minutes': 30
+                                }
+                            ]
+                        }
+                    };
+                    
+                    googleCalendar.events.insert({
+                        'calendarId': 'primary',
+                        'resource': googleEvent
+                    }).then(function(response) {
+                        console.log('Event synced:', response.result);
+                    }).catch(function(error) {
+                        console.error('Error syncing event:', error);
+                    });
+                });
+                
+                crm.showNotification('Events synced with Google Calendar!', 'success');
+            } else {
+                crm.showNotification('Please connect to Google Calendar in Account Settings first.', 'error');
+            }
+        }
+
+        function exportCalendar() {
+            const calendarData = events.map(event => ({
+                title: event.title,
+                type: event.type,
+                date: event.date,
+                startTime: event.startTime,
+                endTime: event.endTime,
+                location: event.location,
+                description: event.description
+            }));
+            
+            crm.exportToCSV(calendarData, `calendar_export_${new Date().toISOString().split('T')[0]}.csv`);
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userRole');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Check Google Calendar connection status
+        function checkGoogleConnection() {
+            const googleSettings = JSON.parse(localStorage.getItem('googleCalendarSettings') || '{}');
+            if (googleSettings.connected) {
+                crm.showNotification('Google Calendar connected!', 'success');
+            } else {
+                crm.showNotification('Connect to Google Calendar in Account Settings for full sync functionality.', 'info');
+            }
+        }
+
+        // Initialize page
+        initializePage();
+        checkGoogleConnection();
+    </script>
+</body>
+</html> 

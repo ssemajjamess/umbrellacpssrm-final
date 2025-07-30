@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Processing Test - Umbrella CRM</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .upload-section {
+            border: 2px dashed #1e3c72;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .upload-section:hover {
+            border-color: #2a5298;
+            background: #f8f9fa;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .upload-btn {
+            background: #1e3c72;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .upload-btn:hover {
+            background: #2a5298;
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        .customer-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .info-item {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #1e3c72;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #1e3c72;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .info-value {
+            margin-top: 5px;
+            color: #333;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .loading {
+            color: #ffc107;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PDF Processing Test</h1>
+        
+        <div class="upload-section">
+            <h3>Upload Signed PDF Contract</h3>
+            <p>Upload a signed PDF contract from your customer portal to test the automatic customer creation feature.</p>
+            
+            <input type="file" id="pdfFileInput" accept=".pdf">
+            <button class="upload-btn" onclick="document.getElementById('pdfFileInput').click()">
+                Choose PDF File
+            </button>
+            
+            <div id="fileInfo" style="margin-top: 15px; display: none;">
+                <p><strong>Selected File:</strong> <span id="fileName"></span></p>
+                <button class="upload-btn" onclick="processPDF()" id="processBtn" style="display: none;">
+                    Process PDF
+                </button>
+            </div>
+        </div>
+        
+        <div class="results" id="results">
+            <h3>Processing Results</h3>
+            <div id="status"></div>
+            <div class="customer-info" id="customerInfo"></div>
+        </div>
+    </div>
+
+    <script src="../DASHBOARD/crm-data.js"></script>
+    <script src="pdf-processor.js"></script>
+    <script>
+        let crm = null;
+        let pdfProcessor = null;
+        let selectedFile = null;
+
+        // Initialize CRM and PDF processor
+        function initialize() {
+            try {
+                crm = new UmbrellaCRM();
+                pdfProcessor = new PDFProcessor(crm);
+                console.log('CRM and PDF processor initialized');
+            } catch (error) {
+                console.error('Error initializing:', error);
+            }
+        }
+
+        // Handle file selection
+        document.getElementById('pdfFileInput').addEventListener('change', function(e) {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                document.getElementById('fileName').textContent = selectedFile.name;
+                document.getElementById('fileInfo').style.display = 'block';
+                document.getElementById('processBtn').style.display = 'inline-block';
+                document.getElementById('results').style.display = 'none';
+            }
+        });
+
+        // Process PDF file
+        async function processPDF() {
+            if (!selectedFile) {
+                alert('Please select a PDF file first.');
+                return;
+            }
+
+            if (!pdfProcessor) {
+                alert('PDF processor not initialized. Please refresh the page.');
+                return;
+            }
+
+            try {
+                // Show loading state
+                document.getElementById('status').innerHTML = '<p class="loading">Processing PDF...</p>';
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('customerInfo').innerHTML = '';
+
+                // Process the PDF
+                const result = await pdfProcessor.processPDFContract(selectedFile);
+
+                if (result.success) {
+                    // Show success status
+                    document.getElementById('status').innerHTML = '<p class="success">PDF processed successfully! Customer created.</p>';
+                    
+                    // Display customer information
+                    const customer = result.customer;
+                    const customerInfo = document.getElementById('customerInfo');
+                    
+                    customerInfo.innerHTML = `
+                        <div class="info-item">
+                            <div class="info-label">Customer Name</div>
+                            <div class="info-value">${customer.customerName}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">${customer.phone}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">${customer.email || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Address</div>
+                            <div class="info-value">${customer.address}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Insurance Company</div>
+                            <div class="info-value">${customer.insuranceCompany}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Claim Number</div>
+                            <div class="info-value">${customer.claimNumber || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Policy Number</div>
+                            <div class="info-value">${customer.policyNumber || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Roof Type</div>
+                            <div class="info-value">${customer.roofType || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Replacement Type</div>
+                            <div class="info-value">${customer.replacementType || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Stage</div>
+                            <div class="info-value">${customer.stage}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Created By</div>
+                            <div class="info-value">${customer.createdBy}</div>
+                        </div>
+                    `;
+
+                    console.log('PDF processed successfully:', result);
+                } else {
+                    // Show error status
+                    document.getElementById('status').innerHTML = `<p class="error">Error: ${result.error}</p>`;
+                    console.error('PDF processing failed:', result.error);
+                }
+
+            } catch (error) {
+                console.error('Error processing PDF:', error);
+                document.getElementById('status').innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initialize();
+        });
+    </script>
+</body>
+</html> 

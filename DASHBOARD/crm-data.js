@@ -14,6 +14,10 @@ class UmbrellaCRM {
                 customers: [],
                 tasks: [],
                 activities: [],
+                documents: [],
+                documentFolders: [],
+                vendors: [],
+                calendarEvents: [],
                 users: [
                     {
                         id: 1,
@@ -34,7 +38,7 @@ class UmbrellaCRM {
                     'ALLSTATE', 'AMERICAN FAMILY', 'FARM BUREAU', 'FARMERS', 'FOREMOST',
                     'GEICO', 'HARTFORD', 'HOMEFIRST AGENCY', 'HORACE MANN', 'THE GENERAL',
                     'KEMPER', 'NATIONWIDE', 'PROGRESSIVE', 'SAGESURE', 'STATEFARM',
-                    'SAFECO', 'TRAVELERS', 'UNIVERSAL CASUALTY', 'USAA'
+                    'SAFECO', 'TRAVELERS', 'UNIVERSAL CASUALTY', 'USAA', 'OTHER'
                 ],
                 stages: [
                     'LEAD', 'WAITING ADJUSTMENT', 'WAITING INS SCOPE', 'READY TO INSTALL',
@@ -48,55 +52,621 @@ class UmbrellaCRM {
 
     // Load data from localStorage
     loadData() {
-        this.data = JSON.parse(localStorage.getItem('umbrellaCRM'));
+        try {
+            const data = localStorage.getItem('umbrellaCRM');
+            if (data) {
+                this.data = JSON.parse(data);
+                this.validateAndFixData();
+            } else {
+                this.initializeData();
+                this.data = JSON.parse(localStorage.getItem('umbrellaCRM'));
+            }
+            
+            // Ensure sample data is loaded if no customers exist
+            if (this.data.leads.length === 0) {
+                this.loadSampleData();
+            }
+        } catch (error) {
+            console.error('Error loading CRM data:', error);
+            this.initializeData();
+            this.data = JSON.parse(localStorage.getItem('umbrellaCRM'));
+            this.loadSampleData();
+        }
+    }
+
+    // Load sample data
+    loadSampleData() {
+        console.log('Loading sample data...');
+        const sampleCustomers = [
+            {
+                customerName: 'Enrique and Viviana Guzman',
+                phone: 'H: (864) 123-4567',
+                email: 'enrique.guzman@gmail.com',
+                address: '123 Main St, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'CLOSED-W NEW ROOF',
+                feePaid: 'YES! :)',
+                insuranceCompany: 'STATEFARM',
+                claimNumber: 'SF-2024-001',
+                adjusterInfo: 'John Smith',
+                roofType: 'Asphalt Shingle',
+                replacementType: 'Full Replacement',
+                jobCost: 15000,
+                laborCost: 8000,
+                materialCost: 7000,
+                profit: 5000,
+                googleRating: 5,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'James & Brenda Alexander',
+                phone: 'H: (864) 234-5678',
+                email: 'james.alexander@aol.com',
+                address: '456 Oak Ave, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'WAITING INS SCOPE',
+                feePaid: 'N/A',
+                insuranceCompany: 'ALLSTATE',
+                claimNumber: 'AS-2024-002',
+                adjusterInfo: 'Sarah Johnson',
+                roofType: 'Metal Roof',
+                replacementType: 'Partial Repair',
+                jobCost: 8500,
+                laborCost: 4500,
+                materialCost: 4000,
+                profit: 2000,
+                googleRating: 4,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Russell Brendel',
+                phone: 'H: (864) 345-6789',
+                email: 'russell.brendel@icloud.com',
+                address: '789 Pine St, Greenville, SC 29611',
+                soldBy: 'Daniel Pruiksma',
+                stage: 'CLOSED-DEAD DENIED',
+                feePaid: 'N/A',
+                insuranceCompany: 'GEICO',
+                claimNumber: 'GC-2024-003',
+                adjusterInfo: 'Mike Wilson',
+                roofType: 'Tile Roof',
+                replacementType: 'Full Replacement',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 3,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'John Brewer',
+                phone: 'H: (864) 456-7890',
+                email: 'john.brewer@bellsouth.net',
+                address: '321 Elm St, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'WAITING FEE',
+                feePaid: 'YES! :)',
+                insuranceCompany: 'PROGRESSIVE',
+                claimNumber: 'PR-2024-004',
+                adjusterInfo: 'Lisa Brown',
+                roofType: 'Asphalt Shingle',
+                replacementType: 'Full Replacement',
+                jobCost: 12000,
+                laborCost: 6500,
+                materialCost: 5500,
+                profit: 3000,
+                googleRating: 5,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Corey Craft',
+                phone: 'H: (864) 567-8901',
+                email: 'corey.craft@yahoo.com',
+                address: '654 Maple Dr, Greenville, SC 29611',
+                soldBy: 'Daniel Pruiksma',
+                stage: 'WAITING ADJUSTMENT',
+                feePaid: 'N/A',
+                insuranceCompany: 'FARMERS',
+                claimNumber: 'FM-2024-005',
+                adjusterInfo: 'David Lee',
+                roofType: 'Metal Roof',
+                replacementType: 'Partial Repair',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 4,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Tonya Strickland',
+                phone: 'H: (864) 678-9012',
+                email: 'tonya.strickland@gmail.com',
+                address: '987 Cedar Ln, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'TBD',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: '',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Mike Hanner',
+                phone: 'H: (864) 789-0123',
+                email: 'mike.hanner@aol.com',
+                address: '147 Birch Rd, Greenville, SC 29611',
+                soldBy: 'Daniel Pruiksma',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'TBD',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: '',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Lorrie Green',
+                phone: 'H: (864) 890-1234',
+                email: 'lorrie.green@icloud.com',
+                address: '258 Spruce Way, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'TBD',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: '',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'James Turner',
+                phone: 'H: (864) 901-2345',
+                email: 'james.turner@bellsouth.net',
+                address: '369 Willow Ct, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'TBD',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: '',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Joshua W. Taylor',
+                phone: 'H: (864) 012-3456',
+                email: 'joshua.taylor@yahoo.com',
+                address: '741 Poplar St, Greenville, SC 29611',
+                soldBy: 'Daniel Pruiksma',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'TBD',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: '',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            }
+        ];
+
+        sampleCustomers.forEach(customer => {
+            this.addLead(customer);
+        });
+
+        this.saveData();
+        console.log('Sample data loaded successfully!');
+    }
+
+    // Validate and fix data structure
+    validateAndFixData() {
+        const requiredArrays = [
+            'leads', 'jobs', 'customers', 'tasks', 'activities', 
+            'documents', 'documentFolders', 'vendors', 'calendarEvents'
+        ];
+        
+        let needsSave = false;
+        
+        requiredArrays.forEach(arrayName => {
+            if (!this.data[arrayName] || !Array.isArray(this.data[arrayName])) {
+                this.data[arrayName] = [];
+                needsSave = true;
+            }
+        });
+
+        // Ensure users array exists and has default users
+        if (!this.data.users || !Array.isArray(this.data.users) || this.data.users.length === 0) {
+            this.data.users = [
+                {
+                    id: 1,
+                    name: 'James Causey',
+                    email: 'james@roofsbyumbrella.com',
+                    role: 'Owner',
+                    phone: '(864) 767-6188'
+                },
+                {
+                    id: 2,
+                    name: 'Daniel Pruiksma',
+                    email: 'daniel@roofsbyumbrella.com',
+                    role: 'Sales',
+                    phone: '(864) 767-6188'
+                }
+            ];
+            needsSave = true;
+        }
+
+        // Ensure insurance companies array exists
+        if (!this.data.insuranceCompanies || !Array.isArray(this.data.insuranceCompanies)) {
+            this.data.insuranceCompanies = [
+                'ALLSTATE', 'AMERICAN FAMILY', 'FARM BUREAU', 'FARMERS', 'FOREMOST',
+                'GEICO', 'HARTFORD', 'HOMEFIRST AGENCY', 'HORACE MANN', 'THE GENERAL',
+                'KEMPER', 'NATIONWIDE', 'PROGRESSIVE', 'SAGESURE', 'STATEFARM',
+                'SAFECO', 'TRAVELERS', 'UNIVERSAL CASUALTY', 'USAA', 'OTHER'
+            ];
+            needsSave = true;
+        }
+
+        // Ensure stages array exists
+        if (!this.data.stages || !Array.isArray(this.data.stages)) {
+            this.data.stages = [
+                'LEAD', 'WAITING ADJUSTMENT', 'WAITING INS SCOPE', 'READY TO INSTALL',
+                'INVOICED WPAYMENT', 'CLOSED-W NEW ROOF', 'CLOSED-DEAD DENIED', 'WAITING FEE'
+            ];
+            needsSave = true;
+        }
+
+        // Fix any leads without IDs
+        if (this.data.leads) {
+            this.data.leads.forEach((lead, index) => {
+                if (!lead.id) {
+                    lead.id = Date.now() + index;
+                    needsSave = true;
+                }
+                if (!lead.createdAt) {
+                    lead.createdAt = new Date().toISOString();
+                    needsSave = true;
+                }
+            });
+        }
+
+        if (needsSave) {
+            this.saveData();
+        }
+    }
+
+    // System health check
+    performHealthCheck() {
+        const healthReport = {
+            dataIntegrity: true,
+            issues: [],
+            recommendations: []
+        };
+
+        try {
+            // Check data structure
+            if (!this.data) {
+                healthReport.dataIntegrity = false;
+                healthReport.issues.push('No CRM data found');
+                return healthReport;
+            }
+
+            // Check required arrays
+            const requiredArrays = [
+                'leads', 'jobs', 'customers', 'tasks', 'activities', 
+                'documents', 'documentFolders', 'vendors', 'calendarEvents'
+            ];
+
+            requiredArrays.forEach(arrayName => {
+                if (!this.data[arrayName] || !Array.isArray(this.data[arrayName])) {
+                    healthReport.issues.push(`Missing or invalid ${arrayName} array`);
+                    healthReport.dataIntegrity = false;
+                }
+            });
+
+            // Check for data inconsistencies
+            if (this.data.leads) {
+                this.data.leads.forEach((lead, index) => {
+                    if (!lead.id) {
+                        healthReport.issues.push(`Lead at index ${index} missing ID`);
+                        healthReport.dataIntegrity = false;
+                    }
+                    if (!lead.customerName) {
+                        healthReport.issues.push(`Lead at index ${index} missing customer name`);
+                        healthReport.dataIntegrity = false;
+                    }
+                });
+            }
+
+            // Check for duplicate IDs
+            const leadIds = this.data.leads?.map(l => l.id) || [];
+            const duplicateIds = leadIds.filter((id, index) => leadIds.indexOf(id) !== index);
+            if (duplicateIds.length > 0) {
+                healthReport.issues.push(`Found ${duplicateIds.length} duplicate lead IDs`);
+                healthReport.dataIntegrity = false;
+            }
+
+            // Check localStorage capacity
+            try {
+                const testData = 'test';
+                localStorage.setItem('test', testData);
+                localStorage.removeItem('test');
+            } catch (error) {
+                healthReport.issues.push('localStorage is full or not available');
+                healthReport.dataIntegrity = false;
+            }
+
+            // Generate recommendations
+            if (this.data.leads && this.data.leads.length > 100) {
+                healthReport.recommendations.push('Consider archiving old leads to improve performance');
+            }
+
+            if (!this.data.currentUser) {
+                healthReport.recommendations.push('No current user set - please log in');
+            }
+
+            return healthReport;
+        } catch (error) {
+            healthReport.dataIntegrity = false;
+            healthReport.issues.push(`Health check error: ${error.message}`);
+            return healthReport;
+        }
+    }
+
+    // Auto-repair function
+    autoRepair() {
+        const healthReport = this.performHealthCheck();
+        
+        if (!healthReport.dataIntegrity) {
+            console.log('Auto-repairing CRM data...');
+            this.validateAndFixData();
+            
+            // Re-run health check
+            const newHealthReport = this.performHealthCheck();
+            if (newHealthReport.dataIntegrity) {
+                this.showNotification('CRM data repaired successfully!', 'success');
+            } else {
+                this.showNotification('Some issues could not be automatically repaired', 'error');
+            }
+        }
+        
+        return healthReport;
     }
 
     // Save data to localStorage
     saveData() {
-        localStorage.setItem('umbrellaCRM', JSON.stringify(this.data));
+        try {
+            localStorage.setItem('umbrellaCRM', JSON.stringify(this.data));
+        } catch (error) {
+            console.error('Error saving data:', error);
+            this.showNotification('Error saving data. Please try again.', 'error');
+        }
+    }
+
+    // Notification system
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
+        
+        if (type === 'success') {
+            notification.style.background = '#28a745';
+        } else if (type === 'error') {
+            notification.style.background = '#dc3545';
+        } else {
+            notification.style.background = '#17a2b8';
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 3000);
     }
 
     // Add new lead
     addLead(leadData) {
-        const lead = {
-            id: Date.now(),
-            ...leadData,
-            createdAt: new Date().toISOString(),
-            stage: 'LEAD',
-            activities: [],
-            // Additional fields from screenshots
-            claimFiled: leadData.claimFiled || 'NO',
-            approved: leadData.approved || 'PENDING',
-            incidentDate: leadData.incidentDate || '',
-            claimNumber: leadData.claimNumber || '',
-            adjusterInfo: leadData.adjusterInfo || '',
-            replacementType: leadData.replacementType || '',
-            roofType: leadData.roofType || '',
-            propertyType: leadData.propertyType || 'RESIDENTIAL',
-            estimatedLoss: leadData.estimatedLoss || '',
-            damageDescription: leadData.damageDescription || '',
-            propertyValue: leadData.propertyValue || '',
-            leadSource: leadData.leadSource || '',
-            notes: leadData.notes || '',
-            // Document and photo fields
-            documents: [],
-            photos: {
-                before: [],
-                after: []
-            },
-            // Cost tracking
-            jobCost: 0,
-            laborCost: 0,
-            materialCost: 0,
-            profit: 0,
-            googleRating: 0,
-            jobNotes: '',
-            documentLinks: []
-        };
-        this.data.leads.push(lead);
-        this.addActivity('lead', 'created', `New lead created for ${leadData.customerName}`);
-        this.saveData();
-        return lead;
+        try {
+            // Validate required fields
+            if (!leadData.customerName || !leadData.phone) {
+                throw new Error('Customer name and phone are required');
+            }
+
+            // Validate email format if provided
+            if (leadData.email && !this.isValidEmail(leadData.email)) {
+                throw new Error('Please enter a valid email address');
+            }
+
+            // Validate phone format
+            if (!this.isValidPhone(leadData.phone)) {
+                throw new Error('Please enter a valid phone number');
+            }
+
+            const lead = {
+                id: Date.now(),
+                ...leadData,
+                createdAt: new Date().toISOString(),
+                stage: 'LEAD',
+                activities: [],
+                // Additional fields from screenshots
+                claimFiled: leadData.claimFiled || 'NO',
+                approved: leadData.approved || 'PENDING',
+                incidentDate: leadData.incidentDate || '',
+                claimNumber: leadData.claimNumber || '',
+                adjusterInfo: leadData.adjusterInfo || '',
+                replacementType: leadData.replacementType || '',
+                roofType: leadData.roofType || '',
+                propertyType: leadData.propertyType || 'RESIDENTIAL',
+                estimatedLoss: leadData.estimatedLoss || '',
+                damageDescription: leadData.damageDescription || '',
+                propertyValue: leadData.propertyValue || '',
+                leadSource: leadData.leadSource || '',
+                notes: leadData.notes || '',
+                // Document and photo fields
+                documents: [],
+                photos: {
+                    before: [],
+                    after: []
+                },
+                // Cost tracking
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                jobNotes: '',
+                documentLinks: []
+            };
+            this.data.leads.push(lead);
+            this.addActivity('lead', 'created', `New lead created for ${leadData.customerName}`);
+            this.saveData();
+            this.showNotification('Lead added successfully!', 'success');
+            return lead;
+        } catch (error) {
+            console.error('Error adding lead:', error);
+            this.showNotification(error.message, 'error');
+            throw error;
+        }
+    }
+
+    // Delete customer with backup
+    deleteCustomer(customerId) {
+        try {
+            const customer = this.data.leads.find(c => c.id === customerId);
+            if (!customer) {
+                throw new Error('Customer not found');
+            }
+
+            // Create backup before deletion
+            if (!this.data.deletedCustomers) {
+                this.data.deletedCustomers = [];
+            }
+            
+            const deletedCustomer = {
+                ...customer,
+                deletedAt: new Date().toISOString(),
+                deletedBy: this.getCurrentUser()?.name || 'System'
+            };
+            
+            this.data.deletedCustomers.push(deletedCustomer);
+
+            // Remove from active leads
+            const index = this.data.leads.findIndex(c => c.id === customerId);
+            if (index !== -1) {
+                this.data.leads.splice(index, 1);
+            }
+
+            this.saveData();
+            this.addActivity('customer', 'deleted', `Customer ${customer.customerName} was deleted`);
+            
+            return customer;
+        } catch (error) {
+            console.error('Error deleting customer:', error);
+            throw error;
+        }
+    }
+
+    // Restore deleted customer
+    restoreCustomer(deletedCustomerId) {
+        try {
+            const deletedCustomer = this.data.deletedCustomers?.find(c => c.id === deletedCustomerId);
+            if (!deletedCustomer) {
+                throw new Error('Deleted customer not found');
+            }
+
+            // Remove from deleted customers
+            const deletedIndex = this.data.deletedCustomers.findIndex(c => c.id === deletedCustomerId);
+            if (deletedIndex !== -1) {
+                this.data.deletedCustomers.splice(deletedIndex, 1);
+            }
+
+            // Add back to active leads
+            const restoredCustomer = {
+                ...deletedCustomer,
+                restoredAt: new Date().toISOString(),
+                restoredBy: this.getCurrentUser()?.name || 'System'
+            };
+            delete restoredCustomer.deletedAt;
+            delete restoredCustomer.deletedBy;
+            
+            this.data.leads.push(restoredCustomer);
+
+            this.saveData();
+            this.addActivity('customer', 'restored', `Customer ${deletedCustomer.customerName} was restored`);
+            
+            return restoredCustomer;
+        } catch (error) {
+            console.error('Error restoring customer:', error);
+            throw error;
+        }
+    }
+
+    // Get deleted customers
+    getDeletedCustomers() {
+        return this.data.deletedCustomers || [];
+    }
+
+    // Validate email format
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Validate phone format - More flexible for PDF imports
+    isValidPhone(phone) {
+        if (!phone || phone === 'N/A') return true; // Allow N/A for PDF imports
+        
+        // Remove all non-digit characters except + for international numbers
+        const cleanPhone = phone.replace(/[\s\-\(\)\.]/g, '');
+        
+        // Check for various phone formats
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        const usPhoneRegex = /^[1-9]\d{9}$/;
+        const internationalRegex = /^[\+]?[1-9][\d]{7,15}$/;
+        
+        return phoneRegex.test(cleanPhone) || usPhoneRegex.test(cleanPhone) || internationalRegex.test(cleanPhone);
     }
 
     // Update lead stage
@@ -171,9 +741,24 @@ class UmbrellaCRM {
 
     // Get dashboard statistics
     getDashboardStats() {
-        const activeLeads = this.data.leads.filter(l => l.stage !== 'CLOSED-W NEW ROOF' && l.stage !== 'CLOSED-DEAD DENIED').length;
-        const activeJobs = this.data.jobs.filter(j => j.status === 'Active').length;
+        // Active leads (not closed)
+        const activeLeads = this.data.leads.filter(l => 
+            l.stage !== 'CLOSED-W NEW ROOF' && 
+            l.stage !== 'CLOSED-DEAD DENIED' &&
+            l.stage !== 'INVOICED WPAYMENT'
+        ).length;
+
+        // Active jobs (in progress stages)
+        const activeJobs = this.data.leads.filter(l => 
+            l.stage === 'READY TO INSTALL' || 
+            l.stage === 'WAITING ADJUSTMENT' ||
+            l.stage === 'WAITING INS SCOPE'
+        ).length;
+
+        // Pending tasks
         const pendingTasks = this.data.tasks.filter(t => t.status === 'Pending').length;
+
+        // Monthly revenue calculation
         const monthlyRevenue = this.calculateMonthlyRevenue();
 
         return {
@@ -189,14 +774,14 @@ class UmbrellaCRM {
         const currentMonth = new Date().getMonth();
         const currentYear = new Date().getFullYear();
         
-        return this.data.jobs
-            .filter(job => {
-                const jobDate = new Date(job.createdAt);
-                return jobDate.getMonth() === currentMonth && 
-                       jobDate.getFullYear() === currentYear &&
-                       job.status === 'Completed';
+        return this.data.leads
+            .filter(lead => {
+                const leadDate = new Date(lead.createdAt);
+                return leadDate.getMonth() === currentMonth && 
+                       leadDate.getFullYear() === currentYear &&
+                       (lead.stage === 'CLOSED-W NEW ROOF' || lead.stage === 'INVOICED WPAYMENT');
             })
-            .reduce((total, job) => total + (job.revenue || 0), 0);
+            .reduce((total, lead) => total + (lead.jobCost || 0), 0);
     }
 
     // Calculate weekly jobs sold (Monday to Sunday)
@@ -212,8 +797,25 @@ class UmbrellaCRM {
         
         return this.data.leads.filter(lead => {
             const leadDate = new Date(lead.createdAt);
-            return leadDate >= startOfWeek && leadDate <= endOfWeek;
+            return leadDate >= startOfWeek && leadDate <= endOfWeek && 
+                   (lead.stage === 'CLOSED-W NEW ROOF' || lead.stage === 'INVOICED WPAYMENT');
         }).length;
+    }
+
+    // Get claims count
+    getClaimsCount() {
+        return this.data.leads.filter(lead => 
+            lead.claimNumber && lead.claimNumber.trim() !== ''
+        ).length;
+    }
+
+    // Get active jobs count (jobs in progress)
+    getActiveJobsCount() {
+        return this.data.leads.filter(lead => 
+            lead.stage === 'READY TO INSTALL' || 
+            lead.stage === 'WAITING ADJUSTMENT' ||
+            lead.stage === 'WAITING INS SCOPE'
+        ).length;
     }
 
     // Get weekly record
@@ -402,6 +1004,475 @@ class UmbrellaCRM {
             'Customer Reviews'
         ];
     }
+
+    // Create document folder
+    createDocumentFolder(name) {
+        const folder = {
+            id: Date.now().toString(),
+            name: name,
+            createdAt: new Date().toISOString(),
+            createdBy: this.getCurrentUser()?.name || 'Unknown'
+        };
+        
+        if (!this.data.documentFolders) {
+            this.data.documentFolders = [];
+        }
+        
+        this.data.documentFolders.push(folder);
+        this.saveData();
+        return folder;
+    }
+
+    // Update document folder
+    updateDocumentFolder(folderId, newName) {
+        const folder = this.data.documentFolders?.find(f => f.id === folderId);
+        if (folder) {
+            folder.name = newName;
+            folder.updatedAt = new Date().toISOString();
+            this.saveData();
+            return folder;
+        }
+        return null;
+    }
+
+    // Delete document folder
+    deleteDocumentFolder(folderId) {
+        if (this.data.documentFolders) {
+            this.data.documentFolders = this.data.documentFolders.filter(f => f.id !== folderId);
+            this.saveData();
+        }
+    }
+
+    // Get documents
+    getDocuments(folderId = 'all') {
+        if (!this.data.documents) {
+            this.data.documents = [];
+        }
+        
+        if (folderId === 'all') {
+            return this.data.documents;
+        }
+        
+        return this.data.documents.filter(doc => doc.folder === folderId);
+    }
+
+    // Get all documents
+    getAllDocuments() {
+        return this.data.documents || [];
+    }
+
+    // Get single document
+    getDocument(docId) {
+        return this.data.documents?.find(doc => doc.id === docId);
+    }
+
+    // Upload document
+    uploadDocument(docData, file) {
+        const document = {
+            id: Date.now().toString(),
+            ...docData,
+            url: URL.createObjectURL(file), // In real app, this would upload to server
+            createdAt: new Date().toISOString()
+        };
+        
+        if (!this.data.documents) {
+            this.data.documents = [];
+        }
+        
+        this.data.documents.push(document);
+        this.saveData();
+        return document;
+    }
+
+    // Delete document
+    deleteDocument(docId) {
+        if (this.data.documents) {
+            this.data.documents = this.data.documents.filter(doc => doc.id !== docId);
+            this.saveData();
+        }
+    }
+
+    // Share document
+    shareDocument(docId, email) {
+        const doc = this.getDocument(docId);
+        if (doc) {
+            // In real app, this would send email with document link
+            console.log(`Sharing document ${doc.name} with ${email}`);
+            this.addActivity('document', 'shared', `Document ${doc.name} shared with ${email}`);
+        }
+    }
+
+    // Add vendor/contractor
+    addVendor(vendorData) {
+        const vendor = {
+            id: Date.now().toString(),
+            ...vendorData,
+            createdAt: new Date().toISOString()
+        };
+        
+        if (!this.data.vendors) {
+            this.data.vendors = [];
+        }
+        
+        this.data.vendors.push(vendor);
+        this.saveData();
+        this.addActivity('vendor', 'added', `Vendor ${vendorData.company} added`);
+        return vendor;
+    }
+
+    // Get vendors
+    getVendors() {
+        return this.data.vendors || [];
+    }
+
+    // Calendar functions
+    getCalendarEvents() {
+        return this.data.calendarEvents || [];
+    }
+
+    addCalendarEvent(eventData) {
+        const event = {
+            id: Date.now().toString(),
+            ...eventData,
+            createdAt: new Date().toISOString()
+        };
+        
+        if (!this.data.calendarEvents) {
+            this.data.calendarEvents = [];
+        }
+        
+        this.data.calendarEvents.push(event);
+        this.saveData();
+        this.addActivity('calendar', 'event_added', `Event "${eventData.title}" added to calendar`);
+        return event;
+    }
+
+    updateCalendarEvent(eventId, eventData) {
+        const event = this.data.calendarEvents?.find(e => e.id === eventId);
+        if (event) {
+            Object.assign(event, eventData);
+            event.updatedAt = new Date().toISOString();
+            this.saveData();
+            this.addActivity('calendar', 'event_updated', `Event "${eventData.title}" updated`);
+            return event;
+        }
+        return null;
+    }
+
+    deleteCalendarEvent(eventId) {
+        if (this.data.calendarEvents) {
+            const event = this.data.calendarEvents.find(e => e.id === eventId);
+            if (event) {
+                this.data.calendarEvents = this.data.calendarEvents.filter(e => e.id !== eventId);
+                this.saveData();
+                this.addActivity('calendar', 'event_deleted', `Event "${event.title}" deleted`);
+            }
+        }
+    }
+
+    getEventsForCustomer(customerId) {
+        return this.data.calendarEvents?.filter(event => event.customerId === customerId) || [];
+    }
+
+    getUpcomingEvents(days = 7) {
+        const today = new Date();
+        const futureDate = new Date();
+        futureDate.setDate(today.getDate() + days);
+        
+        return this.data.calendarEvents?.filter(event => {
+            const eventDate = new Date(event.date);
+            return eventDate >= today && eventDate <= futureDate;
+        }) || [];
+    }
+
+    // Invoice functions
+    getInvoices() {
+        return this.data.invoices || [];
+    }
+
+    addInvoice(invoiceData) {
+        const invoice = {
+            id: Date.now().toString(),
+            ...invoiceData,
+            createdAt: new Date().toISOString(),
+            createdBy: this.getCurrentUser()?.name || 'Unknown'
+        };
+        
+        if (!this.data.invoices) {
+            this.data.invoices = [];
+        }
+        
+        this.data.invoices.push(invoice);
+        this.saveData();
+        this.addActivity('invoice', 'created', `Invoice ${invoiceData.invoiceNumber} created for ${this.getCustomer(invoiceData.customerId)?.customerName || 'Customer'}`);
+        return invoice;
+    }
+
+    updateInvoice(invoiceId, invoiceData) {
+        const invoice = this.data.invoices?.find(i => i.id === invoiceId);
+        if (invoice) {
+            Object.assign(invoice, invoiceData);
+            invoice.updatedAt = new Date().toISOString();
+            this.saveData();
+            this.addActivity('invoice', 'updated', `Invoice ${invoiceData.invoiceNumber} updated`);
+            return invoice;
+        }
+        return null;
+    }
+
+    deleteInvoice(invoiceId) {
+        if (this.data.invoices) {
+            const invoice = this.data.invoices.find(i => i.id === invoiceId);
+            if (invoice) {
+                this.data.invoices = this.data.invoices.filter(i => i.id !== invoiceId);
+                this.saveData();
+                this.addActivity('invoice', 'deleted', `Invoice ${invoice.invoiceNumber} deleted`);
+            }
+        }
+    }
+
+    getInvoice(invoiceId) {
+        return this.data.invoices?.find(i => i.id === invoiceId);
+    }
+
+    getInvoicesByCustomer(customerId) {
+        return this.data.invoices?.filter(i => i.customerId === customerId) || [];
+    }
+
+    getInvoicesByStatus(status) {
+        return this.data.invoices?.filter(i => i.status === status) || [];
+    }
+
+    getCustomer(customerId) {
+        return this.data.customers?.find(c => c.id === customerId);
+    }
+
+    // API Integration functions
+    addCustomerFromAPI(customerData) {
+        const customer = {
+            id: Date.now().toString(),
+            customerName: customerData.name || customerData.customerName,
+            email: customerData.email,
+            phone: customerData.phone,
+            address: customerData.address,
+            insuranceCompany: customerData.insuranceCompany,
+            claimNumber: customerData.claimNumber,
+            policyNumber: customerData.policyNumber,
+            stage: 'LEAD',
+            createdAt: new Date().toISOString(),
+            createdBy: 'API Integration',
+            source: 'external_api'
+        };
+        
+        if (!this.data.customers) {
+            this.data.customers = [];
+        }
+        
+        this.data.customers.push(customer);
+        this.saveData();
+        this.addActivity('customer', 'created', `Customer ${customer.customerName} created via API integration`);
+        return customer;
+    }
+
+    saveContractFromAPI(customerId, pdfData, fileName) {
+        const document = {
+            id: Date.now().toString(),
+            name: fileName || `Contract_${Date.now()}.pdf`,
+            type: 'contract',
+            customerId: customerId,
+            content: pdfData,
+            uploadedBy: 'API Integration',
+            uploadedAt: new Date().toISOString(),
+            source: 'external_api'
+        };
+        
+        if (!this.data.documents) {
+            this.data.documents = [];
+        }
+        
+        this.data.documents.push(document);
+        this.saveData();
+        this.addActivity('document', 'uploaded', `Contract document saved via API integration for customer ${customerId}`);
+        return document;
+    }
+
+    // API endpoint handlers
+    handleAPIRequest(endpoint, method, data) {
+        switch (endpoint) {
+            case '/api/crm/receive-contract':
+                return this.handleReceiveContract(data);
+            case '/api/crm/receive-contract-json':
+                return this.handleReceiveContractJSON(data);
+            case '/api/crm/customers':
+                return this.handleGetCustomers();
+            default:
+                if (endpoint.match(/^\/api\/crm\/customers\/\d+$/)) {
+                    const customerId = endpoint.split('/').pop();
+                    return this.handleGetCustomerById(customerId);
+                }
+                return { success: false, error: 'Endpoint not found' };
+        }
+    }
+
+    handleReceiveContract(data) {
+        try {
+            const customer = this.addCustomerFromAPI(data.customerData);
+            const document = this.saveContractFromAPI(customer.id, data.pdfData, data.fileName);
+            
+            return {
+                success: true,
+                customerId: customer.id,
+                documentId: document.id,
+                message: 'Contract received and customer record created successfully'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    handleReceiveContractJSON(data) {
+        try {
+            const customer = this.addCustomerFromAPI(data.customerData);
+            const document = this.saveContractFromAPI(customer.id, data.pdfBase64, data.fileName);
+            
+            return {
+                success: true,
+                customerId: customer.id,
+                documentId: document.id,
+                message: 'Contract data received and customer record created successfully'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    handleGetCustomers() {
+        try {
+            return {
+                success: true,
+                customers: this.getCustomers()
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    handleGetCustomerById(customerId) {
+        try {
+            const customer = this.getCustomer(customerId);
+            if (!customer) {
+                return {
+                    success: false,
+                    error: 'Customer not found'
+                };
+            }
+            
+            return {
+                success: true,
+                customer: customer
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    // Get leads by sales person
+    getLeadsBySalesPerson(salesPerson) {
+        return this.data.leads.filter(lead => lead.soldBy === salesPerson);
+    }
+
+    // Get leads by insurance company
+    getLeadsByInsurance(insuranceCompany) {
+        return this.data.leads.filter(lead => lead.insuranceCompany === insuranceCompany);
+    }
+
+    // Search leads by multiple criteria
+    searchLeads(query, filters = {}) {
+        return this.data.leads.filter(lead => {
+            const matchesQuery = !query || 
+                lead.customerName?.toLowerCase().includes(query.toLowerCase()) ||
+                lead.email?.toLowerCase().includes(query.toLowerCase()) ||
+                lead.phone?.includes(query) ||
+                lead.address?.toLowerCase().includes(query.toLowerCase());
+            
+            const matchesStage = !filters.stage || lead.stage === filters.stage;
+            const matchesSales = !filters.salesPerson || lead.soldBy === filters.salesPerson;
+            const matchesInsurance = !filters.insurance || lead.insuranceCompany === filters.insurance;
+            
+            return matchesQuery && matchesStage && matchesSales && matchesInsurance;
+        });
+    }
+
+    // Export data to CSV
+    exportToCSV(data, filename) {
+        try {
+            const headers = Object.keys(data[0] || {});
+            const csvContent = [
+                headers.join(','),
+                ...data.map(row => headers.map(header => `"${row[header] || ''}"`).join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            this.showNotification('Data exported successfully!', 'success');
+        } catch (error) {
+            console.error('Error exporting data:', error);
+            this.showNotification('Error exporting data. Please try again.', 'error');
+        }
+    }
+
+    // Backup and restore data
+    backupData() {
+        try {
+            const backup = {
+                timestamp: new Date().toISOString(),
+                data: this.data
+            };
+            localStorage.setItem('umbrellaCRM_backup', JSON.stringify(backup));
+            this.showNotification('Data backed up successfully!', 'success');
+        } catch (error) {
+            console.error('Error backing up data:', error);
+            this.showNotification('Error backing up data.', 'error');
+        }
+    }
+
+    restoreData() {
+        try {
+            const backup = localStorage.getItem('umbrellaCRM_backup');
+            if (backup) {
+                const parsedBackup = JSON.parse(backup);
+                this.data = parsedBackup.data;
+                this.saveData();
+                this.showNotification('Data restored successfully!', 'success');
+                return true;
+            } else {
+                this.showNotification('No backup found.', 'error');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error restoring data:', error);
+            this.showNotification('Error restoring data.', 'error');
+            return false;
+        }
+    }
 }
 
 // Initialize CRM system
@@ -561,4 +1632,13 @@ function initializeSampleData() {
 }
 
 // Initialize sample data
-initializeSampleData(); 
+if (typeof crm !== 'undefined') {
+    initializeSampleData();
+} else {
+    // Wait for CRM to be initialized
+    setTimeout(() => {
+        if (typeof crm !== 'undefined') {
+            initializeSampleData();
+        }
+    }, 1000);
+} 

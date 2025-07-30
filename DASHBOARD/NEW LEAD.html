@@ -415,6 +415,24 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CALENDAR.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        Calendar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="INVOICE MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Invoices
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="CREATE A TASK.html" class="nav-link">
                         <i class="fas fa-tasks"></i>
                         Create Task
@@ -853,9 +871,13 @@
                     successMsg.style.display = 'block';
                 }
                 
-                // Redirect to dashboard after 2 seconds
+                // Determine redirect based on claim number
+                const hasClaimNumber = leadData.claimNumber && leadData.claimNumber.trim() !== '';
+                const redirectUrl = hasClaimNumber ? 'CLAIMS MANAGEMENT.html' : 'customers.html';
+                
+                // Redirect after 2 seconds
                 setTimeout(() => {
-                    window.location.href = 'DASHBOARD.html';
+                    window.location.href = redirectUrl;
                 }, 2000);
             } catch (error) {
                 console.error('Error adding lead:', error);

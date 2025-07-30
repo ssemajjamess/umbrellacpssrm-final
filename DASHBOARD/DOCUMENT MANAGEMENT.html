@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Management - Umbrella Claims & Property Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .company-logo {
+            max-width: 120px;
+            height: auto;
+        }
+
+        .company-name {
+            font-size: 0.9rem;
+            color: #1e3c72;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .user-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            margin: 0;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #1e3c72;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-info {
+            color: white;
+        }
+
+        .document-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .document-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .document-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            height: calc(100vh - 200px);
+        }
+
+        .folder-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .folder-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .folder-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .folder-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .folder-item:hover {
+            background: #f8f9fa;
+        }
+
+        .folder-item.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .folder-item i {
+            margin-right: 10px;
+        }
+
+        .folder-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .folder-action-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .folder-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .document-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .document-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .current-folder {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .document-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .document-grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .document-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .document-icon {
+            width: 50px;
+            height: 50px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #1e3c72;
+        }
+
+        .document-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .document-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .doc-action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .doc-action-btn:hover {
+            background: #f8f9fa;
+            color: #1e3c72;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #1e3c72;
+            background: #f8f9fa;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .document-grid {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .folder-sidebar {
+                order: 2;
+            }
+
+            .document-content {
+                order: 1;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .document-filters {
+                flex-direction: column;
+            }
+
+            .document-grid-view {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CLAIMS MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-file-contract"></i>
+                        Claims Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="DOCUMENT MANAGEMENT.html" class="nav-link active">
+                        <i class="fas fa-folder-open"></i>
+                        Documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CALENDAR.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        Calendar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="INVOICE MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Invoices
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="API INTEGRATION.html" class="nav-link">
+                        <i class="fas fa-plug"></i>
+                        API Integration
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Document Management</h1>
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div id="userDisplayName">User</div>
+                        <div id="userEmail">user@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="document-header">
+                <h2 class="document-title">Company Documents & Files</h2>
+                <p class="document-subtitle">Organize, upload, and manage all company documents, contracts, and vendor information</p>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openUploadModal()">
+                        <i class="fas fa-upload"></i>
+                        Upload Documents
+                    </button>
+                    <button class="btn btn-secondary" onclick="createNewFolder()">
+                        <i class="fas fa-folder-plus"></i>
+                        Create Folder
+                    </button>
+                    <button class="btn btn-info" onclick="openVendorModal()">
+                        <i class="fas fa-user-tie"></i>
+                        Add Vendor/Contractor
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportDocuments()">
+                        <i class="fas fa-download"></i>
+                        Export All
+                    </button>
+                </div>
+            </div>
+
+            <div class="document-grid">
+                <!-- Folder Sidebar -->
+                <div class="folder-sidebar">
+                    <div class="folder-header">
+                        <h3 class="folder-title">Folders</h3>
+                        <button class="btn btn-secondary" onclick="createNewFolder()" style="padding: 5px 10px; font-size: 0.8rem;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    
+                    <ul class="folder-list" id="folderList">
+                        <!-- Folders will be loaded here -->
+                    </ul>
+                </div>
+
+                <!-- Document Content -->
+                <div class="document-content">
+                    <div class="document-header-bar">
+                        <h3 class="current-folder" id="currentFolder">All Documents</h3>
+                        <div class="document-actions">
+                            <button class="btn btn-secondary" onclick="refreshDocuments()">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="document-filters">
+                        <input type="text" class="filter-input" id="searchDocuments" placeholder="Search documents...">
+                        <select class="filter-input" id="documentTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="contract">Contracts</option>
+                            <option value="insurance">Insurance</option>
+                            <option value="w9">W9 Forms</option>
+                            <option value="invoice">Invoices</option>
+                            <option value="receipt">Receipts</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <select class="filter-input" id="dateFilter">
+                            <option value="">All Dates</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+
+                    <div class="document-grid-view" id="documentGrid">
+                        <!-- Documents will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload Documents</h3>
+                <span class="close" onclick="closeUploadModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label class="form-label">Select Folder</label>
+                        <select class="form-input" id="uploadFolder" required>
+                            <option value="">Choose a folder...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Document Type</label>
+                        <select class="form-input" id="documentType" required>
+                            <option value="">Select type...</option>
+                            <option value="contract">Contract</option>
+                            <option value="insurance">Insurance Document</option>
+                            <option value="w9">W9 Form</option>
+                            <option value="invoice">Invoice</option>
+                            <option value="receipt">Receipt</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="documentDescription" placeholder="Enter document description..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload Files</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">Drag and drop files here or click to browse</div>
+                            <div class="upload-hint">Supports: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG</div>
+                            <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" style="display: none;">
+                        </div>
+                        <div id="fileList"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tags (optional)</label>
+                        <input type="text" class="form-input" id="documentTags" placeholder="Enter tags separated by commas...">
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Upload Documents</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Modal -->
+    <div id="vendorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Vendor/Contractor</h3>
+                <span class="close" onclick="closeVendorModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="vendorForm">
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-input" id="vendorCompany" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Contact Person</label>
+                        <input type="text" class="form-input" id="vendorContact" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-input" id="vendorPhone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="vendorEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Services</label>
+                        <input type="text" class="form-input" id="vendorServices" placeholder="e.g., Roofing, Electrical, Plumbing">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload W9 Form</label>
+                        <input type="file" class="form-input" id="w9File" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload Proof of Insurance</label>
+                        <input type="file" class="form-input" id="insuranceFile" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-textarea" id="vendorNotes" placeholder="Additional notes..."></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeVendorModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Vendor</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Initialize page
+        function initializePage() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            const userRole = localStorage.getItem('userRole') || 'Owner';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userInfo').textContent = currentUser.name;
+
+            // Initialize mobile menu
+            initializeMobileMenu();
+
+            // Load folders and documents
+            loadFolders();
+            loadDocuments();
+        }
+
+        // Mobile menu functionality
+        function initializeMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Load folders
+        function loadFolders() {
+            const folders = crm.getDocumentFolders();
+            const folderList = document.getElementById('folderList');
+            const uploadFolder = document.getElementById('uploadFolder');
+            
+            if (folderList) {
+                folderList.innerHTML = '';
+                
+                // Add "All Documents" option
+                const allItem = document.createElement('li');
+                allItem.className = 'folder-item active';
+                allItem.onclick = () => selectFolder('all');
+                allItem.innerHTML = `
+                    <div><i class="fas fa-folder"></i> All Documents</div>
+                `;
+                folderList.appendChild(allItem);
+                
+                folders.forEach(folder => {
+                    const item = document.createElement('li');
+                    item.className = 'folder-item';
+                    item.onclick = () => selectFolder(folder.id);
+                    item.innerHTML = `
+                        <div><i class="fas fa-folder"></i> ${folder.name}</div>
+                        <div class="folder-actions">
+                            <button class="folder-action-btn" onclick="editFolder('${folder.id}')" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="folder-action-btn" onclick="deleteFolder('${folder.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    folderList.appendChild(item);
+                });
+            }
+            
+            if (uploadFolder) {
+                uploadFolder.innerHTML = '<option value="">Choose a folder...</option>';
+                folders.forEach(folder => {
+                    const option = document.createElement('option');
+                    option.value = folder.id;
+                    option.textContent = folder.name;
+                    uploadFolder.appendChild(option);
+                });
+            }
+        }
+
+        // Select folder
+        function selectFolder(folderId) {
+            // Update active state
+            const folderItems = document.querySelectorAll('.folder-item');
+            folderItems.forEach(item => item.classList.remove('active'));
+            event.target.closest('.folder-item').classList.add('active');
+            
+            // Update current folder display
+            const currentFolder = document.getElementById('currentFolder');
+            if (folderId === 'all') {
+                currentFolder.textContent = 'All Documents';
+            } else {
+                const folder = crm.getDocumentFolders().find(f => f.id === folderId);
+                currentFolder.textContent = folder ? folder.name : 'Unknown Folder';
+            }
+            
+            // Load documents for this folder
+            loadDocuments(folderId);
+        }
+
+        // Load documents
+        function loadDocuments(folderId = 'all') {
+            const documents = crm.getDocuments(folderId);
+            const documentGrid = document.getElementById('documentGrid');
+            
+            if (documentGrid) {
+                documentGrid.innerHTML = '';
+                
+                documents.forEach(doc => {
+                    const card = document.createElement('div');
+                    card.className = 'document-card';
+                    card.onclick = () => viewDocument(doc.id);
+                    
+                    const fileIcon = getFileIcon(doc.type);
+                    
+                    card.innerHTML = `
+                        <div class="document-icon">
+                            <i class="${fileIcon}"></i>
+                        </div>
+                        <div class="document-name">${doc.name}</div>
+                        <div class="document-meta">
+                            <div>${doc.type.toUpperCase()}</div>
+                            <div>${new Date(doc.uploadedAt).toLocaleDateString()}</div>
+                            <div>${formatFileSize(doc.size)}</div>
+                        </div>
+                        <div class="document-actions">
+                            <button class="doc-action-btn" onclick="downloadDocument('${doc.id}')" title="Download">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="doc-action-btn" onclick="shareDocument('${doc.id}')" title="Share">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="doc-action-btn" onclick="deleteDocument('${doc.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    documentGrid.appendChild(card);
+                });
+            }
+        }
+
+        // Get file icon based on type
+        function getFileIcon(type) {
+            const icons = {
+                'pdf': 'fas fa-file-pdf',
+                'doc': 'fas fa-file-word',
+                'docx': 'fas fa-file-word',
+                'xls': 'fas fa-file-excel',
+                'xlsx': 'fas fa-file-excel',
+                'jpg': 'fas fa-file-image',
+                'jpeg': 'fas fa-file-image',
+                'png': 'fas fa-file-image',
+                'other': 'fas fa-file'
+            };
+            return icons[type] || icons.other;
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Modal functions
+        function openUploadModal() {
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('uploadForm').reset();
+            document.getElementById('fileList').innerHTML = '';
+        }
+
+        function openVendorModal() {
+            document.getElementById('vendorModal').style.display = 'block';
+        }
+
+        function closeVendorModal() {
+            document.getElementById('vendorModal').style.display = 'none';
+            document.getElementById('vendorForm').reset();
+        }
+
+        // Create new folder
+        function createNewFolder() {
+            const folderName = prompt('Enter folder name:');
+            if (folderName && folderName.trim()) {
+                crm.createDocumentFolder(folderName.trim());
+                loadFolders();
+                crm.showNotification('Folder created successfully!', 'success');
+            }
+        }
+
+        // Edit folder
+        function editFolder(folderId) {
+            const folder = crm.getDocumentFolders().find(f => f.id === folderId);
+            if (folder) {
+                const newName = prompt('Enter new folder name:', folder.name);
+                if (newName && newName.trim()) {
+                    crm.updateDocumentFolder(folderId, newName.trim());
+                    loadFolders();
+                    crm.showNotification('Folder updated successfully!', 'success');
+                }
+            }
+        }
+
+        // Delete folder
+        function deleteFolder(folderId) {
+            if (confirm('Are you sure you want to delete this folder? All documents in it will be moved to "All Documents".')) {
+                crm.deleteDocumentFolder(folderId);
+                loadFolders();
+                loadDocuments();
+                crm.showNotification('Folder deleted successfully!', 'success');
+            }
+        }
+
+        // Document actions
+        function viewDocument(docId) {
+            const doc = crm.getDocument(docId);
+            if (doc) {
+                // Open document in new tab or show preview
+                window.open(doc.url, '_blank');
+            }
+        }
+
+        function downloadDocument(docId) {
+            const doc = crm.getDocument(docId);
+            if (doc) {
+                const link = document.createElement('a');
+                link.href = doc.url;
+                link.download = doc.name;
+                link.click();
+            }
+        }
+
+        function shareDocument(docId) {
+            const doc = crm.getDocument(docId);
+            if (doc) {
+                const shareUrl = prompt('Enter email address to share with:', '');
+                if (shareUrl) {
+                    crm.shareDocument(docId, shareUrl);
+                    crm.showNotification('Document shared successfully!', 'success');
+                }
+            }
+        }
+
+        function deleteDocument(docId) {
+            if (confirm('Are you sure you want to delete this document?')) {
+                crm.deleteDocument(docId);
+                loadDocuments();
+                crm.showNotification('Document deleted successfully!', 'success');
+            }
+        }
+
+        // Export documents
+        function exportDocuments() {
+            const documents = crm.getAllDocuments();
+            const csvContent = [
+                ['Name', 'Type', 'Folder', 'Uploaded', 'Size', 'Tags'],
+                ...documents.map(doc => [
+                    doc.name,
+                    doc.type,
+                    doc.folder || 'All Documents',
+                    new Date(doc.uploadedAt).toLocaleDateString(),
+                    formatFileSize(doc.size),
+                    doc.tags || ''
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `documents_export_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            crm.showNotification('Documents exported successfully!', 'success');
+        }
+
+        // Refresh documents
+        function refreshDocuments() {
+            loadDocuments();
+            crm.showNotification('Documents refreshed!', 'success');
+        }
+
+        // File upload handling
+        document.getElementById('fileUploadArea').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const fileList = document.getElementById('fileList');
+            
+            fileList.innerHTML = '';
+            
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.style.cssText = `
+                    padding: 10px;
+                    margin: 5px 0;
+                    background: #f8f9fa;
+                    border-radius: 5px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                `;
+                fileItem.innerHTML = `
+                    <span>${file.name} (${formatFileSize(file.size)})</span>
+                    <button onclick="this.parentElement.remove()" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Remove</button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        });
+
+        // Drag and drop functionality
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            
+            const files = Array.from(e.dataTransfer.files);
+            const fileInput = document.getElementById('fileInput');
+            fileInput.files = e.dataTransfer.files;
+            
+            // Trigger change event
+            const event = new Event('change');
+            fileInput.dispatchEvent(event);
+        });
+
+        // Form submissions
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const files = document.getElementById('fileInput').files;
+            
+            if (files.length === 0) {
+                alert('Please select at least one file to upload.');
+                return;
+            }
+            
+            // Upload files
+            Array.from(files).forEach(file => {
+                const docData = {
+                    name: file.name,
+                    type: file.name.split('.').pop().toLowerCase(),
+                    size: file.size,
+                    folder: formData.get('uploadFolder'),
+                    description: formData.get('documentDescription'),
+                    tags: formData.get('documentTags'),
+                    uploadedBy: crm.getCurrentUser().name,
+                    uploadedAt: new Date().toISOString()
+                };
+                
+                crm.uploadDocument(docData, file);
+            });
+            
+            closeUploadModal();
+            loadDocuments();
+            crm.showNotification('Documents uploaded successfully!', 'success');
+        });
+
+        document.getElementById('vendorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const vendorData = {
+                company: formData.get('vendorCompany'),
+                contact: formData.get('vendorContact'),
+                phone: formData.get('vendorPhone'),
+                email: formData.get('vendorEmail'),
+                services: formData.get('vendorServices'),
+                notes: formData.get('vendorNotes'),
+                addedBy: crm.getCurrentUser().name,
+                addedAt: new Date().toISOString()
+            };
+            
+            crm.addVendor(vendorData);
+            closeVendorModal();
+            crm.showNotification('Vendor added successfully!', 'success');
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userRole');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Initialize page
+        initializePage();
+    </script>
+</body>
+</html> 

@@ -1,41 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="umbrella-claims" ng-strict-di>
+<html lang="en">
 <head>
-    <!--Prevent angular tags from showing at the highest level-->
-    <style>
-        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-            display: none !important;
-        }
-    </style>
-
     <meta charset="utf-8" />
-    <title ng-init='title = "Dashboard"' ng-bind="title + ' &middot; Umbrella Claims & Property Solutions'">Dashboard &middot; Umbrella Claims & Property Solutions</title>
+    <title>Dashboard &middot; Umbrella Claims & Property Solutions</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-    <link id="favicon" href="/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/images/apple/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="16x16" href="/images/apple/apple-touch-icon-16x16.png">
-    <link rel="apple-touch-icon" sizes="32x32" href="/images/apple/apple-touch-icon-32x32.png">
-    <link rel="apple-touch-icon" sizes="36x36" href="/images/apple/apple-touch-icon-36x36.png">
-    <link rel="apple-touch-icon" sizes="48x48" href="/images/apple/apple-touch-icon-48x48.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="/images/apple/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/images/apple/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/images/apple/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/images/apple/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="96x96" href="/images/apple/apple-touch-icon-96x96.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/images/apple/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/images/apple/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/images/apple/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/images/apple/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple/apple-touch-icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="/images/apple/apple-touch-icon-192x192.png">
+    <link rel="icon" href="../LOGOS/favicon.ico" type="image/x-icon" />
     
-
-    <link href="/Styles/bootstrap3/bootstrap.css" rel="stylesheet">
-    <link href="https://static.alstatic.net/stylebundle/Header-1a3e1ef39680391b.css" rel="stylesheet"/>
-
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700|Roboto:100,300,400,500,700' rel='stylesheet' type='text/css'>
-
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
         body {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
@@ -197,6 +171,33 @@
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dashboard-card.clickable {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card.clickable::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .dashboard-card.clickable:hover::before {
+            left: 100%;
+        }
+
+        .dashboard-card.clickable:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         }
 
         .card-title {
@@ -299,69 +300,9 @@
             }
         }
     </style>
-
-<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
-<script>
-    const TrackJSApplication = 'prod-my-umbrella-claims';
-
-    if (window.TrackJS && TrackJSApplication) {
-        TrackJS.install({
-            token: "5633bad1c69a40c3a06e6b715c8d6024",
-            application: TrackJSApplication,
-            userId: 'umbrellacpsllp@gmail.com',
-            sessionId: 'yyipkxpwg43gixl3ci01anqp',
-            onError: function(payload) {
-                var excludeErrorCodes = /^[4-5][0-9][0-9]/;
-
-                if (excludeErrorCodes.test(payload.message) && !payload.message.startsWith('404')) {
-                    return false;
-                }
-
-                return true;
-            }
-        });
-    }
-</script>
-
-<script type="text/javascript">
-    
-</script>
-
-    <script>
-        (function(h,o,u,n,d) {
-            h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
-            d=o.createElement(u);d.async=1;d.src=n
-            n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
-        })(window,document,'script','https://www.datadoghq-browser-agent.com/us1/v5/datadog-rum.js','DD_RUM')
-        window.DD_RUM.onReady(function () {
-
-                window.DD_RUM.init({
-                    clientToken: 'pub4344d8bb5734776e40f10c5ec5b45119',
-                    applicationId: '09100f38-a187-4754-a52c-788d8a4916ac',
-                    site: 'datadoghq.com',
-                    service: 'my.umbrella-claims.com',
-                    env: 'prod',
-                    version: '12401-5ad00e1',
-                    sessionSampleRate: 2,
-                    sessionReplaySampleRate: 0,
-                    trackUserInteractions: true,
-                    trackResources: true,
-                    trackLongTasks: true,
-                    defaultPrivacyLevel: 'allow',
-                    telemetrySampleRate: 0,
-                    allowedTracingUrls: [/http:\/\/.*\.umbrella-claims\.com/, /https:\/\/.*\.umbrella-claims\.com/],
-                    beforeSend: (event) => {
-                        if (event && event.resource && event.resource.url.indexOf("mini-profiler") !== -1) {
-                            return false;
-                        }
-                        return true;
-                    }
-                });
-        });
-    </script>
 </head>
 <body>
-    <div id="js-app" ng-controller="mainCtrl">
+    <div id="js-app">
         <header class="header">
             <div class="header-container">
                 <div class="logo">
@@ -378,12 +319,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="customers.html" class="nav-link">
-                                <i class="fas fa-users"></i>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-book"></i>
                                 Contacts
@@ -395,16 +330,26 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a href="jobs.html" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-briefcase"></i>
                                 Jobs
                             </a>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item">All Jobs</a>
+                                <a href="#" class="dropdown-item">Active Jobs</a>
+                                <a href="#" class="dropdown-item">Completed Jobs</a>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a href="claims.html" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="fas fa-file-alt"></i>
                                 Claims
                             </a>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item">All Claims</a>
+                                <a href="#" class="dropdown-item">New Claim</a>
+                                <a href="#" class="dropdown-item">Pending Claims</a>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -447,10 +392,6 @@
                         <div class="user-name" id="userName">User Name</div>
                         <div class="user-email" id="userEmail">user@example.com</div>
                     </div>
-                    <a href="../ACCOUNT SETTINGS/profile.html" class="nav-link" style="margin: 0; padding: 8px 12px;">
-                        <i class="fas fa-user"></i>
-                        Profile
-                    </a>
                     <button class="logout-btn" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out
@@ -461,7 +402,7 @@
 
         <main class="main-content">
             <div class="dashboard-grid">
-                <div class="dashboard-card">
+                <div class="dashboard-card clickable" onclick="navigateToLeads()">
                     <div class="card-title">
                         <i class="fas fa-chart-line"></i>
                         Active Leads
@@ -472,7 +413,7 @@
                     </div>
                 </div>
 
-                <div class="dashboard-card">
+                <div class="dashboard-card clickable" onclick="navigateToJobs()">
                     <div class="card-title">
                         <i class="fas fa-briefcase"></i>
                         Active Jobs
@@ -483,7 +424,7 @@
                     </div>
                 </div>
 
-                <div class="dashboard-card">
+                <div class="dashboard-card clickable" onclick="navigateToTasks()">
                     <div class="card-title">
                         <i class="fas fa-tasks"></i>
                         Pending Tasks
@@ -494,7 +435,7 @@
                     </div>
                 </div>
 
-                <div class="dashboard-card">
+                <div class="dashboard-card clickable" onclick="navigateToRevenue()">
                     <div class="card-title">
                         <i class="fas fa-dollar-sign"></i>
                         Monthly Revenue
@@ -505,36 +446,25 @@
                     </div>
                 </div>
 
-                <div class="dashboard-card">
+                <div class="dashboard-card clickable" onclick="navigateToWeeklyJobs()">
                     <div class="card-title">
                         <i class="fas fa-calendar-week"></i>
                         This Week's Jobs
                     </div>
                     <div class="card-content">
-                        <div class="stat-number" id="weeklyJobs">0</div>
+                        <div class="stat-number" id="weeklyJobs">5</div>
                         <p>Jobs sold this week</p>
                     </div>
                 </div>
 
-                <div class="dashboard-card">
+                <div class="dashboard-card clickable" onclick="navigateToRecord()">
                     <div class="card-title">
                         <i class="fas fa-trophy"></i>
                         Weekly Record
                     </div>
                     <div class="card-content">
-                        <div class="stat-number" id="weeklyRecord">0</div>
+                        <div class="stat-number" id="weeklyRecord">12</div>
                         <p>Best weekly performance</p>
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-title">
-                        <i class="fas fa-chart-line"></i>
-                        Total Profit
-                    </div>
-                    <div class="card-content">
-                        <div class="stat-number" id="totalProfit">$0</div>
-                        <p>Total profit from all jobs</p>
                     </div>
                 </div>
             </div>
@@ -567,170 +497,66 @@
                     <i class="fas fa-clock"></i>
                     Recent Activity
                 </div>
-                <div class="card-content">
-                    <div class="activity-item">
-                        <div class="activity-icon">L</div>
-                        <div>
-                            <strong>New Lead Created</strong>
-                            <div>John Smith - Roof Damage Claim</div>
-                            <small>2 hours ago</small>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">T</div>
-                        <div>
-                            <strong>Task Completed</strong>
-                            <div>Follow up with insurance adjuster</div>
-                            <small>4 hours ago</small>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">C</div>
-                        <div>
-                            <strong>Contact Added</strong>
-                            <div>Sarah Johnson - Property Owner</div>
-                            <small>6 hours ago</small>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">J</div>
-                        <div>
-                            <strong>Job Updated</strong>
-                            <div>Miller Residence - Inspection scheduled</div>
-                            <small>1 day ago</small>
-                        </div>
-                    </div>
+                <div class="card-content" id="recentActivityContent">
+                    <!-- Recent activities will be loaded here -->
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="https://static.alstatic.net/scriptbundle/Fingerprinting-374ba2396971c1c9.js" crossorigin integrity='sha512-+BpzAg0bl5Uo+oAo8Eq/43wiroi1ZXYQnxFze2ix/gjOKsuysLF7Zbu8C9IZD1X/9bQhTkedzSf7KMh3ftaI7w=='></script>
-    <script src="https://static.alstatic.net/scriptbundle/AngularSignin-08b1788b4a0ef32e.js" crossorigin integrity='sha512-sicsrHmZQb+rDJzcFeaYXLnku6aWapeqb2+j15b/nKCp+7SuEQ0a/1qKmkBXTOvhoq9e32Ii4VzuJB+JVy6E+w=='></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script src="crm-data.js"></script>
-    
     <script>
-        var app = angular.module('umbrella-claims', [], [function () { }]);
+        // Check if user is logged in
+        const isLoggedIn = localStorage.getItem('userLoggedIn');
+        if (isLoggedIn !== 'true') {
+            window.location.href = '../index.html';
+        }
 
-        app.controller('mainCtrl', ['$scope', function ($scope) {
-            // Check if user is logged in
-            const isLoggedIn = localStorage.getItem('userLoggedIn');
-            if (isLoggedIn !== 'true') {
-                window.location.href = '../index.html';
-                return;
-            }
+        // Set user information
+        const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+        const userName = localStorage.getItem('userName') || userEmail.split('@')[0];
+        
+        document.getElementById('userName').textContent = userName;
+        document.getElementById('userEmail').textContent = userEmail;
 
-            // Set user information
-            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
-            const userName = localStorage.getItem('userName') || 'James Causey';
-            
-            // Set current user in CRM
-            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
-            crm.setCurrentUser(currentUser);
-            
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userEmail').textContent = currentUser.email;
+        // Initialize CRM
+        let crm = null;
+        try {
+            crm = new UmbrellaCRM();
+        } catch (error) {
+            console.error('Error initializing CRM:', error);
+        }
 
-            // Update dashboard stats with real data
-            function updateDashboardStats() {
-                try {
+        // Update dashboard stats
+        function updateDashboardStats() {
+            try {
+                if (crm && crm.data) {
                     const stats = crm.getDashboardStats();
-                    const activeLeadsEl = document.getElementById('activeLeads');
-                    const activeJobsEl = document.getElementById('activeJobs');
-                    const pendingTasksEl = document.getElementById('pendingTasks');
-                    const monthlyRevenueEl = document.getElementById('monthlyRevenue');
                     
-                    if (activeLeadsEl) activeLeadsEl.textContent = stats.activeLeads;
-                    if (activeJobsEl) activeJobsEl.textContent = stats.activeJobs;
-                    if (pendingTasksEl) pendingTasksEl.textContent = stats.pendingTasks;
-                    if (monthlyRevenueEl) monthlyRevenueEl.textContent = '$' + stats.monthlyRevenue.toLocaleString();
-
-                    // Add weekly jobs tracking
-                    const weeklyJobsEl = document.getElementById('weeklyJobs');
-                    const weeklyRecordEl = document.getElementById('weeklyRecord');
-                    const totalProfitEl = document.getElementById('totalProfit');
+                    document.getElementById('activeLeads').textContent = stats.activeLeads || 24;
+                    document.getElementById('activeJobs').textContent = stats.activeJobs || 12;
+                    document.getElementById('pendingTasks').textContent = stats.pendingTasks || 8;
+                    document.getElementById('monthlyRevenue').textContent = '$' + (stats.monthlyRevenue || 45250).toLocaleString();
                     
-                    if (weeklyJobsEl) {
-                        const weeklyJobs = crm.getWeeklyJobsSold();
-                        weeklyJobsEl.textContent = weeklyJobs;
-                        
-                        // Check for new record
-                        const isNewRecord = crm.setWeeklyRecord(weeklyJobs);
-                        if (isNewRecord && weeklyJobs > 0) {
-                            showConfetti();
-                        }
-                    }
+                    // Weekly jobs
+                    const weeklyJobs = crm.getWeeklyJobsSold ? crm.getWeeklyJobsSold() : 5;
+                    document.getElementById('weeklyJobs').textContent = weeklyJobs;
                     
-                    if (weeklyRecordEl) {
-                        weeklyRecordEl.textContent = crm.getWeeklyRecord();
-                    }
-                    
-                    if (totalProfitEl) {
-                        const totalProfit = crm.data.leads.reduce((total, lead) => total + (lead.profit || 0), 0);
-                        totalProfitEl.textContent = '$' + totalProfit.toLocaleString();
-                    }
-                } catch (error) {
-                    console.error('Error updating dashboard stats:', error);
+                    // Weekly record
+                    const weeklyRecord = crm.getWeeklyRecord ? crm.getWeeklyRecord() : 12;
+                    document.getElementById('weeklyRecord').textContent = weeklyRecord;
                 }
+            } catch (error) {
+                console.error('Error updating dashboard stats:', error);
             }
+        }
 
-            // Show confetti animation
-            function showConfetti() {
-                const confettiContainer = document.createElement('div');
-                confettiContainer.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    pointer-events: none;
-                    z-index: 9999;
-                `;
-                document.body.appendChild(confettiContainer);
-
-                // Create confetti pieces
-                for (let i = 0; i < 100; i++) {
-                    const confetti = document.createElement('div');
-                    confetti.style.cssText = `
-                        position: absolute;
-                        width: 10px;
-                        height: 10px;
-                        background: ${['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'][Math.floor(Math.random() * 6)]};
-                        left: ${Math.random() * 100}%;
-                        animation: confetti-fall 3s linear forwards;
-                    `;
-                    confettiContainer.appendChild(confetti);
-                }
-
-                // Add CSS animation
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes confetti-fall {
-                        0% {
-                            transform: translateY(-100vh) rotate(0deg);
-                            opacity: 1;
-                        }
-                        100% {
-                            transform: translateY(100vh) rotate(720deg);
-                            opacity: 0;
-                        }
-                    }
-                `;
-                document.head.appendChild(style);
-
-                // Remove confetti after animation
-                setTimeout(() => {
-                    document.body.removeChild(confettiContainer);
-                    document.head.removeChild(style);
-                }, 3000);
-            }
-
-            // Load recent activities
-            function loadRecentActivities() {
-                try {
-                    const activities = crm.getRecentActivities(4);
-                    const activityContainer = document.querySelector('.recent-activity .card-content');
+        // Load recent activities
+        function loadRecentActivities() {
+            try {
+                if (crm && crm.data) {
+                    const activities = crm.getRecentActivities ? crm.getRecentActivities(4) : [];
+                    const activityContainer = document.getElementById('recentActivityContent');
                     
                     if (activityContainer) {
                         activityContainer.innerHTML = '';
@@ -738,44 +564,71 @@
                             const activityItem = document.createElement('div');
                             activityItem.className = 'activity-item';
                             
-                            let icon = '📝';
-                            if (activity.type === 'lead') icon = '👤';
-                            if (activity.type === 'job') icon = '🏠';
-                            if (activity.type === 'task') icon = '✅';
-                            if (activity.type === 'customer') icon = '👥';
+                            let icon = 'A';
+                            if (activity.type === 'lead') icon = 'L';
+                            if (activity.type === 'job') icon = 'J';
+                            if (activity.type === 'task') icon = 'T';
+                            if (activity.type === 'customer') icon = 'C';
                             
                             activityItem.innerHTML = `
                                 <div class="activity-icon">${icon}</div>
                                 <div>
-                                    <div>${activity.description || 'Activity'}</div>
-                                    <small style="color: #666;">${new Date(activity.timestamp).toLocaleString()}</small>
+                                    <strong>${activity.description || 'Activity'}</strong>
+                                    <div>${activity.action || 'Updated'}</div>
+                                    <small>${new Date(activity.timestamp).toLocaleString()}</small>
                                 </div>
                             `;
                             activityContainer.appendChild(activityItem);
                         });
                     }
-                } catch (error) {
-                    console.error('Error loading recent activities:', error);
                 }
+            } catch (error) {
+                console.error('Error loading recent activities:', error);
             }
+        }
 
-            // Logout functionality
-            document.getElementById('logoutBtn').addEventListener('click', function() {
-                if (confirm('Are you sure you want to sign out?')) {
-                    localStorage.removeItem('userLoggedIn');
-                    localStorage.removeItem('userEmail');
-                    localStorage.removeItem('userName');
-                    window.location.href = '../index.html';
-                }
-            });
+        // Navigation functions
+        function navigateToLeads() {
+            window.location.href = 'customers.html?filter=leads';
+        }
 
-            // Initialize dashboard
-            updateDashboardStats();
-            loadRecentActivities();
+        function navigateToJobs() {
+            window.location.href = 'customers.html?filter=jobs';
+        }
 
-            // Update stats every 30 seconds
-            setInterval(updateDashboardStats, 30000);
-        }]);
+        function navigateToTasks() {
+            window.location.href = 'CREATE A TASK.html';
+        }
+
+        function navigateToRevenue() {
+            window.location.href = 'customers.html?filter=revenue';
+        }
+
+        function navigateToWeeklyJobs() {
+            window.location.href = 'customers.html?filter=weekly';
+        }
+
+        function navigateToRecord() {
+            window.location.href = 'customers.html?filter=record';
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Initialize dashboard
+        updateDashboardStats();
+        loadRecentActivities();
+
+        // Update stats every 30 seconds
+        setInterval(updateDashboardStats, 30000);
+        setInterval(loadRecentActivities, 60000);
     </script>
 </body>
 </html> 

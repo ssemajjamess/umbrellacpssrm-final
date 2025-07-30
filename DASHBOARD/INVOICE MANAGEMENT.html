@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management - Umbrella Claims & Property Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .company-logo {
+            max-width: 120px;
+            height: auto;
+        }
+
+        .company-name {
+            font-size: 0.9rem;
+            color: #1e3c72;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .user-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            margin: 0;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #1e3c72;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-info {
+            color: white;
+        }
+
+        .invoice-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .invoice-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .invoice-subtitle {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .invoice-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .invoice-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+            color: #1e3c72;
+            font-size: 1.2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            border-color: #1e3c72;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .items-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-header {
+            font-weight: bold;
+            color: #1e3c72;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .remove-item {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .remove-item:hover {
+            background: #c82333;
+        }
+
+        .add-item-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .add-item-btn:hover {
+            background: #218838;
+        }
+
+        .totals-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .total-row.final {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #1e3c72;
+            border-top: 2px solid #1e3c72;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .generate-btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .generate-btn:hover {
+            background: #2a5298;
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .item-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .item-header {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../LOGOS/PNG File-01.png" alt="Umbrella Claims Logo" class="company-logo">
+                <div class="company-name">Umbrella Claims & Property Solutions</div>
+                <div class="user-info" id="userInfo">Loading...</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="DASHBOARD.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CLAIMS MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-file-contract"></i>
+                        Claims Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="DOCUMENT MANAGEMENT.html" class="nav-link">
+                        <i class="fas fa-folder-open"></i>
+                        Documents
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CALENDAR.html" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i>
+                        Calendar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="INVOICE MANAGEMENT.html" class="nav-link active">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Invoices
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="NEW LEAD.html" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        New Lead
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="CREATE A TASK.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        Create Task
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="REMINDER.html" class="nav-link">
+                        <i class="fas fa-bell"></i>
+                        Reminders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../ACCOUNT SETTINGS/ACCOUNT SETTINGS.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Invoice Management</h1>
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-info">
+                        <div id="userDisplayName">User</div>
+                        <div id="userEmail">user@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-header">
+                <h2 class="invoice-title">Create Professional Invoices</h2>
+                <p class="invoice-subtitle">Generate detailed invoices for customers with automatic calculations and PDF export</p>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="createNewInvoice()">
+                        <i class="fas fa-plus"></i>
+                        New Invoice
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadInvoiceTemplates()">
+                        <i class="fas fa-file-alt"></i>
+                        Templates
+                    </button>
+                    <button class="btn btn-info" onclick="viewInvoiceHistory()">
+                        <i class="fas fa-history"></i>
+                        Invoice History
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportInvoices()">
+                        <i class="fas fa-download"></i>
+                        Export All
+                    </button>
+                </div>
+            </div>
+
+            <div class="invoice-container">
+                <form class="invoice-form" id="invoiceForm">
+                    <!-- Customer Information -->
+                    <div class="form-section">
+                        <h3>Customer Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Select Customer</label>
+                                <select class="form-select" id="customerSelect" onchange="loadCustomerInfo()">
+                                    <option value="">Choose a customer...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Invoice Number</label>
+                                <input type="text" class="form-input" id="invoiceNumber" placeholder="INV-2024-001">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Invoice Date</label>
+                                <input type="date" class="form-input" id="invoiceDate">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Due Date</label>
+                                <input type="date" class="form-input" id="dueDate">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Items -->
+                    <div class="form-section">
+                        <h3>Invoice Items</h3>
+                        <div class="items-section">
+                            <div class="item-row item-header">
+                                <div>Description</div>
+                                <div>Quantity</div>
+                                <div>Unit Price</div>
+                                <div>Total</div>
+                                <div>Action</div>
+                            </div>
+                            <div id="invoiceItems">
+                                <!-- Items will be added here -->
+                            </div>
+                            <button type="button" class="add-item-btn" onclick="addInvoiceItem()">
+                                <i class="fas fa-plus"></i> Add Item
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Settings -->
+                    <div class="form-section">
+                        <h3>Invoice Settings</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Tax Rate (%)</label>
+                                <input type="number" class="form-input" id="taxRate" value="8.0" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Discount Amount</label>
+                                <input type="number" class="form-input" id="discount" value="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Payment Terms</label>
+                                <select class="form-select" id="paymentTerms">
+                                    <option value="net30">Net 30</option>
+                                    <option value="net15">Net 15</option>
+                                    <option value="due_on_receipt">Due on Receipt</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Invoice Status</label>
+                                <select class="form-select" id="invoiceStatus">
+                                    <option value="draft">Draft</option>
+                                    <option value="sent">Sent</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="overdue">Overdue</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes and Terms -->
+                    <div class="form-section">
+                        <h3>Notes & Terms</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Invoice Notes</label>
+                                <textarea class="form-textarea" id="invoiceNotes" placeholder="Thank you for your business!">Thank you for choosing Umbrella Claims & Property Solutions. Please remit payment within the specified terms.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Terms & Conditions</label>
+                                <textarea class="form-textarea" id="termsConditions" placeholder="Payment terms and conditions...">Payment is due within 30 days of invoice date. Late payments may incur additional charges. All work is guaranteed for 1 year from completion date.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Totals -->
+                    <div class="totals-section">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Tax (<span id="taxRateDisplay">8.0</span>%):</span>
+                            <span id="taxAmount">$0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Discount:</span>
+                            <span id="discountAmount">$0.00</span>
+                        </div>
+                        <div class="total-row final">
+                            <span>TOTAL:</span>
+                            <span id="totalAmount">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button type="button" class="btn btn-primary" onclick="saveInvoice()">
+                            <i class="fas fa-save"></i>
+                            Save Invoice
+                        </button>
+                        <button type="button" class="btn btn-info" onclick="previewInvoice()">
+                            <i class="fas fa-eye"></i>
+                            Preview
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="generatePDF()">
+                            <i class="fas fa-file-pdf"></i>
+                            Generate PDF
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="sendInvoice()">
+                            <i class="fas fa-envelope"></i>
+                            Send Invoice
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="crm-data.js"></script>
+    <script>
+        // Invoice state
+        let currentInvoice = {
+            id: null,
+            customerId: null,
+            invoiceNumber: '',
+            invoiceDate: '',
+            dueDate: '',
+            items: [],
+            taxRate: 8.0,
+            discount: 0,
+            notes: '',
+            terms: '',
+            status: 'draft',
+            paymentTerms: 'net30',
+            total: 0
+        };
+
+        // Initialize page
+        function initializePage() {
+            // Check authentication
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Set user information
+            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
+            const userName = localStorage.getItem('userName') || 'James Causey';
+            const userRole = localStorage.getItem('userRole') || 'Owner';
+            
+            // Set current user in CRM
+            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
+            crm.setCurrentUser(currentUser);
+            
+            document.getElementById('userDisplayName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userInfo').textContent = currentUser.name;
+
+            // Initialize mobile menu
+            initializeMobileMenu();
+
+            // Load customers and initialize invoice
+            loadCustomers();
+            initializeInvoice();
+        }
+
+        // Mobile menu functionality
+        function initializeMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Load customers for dropdown
+        function loadCustomers() {
+            const customers = crm.getCustomers();
+            const customerSelect = document.getElementById('customerSelect');
+            
+            customerSelect.innerHTML = '<option value="">Choose a customer...</option>';
+            
+            customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.id;
+                option.textContent = customer.customerName;
+                customerSelect.appendChild(option);
+            });
+        }
+
+        // Initialize new invoice
+        function initializeInvoice() {
+            // Set default dates
+            const today = new Date();
+            const dueDate = new Date();
+            dueDate.setDate(today.getDate() + 30);
+            
+            document.getElementById('invoiceDate').value = today.toISOString().split('T')[0];
+            document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
+            
+            // Generate invoice number
+            const invoiceNumber = generateInvoiceNumber();
+            document.getElementById('invoiceNumber').value = invoiceNumber;
+            
+            // Add first item
+            addInvoiceItem();
+            
+            // Update totals
+            updateTotals();
+        }
+
+        // Generate invoice number
+        function generateInvoiceNumber() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `INV-${year}${month}${day}-${random}`;
+        }
+
+        // Load customer information
+        function loadCustomerInfo() {
+            const customerId = document.getElementById('customerSelect').value;
+            if (customerId) {
+                const customer = crm.getCustomer(customerId);
+                if (customer) {
+                    currentInvoice.customerId = customerId;
+                    // You can populate additional customer fields here
+                }
+            }
+        }
+
+        // Add invoice item
+        function addInvoiceItem() {
+            const itemsContainer = document.getElementById('invoiceItems');
+            const itemId = Date.now();
+            
+            const itemRow = document.createElement('div');
+            itemRow.className = 'item-row';
+            itemRow.id = `item-${itemId}`;
+            
+            itemRow.innerHTML = `
+                <input type="text" class="form-input" placeholder="Item description" onchange="updateItem(${itemId}, 'description', this.value)">
+                <input type="number" class="form-input" placeholder="Qty" value="1" min="1" onchange="updateItem(${itemId}, 'quantity', this.value)">
+                <input type="number" class="form-input" placeholder="Price" value="0" min="0" step="0.01" onchange="updateItem(${itemId}, 'price', this.value)">
+                <span class="item-total" id="total-${itemId}">$0.00</span>
+                <button type="button" class="remove-item" onclick="removeItem(${itemId})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            
+            itemsContainer.appendChild(itemRow);
+            
+            // Add to current invoice
+            currentInvoice.items.push({
+                id: itemId,
+                description: '',
+                quantity: 1,
+                price: 0,
+                total: 0
+            });
+        }
+
+        // Update item
+        function updateItem(itemId, field, value) {
+            const item = currentInvoice.items.find(i => i.id === itemId);
+            if (item) {
+                if (field === 'quantity' || field === 'price') {
+                    item[field] = parseFloat(value) || 0;
+                } else {
+                    item[field] = value;
+                }
+                
+                // Calculate item total
+                item.total = item.quantity * item.price;
+                
+                // Update display
+                document.getElementById(`total-${itemId}`).textContent = `$${item.total.toFixed(2)}`;
+                
+                // Update invoice totals
+                updateTotals();
+            }
+        }
+
+        // Remove item
+        function removeItem(itemId) {
+            // Remove from current invoice
+            currentInvoice.items = currentInvoice.items.filter(i => i.id !== itemId);
+            
+            // Remove from DOM
+            const itemElement = document.getElementById(`item-${itemId}`);
+            if (itemElement) {
+                itemElement.remove();
+            }
+            
+            // Update totals
+            updateTotals();
+        }
+
+        // Update totals
+        function updateTotals() {
+            const subtotal = currentInvoice.items.reduce((sum, item) => sum + item.total, 0);
+            const taxRate = parseFloat(document.getElementById('taxRate').value) / 100;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            
+            const tax = subtotal * taxRate;
+            const total = subtotal + tax - discount;
+            
+            // Update display
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('taxRateDisplay').textContent = (taxRate * 100).toFixed(1);
+            document.getElementById('taxAmount').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('discountAmount').textContent = `$${discount.toFixed(2)}`;
+            document.getElementById('totalAmount').textContent = `$${total.toFixed(2)}`;
+            
+            // Update current invoice
+            currentInvoice.subtotal = subtotal;
+            currentInvoice.tax = tax;
+            currentInvoice.total = total;
+        }
+
+        // Save invoice
+        function saveInvoice() {
+            // Collect form data
+            currentInvoice.invoiceNumber = document.getElementById('invoiceNumber').value;
+            currentInvoice.invoiceDate = document.getElementById('invoiceDate').value;
+            currentInvoice.dueDate = document.getElementById('dueDate').value;
+            currentInvoice.taxRate = parseFloat(document.getElementById('taxRate').value);
+            currentInvoice.discount = parseFloat(document.getElementById('discount').value);
+            currentInvoice.notes = document.getElementById('invoiceNotes').value;
+            currentInvoice.terms = document.getElementById('termsConditions').value;
+            currentInvoice.status = document.getElementById('invoiceStatus').value;
+            currentInvoice.paymentTerms = document.getElementById('paymentTerms').value;
+            
+            // Validate required fields
+            if (!currentInvoice.customerId) {
+                alert('Please select a customer.');
+                return;
+            }
+            
+            if (!currentInvoice.invoiceNumber) {
+                alert('Please enter an invoice number.');
+                return;
+            }
+            
+            if (currentInvoice.items.length === 0) {
+                alert('Please add at least one item.');
+                return;
+            }
+            
+            // Save to CRM
+            crm.addInvoice(currentInvoice);
+            
+            crm.showNotification('Invoice saved successfully!', 'success');
+        }
+
+        // Generate PDF
+        function generatePDF() {
+            if (!currentInvoice.customerId) {
+                alert('Please select a customer first.');
+                return;
+            }
+            
+            const customer = crm.getCustomer(currentInvoice.customerId);
+            if (!customer) {
+                alert('Customer not found.');
+                return;
+            }
+            
+            // Create PDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add company logo
+            // doc.addImage(logo, 'PNG', 10, 10, 50, 20);
+            
+            // Header
+            doc.setFontSize(20);
+            doc.text('INVOICE', 160, 20, { align: 'right' });
+            
+            doc.setFontSize(12);
+            doc.text(`Invoice #: ${currentInvoice.invoiceNumber}`, 160, 30, { align: 'right' });
+            doc.text(`Date: ${currentInvoice.invoiceDate}`, 160, 35, { align: 'right' });
+            doc.text(`Due: ${currentInvoice.dueDate}`, 160, 40, { align: 'right' });
+            
+            // Company info
+            doc.setFontSize(14);
+            doc.text('Umbrella Claims & Property Solutions', 10, 20);
+            doc.setFontSize(10);
+            doc.text('141 Traction St', 10, 25);
+            doc.text('Greenville, SC 29611', 10, 30);
+            doc.text('864-767-6188', 10, 35);
+            doc.text('customercare@roofsbyumbrella.com', 10, 40);
+            
+            // Customer info
+            doc.setFontSize(12);
+            doc.text('Bill To:', 10, 60);
+            doc.setFontSize(10);
+            doc.text(customer.customerName, 10, 65);
+            doc.text(customer.email || '', 10, 70);
+            doc.text(customer.address || '', 10, 75);
+            
+            // Items table
+            const itemRows = currentInvoice.items.map(item => [
+                item.description,
+                item.quantity,
+                `$${item.price.toFixed(2)}`,
+                `$${item.total.toFixed(2)}`
+            ]);
+            
+            doc.autoTable({
+                head: [['Description', 'Qty', 'Unit Price', 'Total']],
+                body: itemRows,
+                startY: 90,
+                theme: 'grid'
+            });
+            
+            // Totals
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.text(`Subtotal: $${currentInvoice.subtotal.toFixed(2)}`, 140, finalY);
+            doc.text(`Tax (${currentInvoice.taxRate}%): $${currentInvoice.tax.toFixed(2)}`, 140, finalY + 5);
+            doc.text(`Discount: -$${currentInvoice.discount.toFixed(2)}`, 140, finalY + 10);
+            doc.setFontSize(14);
+            doc.text(`TOTAL: $${currentInvoice.total.toFixed(2)}`, 140, finalY + 20);
+            
+            // Notes
+            doc.setFontSize(10);
+            doc.text('Notes:', 10, finalY + 30);
+            doc.text(currentInvoice.notes, 10, finalY + 35);
+            
+            // Terms
+            doc.text('Terms:', 10, finalY + 50);
+            doc.text(currentInvoice.terms, 10, finalY + 55);
+            
+            // Save PDF
+            doc.save(`invoice-${currentInvoice.invoiceNumber}.pdf`);
+            
+            crm.showNotification('PDF generated successfully!', 'success');
+        }
+
+        // Preview invoice
+        function previewInvoice() {
+            if (!currentInvoice.customerId) {
+                alert('Please select a customer first.');
+                return;
+            }
+            
+            // Show preview in new window
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>Invoice Preview</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .invoice-info { float: right; }
+                        .customer-info { margin-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #f2f2f2; }
+                        .totals { text-align: right; margin-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Umbrella Claims & Property Solutions</h1>
+                        <p>141 Traction St, Greenville, SC 29611</p>
+                        <p>864-767-6188 | customercare@roofsbyumbrella.com</p>
+                    </div>
+                    
+                    <div class="invoice-info">
+                        <h2>INVOICE</h2>
+                        <p><strong>Invoice #:</strong> ${currentInvoice.invoiceNumber}</p>
+                        <p><strong>Date:</strong> ${currentInvoice.invoiceDate}</p>
+                        <p><strong>Due:</strong> ${currentInvoice.dueDate}</p>
+                    </div>
+                    
+                    <div class="customer-info">
+                        <h3>Bill To:</h3>
+                        <p>${crm.getCustomer(currentInvoice.customerId)?.customerName || 'Customer'}</p>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${currentInvoice.items.map(item => `
+                                <tr>
+                                    <td>${item.description}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>$${item.price.toFixed(2)}</td>
+                                    <td>$${item.total.toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div class="totals">
+                        <p><strong>Subtotal:</strong> $${currentInvoice.subtotal.toFixed(2)}</p>
+                        <p><strong>Tax (${currentInvoice.taxRate}%):</strong> $${currentInvoice.tax.toFixed(2)}</p>
+                        <p><strong>Discount:</strong> -$${currentInvoice.discount.toFixed(2)}</p>
+                        <p><strong>TOTAL:</strong> $${currentInvoice.total.toFixed(2)}</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <h4>Notes:</h4>
+                        <p>${currentInvoice.notes}</p>
+                        
+                        <h4>Terms:</h4>
+                        <p>${currentInvoice.terms}</p>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        // Send invoice
+        function sendInvoice() {
+            if (!currentInvoice.customerId) {
+                alert('Please select a customer first.');
+                return;
+            }
+            
+            const customer = crm.getCustomer(currentInvoice.customerId);
+            if (!customer || !customer.email) {
+                alert('Customer email not found.');
+                return;
+            }
+            
+            // Simulate sending invoice
+            crm.showNotification(`Invoice sent to ${customer.email}!`, 'success');
+            
+            // Update status
+            currentInvoice.status = 'sent';
+            document.getElementById('invoiceStatus').value = 'sent';
+        }
+
+        // Create new invoice
+        function createNewInvoice() {
+            currentInvoice = {
+                id: null,
+                customerId: null,
+                invoiceNumber: generateInvoiceNumber(),
+                invoiceDate: new Date().toISOString().split('T')[0],
+                dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                items: [],
+                taxRate: 8.0,
+                discount: 0,
+                notes: 'Thank you for choosing Umbrella Claims & Property Solutions. Please remit payment within the specified terms.',
+                terms: 'Payment is due within 30 days of invoice date. Late payments may incur additional charges. All work is guaranteed for 1 year from completion date.',
+                status: 'draft',
+                paymentTerms: 'net30',
+                total: 0
+            };
+            
+            // Reset form
+            document.getElementById('invoiceForm').reset();
+            document.getElementById('invoiceItems').innerHTML = '';
+            
+            // Initialize new invoice
+            initializeInvoice();
+            
+            crm.showNotification('New invoice created!', 'success');
+        }
+
+        // Load invoice templates
+        function loadInvoiceTemplates() {
+            alert('Invoice templates feature coming soon!');
+        }
+
+        // View invoice history
+        function viewInvoiceHistory() {
+            alert('Invoice history feature coming soon!');
+        }
+
+        // Export invoices
+        function exportInvoices() {
+            alert('Export invoices feature coming soon!');
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userRole');
+                window.location.href = '../index.html';
+            }
+        });
+
+        // Initialize page
+        initializePage();
+    </script>
+</body>
+</html> 
