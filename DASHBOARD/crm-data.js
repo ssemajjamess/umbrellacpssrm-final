@@ -114,6 +114,7 @@ class UmbrellaCRM {
         console.log('Loading sample data...');
         const sampleCustomers = [
             {
+                id: Date.now() + 1,
                 customerName: 'Enrique and Viviana Guzman',
                 phone: '(864) 626-7669',
                 email: 'enriqueguzman13@gmail.com',
@@ -134,6 +135,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 2,
                 customerName: 'James & Brenda Alexander',
                 phone: '(864)-419-2313',
                 email: 'ajtabga@aol.com',
@@ -154,6 +156,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 3,
                 customerName: 'Russell Brendel',
                 phone: '(425)-405-0832',
                 email: 'Ourbrendelfamily@gmail.com',
@@ -174,6 +177,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 4,
                 customerName: 'John Brewer',
                 phone: 'H(864)-616-8469 W(864) 404-5637',
                 email: 'Coreygc85@icloud.com',
@@ -194,6 +198,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 5,
                 customerName: 'Corey Craft',
                 phone: '(864) 567-8901',
                 email: 'corey.craft@yahoo.com',
@@ -214,6 +219,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 6,
                 customerName: 'Tonya Strickland',
                 phone: '(864) 678-9012',
                 email: 'Tonstric@bellsouth.net',
@@ -234,6 +240,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 7,
                 customerName: 'Mike Hanner',
                 phone: '(864) 789-0123',
                 email: 'mike.hanner@aol.com',
@@ -254,6 +261,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 8,
                 customerName: 'Lorrie Green',
                 phone: '(864) 890-1234',
                 email: 'lorrie.green@icloud.com',
@@ -274,6 +282,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 9,
                 customerName: 'James Turner',
                 phone: '(864) 901-2345',
                 email: 'james.turner@bellsouth.net',
@@ -294,6 +303,7 @@ class UmbrellaCRM {
                 createdAt: new Date().toISOString()
             },
             {
+                id: Date.now() + 10,
                 customerName: 'Joshua W. Taylor',
                 phone: '(864) 012-3456',
                 email: 'joshua.taylor@yahoo.com',
@@ -315,128 +325,58 @@ class UmbrellaCRM {
             }
         ];
 
-        sampleCustomers.forEach(customer => {
-            this.addLead(customer);
+        console.log(`Adding ${sampleCustomers.length} sample customers...`);
+        
+        // Clear existing leads first
+        this.data.leads = [];
+        
+        // Add each customer directly to the leads array
+        sampleCustomers.forEach((customer, index) => {
+            // Ensure all required fields are present
+            const completeCustomer = {
+                ...customer,
+                documents: customer.documents || [],
+                photos: customer.photos || { before: [], after: [] },
+                activities: customer.activities || [],
+                stage: customer.stage || 'LEAD',
+                jobCost: customer.jobCost || 0,
+                laborCost: customer.laborCost || 0,
+                materialCost: customer.materialCost || 0,
+                profit: customer.profit || 0,
+                googleRating: customer.googleRating || 0,
+                approved: customer.approved || 'PENDING',
+                feePaid: customer.feePaid || 'N/A',
+                insuranceCompany: customer.insuranceCompany || 'TBD',
+                claimNumber: customer.claimNumber || '',
+                adjusterInfo: customer.adjusterInfo || '',
+                roofType: customer.roofType || 'ASPHALT 30 YEAR',
+                replacementType: customer.replacementType || '',
+                soldBy: customer.soldBy || 'Unknown'
+            };
+            
+            this.data.leads.push(completeCustomer);
+            console.log(`Added customer ${index + 1}: ${completeCustomer.customerName} (ID: ${completeCustomer.id})`);
         });
 
-        // Add more customers from the spreadsheet
-        const additionalCustomers = [
-            {
-                customerName: 'Tonya Strickland',
-                phone: '(864) 678-9012',
-                email: 'Tonstric@bellsouth.net',
-                address: '987 Cedar Ln, Greenville, SC 29611',
-                soldBy: 'James Causey',
-                stage: 'LEAD',
-                feePaid: 'N/A',
-                insuranceCompany: 'ALLSTATE',
-                claimNumber: '',
-                adjusterInfo: '',
-                roofType: 'ASPHALT 30 YEAR',
-                replacementType: '',
-                jobCost: 0,
-                laborCost: 0,
-                materialCost: 0,
-                profit: 0,
-                googleRating: 0,
-                createdAt: new Date().toISOString()
-            },
-            {
-                customerName: 'Mike Hanner',
-                phone: '(864) 789-0123',
-                email: 'mike.hanner@aol.com',
-                address: '147 Birch Rd, Greenville, SC 29611',
-                soldBy: 'Daniel Pruiksma',
-                stage: 'LEAD',
-                feePaid: 'N/A',
-                insuranceCompany: 'STATEFARM',
-                claimNumber: '',
-                adjusterInfo: '',
-                roofType: 'ASPHALT 30 YEAR',
-                replacementType: '',
-                jobCost: 0,
-                laborCost: 0,
-                materialCost: 0,
-                profit: 0,
-                googleRating: 0,
-                createdAt: new Date().toISOString()
-            },
-            {
-                customerName: 'Lorrie Green',
-                phone: '(864) 890-1234',
-                email: 'lorrie.green@icloud.com',
-                address: '258 Spruce Way, Greenville, SC 29611',
-                soldBy: 'James Causey',
-                stage: 'LEAD',
-                feePaid: 'N/A',
-                insuranceCompany: '?????????',
-                claimNumber: '',
-                adjusterInfo: '',
-                roofType: 'ASPHALT 30 YEAR',
-                replacementType: '',
-                jobCost: 0,
-                laborCost: 0,
-                materialCost: 0,
-                profit: 0,
-                googleRating: 0,
-                createdAt: new Date().toISOString()
-            },
-            {
-                customerName: 'James Turner',
-                phone: '(864) 901-2345',
-                email: 'james.turner@bellsouth.net',
-                address: '369 Willow Ct, Greenville, SC 29611',
-                soldBy: 'James Causey',
-                stage: 'LEAD',
-                feePaid: 'N/A',
-                insuranceCompany: 'STATEFARM',
-                claimNumber: '',
-                adjusterInfo: '',
-                roofType: 'ASPHALT 30 YEAR',
-                replacementType: '',
-                jobCost: 0,
-                laborCost: 0,
-                materialCost: 0,
-                profit: 0,
-                googleRating: 0,
-                createdAt: new Date().toISOString()
-            },
-            {
-                customerName: 'Joshua W. Taylor',
-                phone: '(864) 012-3456',
-                email: 'joshua.taylor@yahoo.com',
-                address: '741 Poplar St, Greenville, SC 29611',
-                soldBy: 'Daniel Pruiksma',
-                stage: 'LEAD',
-                feePaid: 'N/A',
-                insuranceCompany: 'TBD',
-                claimNumber: '',
-                adjusterInfo: '',
-                roofType: 'ASPHALT 30 YEAR',
-                replacementType: '',
-                jobCost: 0,
-                laborCost: 0,
-                materialCost: 0,
-                profit: 0,
-                googleRating: 0,
-                createdAt: new Date().toISOString()
-            }
-        ];
-
-        additionalCustomers.forEach(customer => {
-            this.addLead(customer);
-        });
-
+        // Save the data
         this.saveData();
-        console.log('Sample data loaded successfully!');
+        console.log(`Successfully loaded ${this.data.leads.length} customers`);
+        this.showNotification(`Loaded ${this.data.leads.length} sample customers successfully!`, 'success');
     }
 
     // Force reload sample data
     forceReloadSampleData() {
         console.log('Force reloading sample data...');
+        
+        // Clear existing data
         this.data.leads = [];
+        this.saveData();
+        
+        // Load fresh sample data
         this.loadSampleData();
-        console.log(`Force reloaded ${this.data.leads.length} customers`);
+        
+        console.log(`Force reload complete. Total customers: ${this.data.leads.length}`);
+        this.showNotification(`Force reloaded ${this.data.leads.length} customers successfully!`, 'success');
     }
 
     // Validate and fix data structure

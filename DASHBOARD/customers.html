@@ -2920,10 +2920,20 @@
                 
                 // Get current user email
                 const userEmail = localStorage.getItem('userEmail');
+                console.log('Current user email:', userEmail);
                 
                 // Get all customers using the CRM function
                 let customers = crm.getCustomersForUser(userEmail);
                 console.log(`Loading ${customers.length} customers for user ${userEmail}`);
+                console.log('Customer data:', customers);
+                
+                // If no customers, try to load sample data
+                if (!customers || customers.length === 0) {
+                    console.log('No customers found, attempting to load sample data...');
+                    crm.loadSampleData();
+                    customers = crm.getCustomersForUser(userEmail);
+                    console.log(`After loading sample data: ${customers.length} customers`);
+                }
                 
                 const tbody = document.getElementById('customerTableBody');
                 const mobileContainer = document.getElementById('mobileCustomersContainer');
