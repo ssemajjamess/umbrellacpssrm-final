@@ -1877,6 +1877,10 @@
                     <button class="notification-btn">
                         <i class="fas fa-bell"></i>
                     </button>
+                    <a href="../ACCOUNT SETTINGS/profile.html" class="profile-btn" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; text-decoration: none; margin-right: 10px;">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
                     <div class="user-profile">
                         <div class="user-avatar" id="userAvatar">U</div>
                         <span id="userDisplayName">User Name</span>
@@ -2418,7 +2422,16 @@
     <script src="crm-data.js"></script>
     <script src="../API/pdf-processor.js"></script>
     <script>
-        // Load customers function
+        // Initialize CRM
+        let crm = null;
+        try {
+            crm = new UmbrellaCRM();
+            console.log('CRM initialized successfully');
+        } catch (error) {
+            console.error('Error initializing CRM:', error);
+        }
+
+        // Load customers function - FIXED VERSION
         function loadCustomers() {
             try {
                 console.log('Loading customers...');
@@ -2429,8 +2442,8 @@
                     crm.initializeData();
                 }
                 
-                // Apply current filters
-                filterCustomers();
+                // Call the main loadCustomers function that handles display
+                loadCustomersMain();
                 
                 console.log('Customers loaded successfully');
             } catch (error) {
@@ -2600,67 +2613,7 @@
             }
         }
 
-        // Initialize page
-        function initializePage() {
-            // Check authentication
-            const isLoggedIn = localStorage.getItem('userLoggedIn');
-            if (isLoggedIn !== 'true') {
-                window.location.href = '../index.html';
-                return;
-            }
 
-            // Set user information
-            const userEmail = localStorage.getItem('userEmail') || 'james@roofsbyumbrella.com';
-            const userName = localStorage.getItem('userName') || 'James Causey';
-            const userRole = localStorage.getItem('userRole') || 'Owner';
-            
-            // Set current user in CRM
-            const currentUser = crm.getUsers().find(u => u.email === userEmail) || crm.getUsers()[0];
-            crm.setCurrentUser(currentUser);
-            
-            document.getElementById('userDisplayName').textContent = currentUser.name;
-            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-            document.getElementById('userInfo').textContent = currentUser.name;
-
-            // Initialize mobile menu
-            initializeMobileMenu();
-
-            // Initialize mobile features
-            initializeMobileFeatures();
-
-            // Validate and fix customer data
-            validateCustomerData();
-            fixCustomerData();
-
-            // Handle URL parameters for filtering
-            handleUrlParameters();
-
-            // Setup filter listeners
-            setupFilterListeners();
-            
-            // Load customers
-            loadCustomers();
-
-            // Check for customers with claims
-            checkForClaims();
-
-            // Add refresh functionality
-            window.addEventListener('focus', function() {
-                // Refresh data when window regains focus
-                crm.loadData();
-                loadCustomers();
-            });
-
-            // Add resize listener for mobile/desktop switching
-            window.addEventListener('resize', function() {
-                detectMobileView();
-            });
-
-            // Add mobile-specific event listeners
-            if (window.innerWidth <= 768) {
-                addMobileEventListeners();
-            }
-        }
 
         // Initialize mobile menu
         function initializeMobileMenu() {
@@ -2687,10 +2640,7 @@
             console.log('Mobile event listeners added');
         }
 
-        // Apply filters function (for HTML onclick handlers)
-        function applyFilters() {
-            filterCustomers();
-        }
+
 
         // Detect mobile view
         function detectMobileView() {
@@ -2949,7 +2899,7 @@
         }
 
         // Enhanced loadCustomers function with proper filtering and display
-        function loadCustomers() {
+        function loadCustomersMain() {
             try {
                 console.log('Loading customers with enhanced function...');
                 
@@ -5101,7 +5051,7 @@
 
                 // Close modal and refresh display
                 document.querySelector('.modal').remove();
-                filterCustomers();
+                loadCustomers();
             } catch (error) {
                 console.error('Error saving costs:', error);
                 crm.showNotification('Error saving costs. Please try again.', 'error');
@@ -5141,7 +5091,7 @@
         function loadSampleData() {
             if (confirm('Load sample customer data? This will add 10 sample customers to your CRM.')) {
                 crm.loadSampleData();
-                filterCustomers();
+                loadCustomers();
                 crm.showNotification('Sample data loaded successfully!', 'success');
             }
         }
