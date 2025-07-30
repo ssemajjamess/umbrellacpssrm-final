@@ -1880,6 +1880,7 @@
                 <button onclick="testLoadCustomers()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">TEST LOAD CUSTOMERS</button>
                 <button onclick="forceLoadSampleData()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">FORCE LOAD SAMPLE DATA</button>
                 <button onclick="checkCRMData()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">CHECK CRM DATA</button>
+                <button onclick="testAllButtons()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">TEST ALL BUTTONS</button>
                 <span id="debugInfo" style="margin-left: 10px;"></span>
             </div>
             
@@ -5772,6 +5773,97 @@
                 console.error('Check error:', error);
                 const debugInfo = document.getElementById('debugInfo');
                 debugInfo.innerHTML = `CHECK ERROR: ${error.message}`;
+            }
+        }
+
+        // COMPREHENSIVE BUTTON TEST FUNCTION
+        function testAllButtons() {
+            try {
+                console.log('=== TESTING ALL BUTTON FUNCTIONS ===');
+                
+                // Test if all required functions exist
+                const requiredFunctions = [
+                    'callCustomer',
+                    'getDirections', 
+                    'viewCustomerDetails',
+                    'editCustomer',
+                    'manageDocuments',
+                    'takePhoto',
+                    'updateCosts',
+                    'deleteCustomer',
+                    'updateStage'
+                ];
+                
+                const missingFunctions = [];
+                requiredFunctions.forEach(funcName => {
+                    if (typeof window[funcName] !== 'function') {
+                        missingFunctions.push(funcName);
+                        console.error(`MISSING FUNCTION: ${funcName}`);
+                    } else {
+                        console.log(`✓ FUNCTION EXISTS: ${funcName}`);
+                    }
+                });
+                
+                // Test with sample data
+                const testCustomer = {
+                    id: 999999,
+                    customerName: 'TEST CUSTOMER',
+                    phone: '(864) 123-4567',
+                    address: '123 Test St, Greenville, SC 29611',
+                    email: 'test@example.com'
+                };
+                
+                console.log('Testing button functions with sample customer:', testCustomer);
+                
+                // Test each function (without actually executing the action)
+                try {
+                    console.log('Testing callCustomer...');
+                    if (typeof callCustomer === 'function') {
+                        console.log('✓ callCustomer function exists');
+                    }
+                } catch (e) {
+                    console.error('✗ callCustomer error:', e);
+                }
+                
+                try {
+                    console.log('Testing getDirections...');
+                    if (typeof getDirections === 'function') {
+                        console.log('✓ getDirections function exists');
+                    }
+                } catch (e) {
+                    console.error('✗ getDirections error:', e);
+                }
+                
+                try {
+                    console.log('Testing editCustomer...');
+                    if (typeof editCustomer === 'function') {
+                        console.log('✓ editCustomer function exists');
+                    }
+                } catch (e) {
+                    console.error('✗ editCustomer error:', e);
+                }
+                
+                try {
+                    console.log('Testing deleteCustomer...');
+                    if (typeof deleteCustomer === 'function') {
+                        console.log('✓ deleteCustomer function exists');
+                    }
+                } catch (e) {
+                    console.error('✗ deleteCustomer error:', e);
+                }
+                
+                const debugInfo = document.getElementById('debugInfo');
+                if (missingFunctions.length > 0) {
+                    debugInfo.innerHTML = `MISSING FUNCTIONS: ${missingFunctions.join(', ')}`;
+                } else {
+                    debugInfo.innerHTML = `ALL FUNCTIONS EXIST ✓`;
+                }
+                
+                console.log('=== BUTTON TEST COMPLETE ===');
+            } catch (error) {
+                console.error('Button test error:', error);
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `BUTTON TEST ERROR: ${error.message}`;
             }
         }
         
