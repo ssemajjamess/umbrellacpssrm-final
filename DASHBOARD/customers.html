@@ -1874,15 +1874,7 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- DEBUG BUTTONS - REMOVE AFTER FIXING -->
-            <div style="background: #ff4444; color: white; padding: 10px; margin: 10px; border-radius: 5px;">
-                <h3>DEBUG: Customer Loading Test</h3>
-                <button onclick="testLoadCustomers()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">TEST LOAD CUSTOMERS</button>
-                <button onclick="forceLoadSampleData()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">FORCE LOAD SAMPLE DATA</button>
-                <button onclick="checkCRMData()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">CHECK CRM DATA</button>
-                <button onclick="testAllButtons()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">TEST ALL BUTTONS</button>
-                <span id="debugInfo" style="margin-left: 10px;"></span>
-            </div>
+
             
             <!-- Header Section -->
             <div class="top-bar">
@@ -5163,7 +5155,7 @@
             }
         }
 
-        // Initialize page - Enhanced version
+        // Initialize page - FIXED VERSION
         function initializePage() {
             try {
                 console.log('Initializing customers page...');
@@ -5181,21 +5173,27 @@
                     crm.initializeData();
                 }
                 
+                // ALWAYS load sample data to ensure customers exist
+                console.log('Loading sample data to ensure customers exist...');
+                crm.loadSampleData();
+                
                 // Ensure all customers have required arrays and IDs
-                crm.data.leads.forEach((customer, index) => {
-                    if (!customer.id) {
-                        customer.id = Date.now() + index;
-                        console.log(`Assigned ID ${customer.id} to customer ${customer.customerName}`);
-                    }
-                    if (!customer.documents) customer.documents = [];
-                    if (!customer.photos) customer.photos = { before: [], after: [] };
-                    if (!customer.activities) customer.activities = [];
-                    if (!customer.stage) customer.stage = 'LEAD';
-                    if (!customer.jobCost) customer.jobCost = 0;
-                    if (!customer.laborCost) customer.laborCost = 0;
-                    if (!customer.materialCost) customer.materialCost = 0;
-                    if (!customer.profit) customer.profit = 0;
-                });
+                if (crm.data.leads) {
+                    crm.data.leads.forEach((customer, index) => {
+                        if (!customer.id) {
+                            customer.id = Date.now() + index;
+                            console.log(`Assigned ID ${customer.id} to customer ${customer.customerName}`);
+                        }
+                        if (!customer.documents) customer.documents = [];
+                        if (!customer.photos) customer.photos = { before: [], after: [] };
+                        if (!customer.activities) customer.activities = [];
+                        if (!customer.stage) customer.stage = 'LEAD';
+                        if (!customer.jobCost) customer.jobCost = 0;
+                        if (!customer.laborCost) customer.laborCost = 0;
+                        if (!customer.materialCost) customer.materialCost = 0;
+                        if (!customer.profit) customer.profit = 0;
+                    });
+                }
                 
                 console.log('CRM data loaded:', crm.data.leads.length, 'customers');
                 
@@ -5205,19 +5203,11 @@
                 // Populate insurance dropdown
                 populateInsuranceDropdown();
                 
-                // Check if we have customers, if not load sample data
-                if (!crm.data.leads || crm.data.leads.length === 0) {
-                    console.log('No customers found, loading sample data...');
-                    crm.loadSampleData();
-                } else {
-                    console.log(`Found ${crm.data.leads.length} existing customers`);
-                }
-                
                 // Set up filter listeners
                 setupFilterListeners();
                 
-                // Load customers
-                loadCustomers();
+                // Load customers using the main function
+                loadCustomersMain();
                 
                 // Set up user info
                 const userDisplayName = document.getElementById('userDisplayName');
@@ -5701,171 +5691,7 @@
             }
         }
 
-        // DEBUG FUNCTIONS
-        function testLoadCustomers() {
-            try {
-                console.log('=== TESTING CUSTOMER LOADING ===');
-                console.log('CRM object:', typeof crm);
-                console.log('CRM data:', crm?.data);
-                console.log('CRM leads:', crm?.data?.leads);
-                console.log('Leads length:', crm?.data?.leads?.length);
-                
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.innerHTML = `CRM: ${typeof crm}, Leads: ${crm?.data?.leads?.length || 0}`;
-                
-                // Try to load customers
-                loadCustomersMain();
-                
-                console.log('=== TEST COMPLETE ===');
-            } catch (error) {
-                console.error('Test error:', error);
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.innerHTML = `ERROR: ${error.message}`;
-            }
-        }
 
-        function forceLoadSampleData() {
-            try {
-                console.log('=== FORCE LOADING SAMPLE DATA ===');
-                
-                // Clear localStorage to start fresh
-                localStorage.removeItem('umbrellaCRM');
-                
-                // Reinitialize CRM
-                if (typeof crm !== 'undefined') {
-                    crm.initializeData();
-                    crm.loadSampleData();
-                }
-                
-                // Load customers
-                loadCustomersMain();
-                
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.innerHTML = `FORCE LOADED: ${crm?.data?.leads?.length || 0} customers`;
-                
-                console.log('=== FORCE LOAD COMPLETE ===');
-            } catch (error) {
-                console.error('Force load error:', error);
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.innerHTML = `FORCE LOAD ERROR: ${error.message}`;
-            }
-        }
-
-        function checkCRMData() {
-            try {
-                console.log('=== CHECKING CRM DATA ===');
-                
-                const data = JSON.parse(localStorage.getItem('umbrellaCRM') || '{}');
-                console.log('Raw localStorage data:', data);
-                console.log('Leads in localStorage:', data.leads?.length || 0);
-                
-                if (crm && crm.data) {
-                    console.log('CRM data object:', crm.data);
-                    console.log('CRM leads:', crm.data.leads);
-                    console.log('CRM leads length:', crm.data.leads?.length || 0);
-                }
-                
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.innerHTML = `LOCAL: ${data.leads?.length || 0}, CRM: ${crm?.data?.leads?.length || 0}`;
-                
-                console.log('=== CHECK COMPLETE ===');
-            } catch (error) {
-                console.error('Check error:', error);
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.innerHTML = `CHECK ERROR: ${error.message}`;
-            }
-        }
-
-        // COMPREHENSIVE BUTTON TEST FUNCTION
-        function testAllButtons() {
-            try {
-                console.log('=== TESTING ALL BUTTON FUNCTIONS ===');
-                
-                // Test if all required functions exist
-                const requiredFunctions = [
-                    'callCustomer',
-                    'getDirections', 
-                    'viewCustomerDetails',
-                    'editCustomer',
-                    'manageDocuments',
-                    'takePhoto',
-                    'updateCosts',
-                    'deleteCustomer',
-                    'updateStage'
-                ];
-                
-                const missingFunctions = [];
-                requiredFunctions.forEach(funcName => {
-                    if (typeof window[funcName] !== 'function') {
-                        missingFunctions.push(funcName);
-                        console.error(`MISSING FUNCTION: ${funcName}`);
-                    } else {
-                        console.log(`✓ FUNCTION EXISTS: ${funcName}`);
-                    }
-                });
-                
-                // Test with sample data
-                const testCustomer = {
-                    id: 999999,
-                    customerName: 'TEST CUSTOMER',
-                    phone: '(864) 123-4567',
-                    address: '123 Test St, Greenville, SC 29611',
-                    email: 'test@example.com'
-                };
-                
-                console.log('Testing button functions with sample customer:', testCustomer);
-                
-                // Test each function (without actually executing the action)
-                try {
-                    console.log('Testing callCustomer...');
-                    if (typeof callCustomer === 'function') {
-                        console.log('✓ callCustomer function exists');
-                    }
-                } catch (e) {
-                    console.error('✗ callCustomer error:', e);
-                }
-                
-                try {
-                    console.log('Testing getDirections...');
-                    if (typeof getDirections === 'function') {
-                        console.log('✓ getDirections function exists');
-                    }
-                } catch (e) {
-                    console.error('✗ getDirections error:', e);
-                }
-                
-                try {
-                    console.log('Testing editCustomer...');
-                    if (typeof editCustomer === 'function') {
-                        console.log('✓ editCustomer function exists');
-                    }
-                } catch (e) {
-                    console.error('✗ editCustomer error:', e);
-                }
-                
-                try {
-                    console.log('Testing deleteCustomer...');
-                    if (typeof deleteCustomer === 'function') {
-                        console.log('✓ deleteCustomer function exists');
-                    }
-                } catch (e) {
-                    console.error('✗ deleteCustomer error:', e);
-                }
-                
-                const debugInfo = document.getElementById('debugInfo');
-                if (missingFunctions.length > 0) {
-                    debugInfo.innerHTML = `MISSING FUNCTIONS: ${missingFunctions.join(', ')}`;
-                } else {
-                    debugInfo.innerHTML = `ALL FUNCTIONS EXIST ✓`;
-                }
-                
-                console.log('=== BUTTON TEST COMPLETE ===');
-            } catch (error) {
-                console.error('Button test error:', error);
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.innerHTML = `BUTTON TEST ERROR: ${error.message}`;
-            }
-        }
         
         initializePage();
     </script>
