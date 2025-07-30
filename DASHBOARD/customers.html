@@ -1981,6 +1981,9 @@
                         <button class="btn btn-success" onclick="loadSampleData()" style="background: #28a745;">
                             <i class="fas fa-database"></i> Load Sample Data
                         </button>
+                        <button class="btn btn-warning" onclick="forceReloadCustomers()" style="background: #ffc107; color: #212529;">
+                            <i class="fas fa-sync"></i> Force Reload Customers
+                        </button>
                     </div>
                 </div>
 
@@ -5108,6 +5111,21 @@
             }
         }
 
+        // Force reload customers function
+        function forceReloadCustomers() {
+            if (confirm('Force reload all customers? This will clear existing data and reload sample customers.')) {
+                try {
+                    console.log('Force reloading customers...');
+                    crm.forceReloadSampleData();
+                    loadCustomers();
+                    crm.showNotification('Customers force reloaded successfully!', 'success');
+                } catch (error) {
+                    console.error('Error force reloading customers:', error);
+                    crm.showNotification('Error force reloading customers', 'error');
+                }
+            }
+        }
+
         // Add event listener for mobile menu
         document.addEventListener('DOMContentLoaded', function() {
             const mobileBtn = document.getElementById('mobileMenuBtn');
@@ -5170,6 +5188,8 @@
                 if (!crm.data.leads || crm.data.leads.length === 0) {
                     console.log('No customers found, loading sample data...');
                     crm.loadSampleData();
+                } else {
+                    console.log(`Found ${crm.data.leads.length} existing customers`);
                 }
                 
                 // Set up filter listeners

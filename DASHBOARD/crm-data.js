@@ -94,9 +94,12 @@ class UmbrellaCRM {
                 this.data = JSON.parse(localStorage.getItem('umbrellaCRM'));
             }
             
-            // Ensure sample data is loaded if no customers exist
-            if (this.data.leads.length === 0) {
+            // Always load sample data if no customers exist
+            if (!this.data.leads || this.data.leads.length === 0) {
+                console.log('No customers found, loading sample data...');
                 this.loadSampleData();
+            } else {
+                console.log(`Found ${this.data.leads.length} existing customers`);
             }
         } catch (error) {
             console.error('Error loading CRM data:', error);
@@ -426,6 +429,14 @@ class UmbrellaCRM {
 
         this.saveData();
         console.log('Sample data loaded successfully!');
+    }
+
+    // Force reload sample data
+    forceReloadSampleData() {
+        console.log('Force reloading sample data...');
+        this.data.leads = [];
+        this.loadSampleData();
+        console.log(`Force reloaded ${this.data.leads.length} customers`);
     }
 
     // Validate and fix data structure
