@@ -189,9 +189,18 @@
 
         .profile-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-height: 300px;
         }
 
         .profile-card {
@@ -450,15 +459,48 @@
 
             .profile-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
 
             .profile-header {
                 flex-direction: column;
                 text-align: center;
+                padding: 20px;
             }
 
             .profile-stats {
                 justify-content: center;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .profile-card {
+                padding: 20px;
+                min-height: auto;
+            }
+
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .profile-card {
+                padding: 15px;
+            }
+
+            .profile-name {
+                font-size: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.2rem;
             }
         }
     </style>

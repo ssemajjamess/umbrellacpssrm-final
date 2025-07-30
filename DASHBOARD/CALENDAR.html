@@ -1249,9 +1249,71 @@
             }
         }
 
+        // Initialize Google Calendar API
+        function initializeGoogleCalendar() {
+            gapi.load('client:auth2', function() {
+                gapi.client.init({
+                    apiKey: 'YOUR_GOOGLE_API_KEY', // Replace with actual API key
+                    clientId: 'YOUR_GOOGLE_CLIENT_ID', // Replace with actual client ID
+                    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+                    scope: 'https://www.googleapis.com/auth/calendar'
+                }).then(function() {
+                    // Listen for sign-in state changes
+                    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+                    
+                    // Handle the initial sign-in state
+                    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+                    
+                    console.log('Google Calendar API initialized');
+                }).catch(function(error) {
+                    console.error('Error initializing Google Calendar API:', error);
+                    crm.showNotification('Error initializing Google Calendar API. Please check your settings.', 'error');
+                });
+            });
+        }
+
+        // Connect to Google Calendar
+        function connectGoogleCalendar() {
+            const auth2 = gapi.auth2.getAuthInstance();
+            if (!auth2.isSignedIn.get()) {
+                auth2.signIn().then(function() {
+                    updateSigninStatus(true);
+                    localStorage.setItem('googleCalendarSettings', JSON.stringify({
+                        connected: true,
+                        connectedAt: new Date().toISOString()
+                    }));
+                }).catch(function(error) {
+                    console.error('Error signing in to Google:', error);
+                    crm.showNotification('Error connecting to Google Calendar. Please try again.', 'error');
+                });
+            }
+        }
+
+        // Disconnect from Google Calendar
+        function disconnectGoogleCalendar() {
+            const auth2 = gapi.auth2.getAuthInstance();
+            if (auth2.isSignedIn.get()) {
+                auth2.signOut().then(function() {
+                    updateSigninStatus(false);
+                    localStorage.setItem('googleCalendarSettings', JSON.stringify({
+                        connected: false,
+                        disconnectedAt: new Date().toISOString()
+                    }));
+                    crm.showNotification('Disconnected from Google Calendar', 'info');
+                });
+            }
+        }
+
         // Initialize page
         initializePage();
         checkGoogleConnection();
+        
+        // Initialize Google Calendar API
+        if (typeof gapi !== 'undefined') {
+            initializeGoogleCalendar();
+        } else {
+            console.warn('Google API not loaded. Calendar sync will be limited.');
+        }
     </script>
 </body>
 </html> 
