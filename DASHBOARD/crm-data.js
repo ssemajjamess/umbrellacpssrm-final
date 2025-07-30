@@ -316,6 +316,114 @@ class UmbrellaCRM {
             this.addLead(customer);
         });
 
+        // Add more customers from the spreadsheet
+        const additionalCustomers = [
+            {
+                customerName: 'Tonya Strickland',
+                phone: '(864) 678-9012',
+                email: 'Tonstric@bellsouth.net',
+                address: '987 Cedar Ln, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'ALLSTATE',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: 'ASPHALT 30 YEAR',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Mike Hanner',
+                phone: '(864) 789-0123',
+                email: 'mike.hanner@aol.com',
+                address: '147 Birch Rd, Greenville, SC 29611',
+                soldBy: 'Daniel Pruiksma',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'STATEFARM',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: 'ASPHALT 30 YEAR',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Lorrie Green',
+                phone: '(864) 890-1234',
+                email: 'lorrie.green@icloud.com',
+                address: '258 Spruce Way, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: '?????????',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: 'ASPHALT 30 YEAR',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'James Turner',
+                phone: '(864) 901-2345',
+                email: 'james.turner@bellsouth.net',
+                address: '369 Willow Ct, Greenville, SC 29611',
+                soldBy: 'James Causey',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'STATEFARM',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: 'ASPHALT 30 YEAR',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            },
+            {
+                customerName: 'Joshua W. Taylor',
+                phone: '(864) 012-3456',
+                email: 'joshua.taylor@yahoo.com',
+                address: '741 Poplar St, Greenville, SC 29611',
+                soldBy: 'Daniel Pruiksma',
+                stage: 'LEAD',
+                feePaid: 'N/A',
+                insuranceCompany: 'TBD',
+                claimNumber: '',
+                adjusterInfo: '',
+                roofType: 'ASPHALT 30 YEAR',
+                replacementType: '',
+                jobCost: 0,
+                laborCost: 0,
+                materialCost: 0,
+                profit: 0,
+                googleRating: 0,
+                createdAt: new Date().toISOString()
+            }
+        ];
+
+        additionalCustomers.forEach(customer => {
+            this.addLead(customer);
+        });
+
         this.saveData();
         console.log('Sample data loaded successfully!');
     }
@@ -990,15 +1098,8 @@ class UmbrellaCRM {
 
     // Get customers based on user role
     getCustomersForUser(email) {
-        const user = this.getUserByEmail(email);
-        if (!user) return [];
-
-        if (user.role === 'Administrator' || user.role === 'Manager') {
-            return this.data.leads;
-        } else {
-            // Sales reps only see their own customers
-            return this.data.leads.filter(lead => lead.soldBy === user.name);
-        }
+        // For now, return all customers to everyone
+        return this.data.leads || [];
     }
 
     // Get team members for manager

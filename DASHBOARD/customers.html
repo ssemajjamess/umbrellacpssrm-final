@@ -2918,7 +2918,7 @@
                 // Get current user email
                 const userEmail = localStorage.getItem('userEmail');
                 
-                // Get customers based on user role
+                // Get all customers using the CRM function
                 let customers = crm.getCustomersForUser(userEmail);
                 console.log(`Loading ${customers.length} customers for user ${userEmail}`);
                 
