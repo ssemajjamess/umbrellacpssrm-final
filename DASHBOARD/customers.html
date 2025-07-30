@@ -1874,6 +1874,16 @@
 
         <!-- Main Content -->
         <main class="main-content">
+            <!-- DEBUG BUTTONS - REMOVE AFTER FIXING -->
+            <div style="background: #ff4444; color: white; padding: 10px; margin: 10px; border-radius: 5px;">
+                <h3>DEBUG: Customer Loading Test</h3>
+                <button onclick="testLoadCustomers()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">TEST LOAD CUSTOMERS</button>
+                <button onclick="forceLoadSampleData()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">FORCE LOAD SAMPLE DATA</button>
+                <button onclick="checkCRMData()" style="background: #fff; color: #ff4444; padding: 10px; margin: 5px; border: none; border-radius: 5px;">CHECK CRM DATA</button>
+                <span id="debugInfo" style="margin-left: 10px;"></span>
+            </div>
+            
+            <!-- Header Section -->
             <div class="top-bar">
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fas fa-bars"></i>
@@ -5687,6 +5697,81 @@
                 console.log('Insurance dropdown populated with', insuranceCompanies.length, 'companies');
             } catch (error) {
                 console.error('Error populating insurance dropdown:', error);
+            }
+        }
+
+        // DEBUG FUNCTIONS
+        function testLoadCustomers() {
+            try {
+                console.log('=== TESTING CUSTOMER LOADING ===');
+                console.log('CRM object:', typeof crm);
+                console.log('CRM data:', crm?.data);
+                console.log('CRM leads:', crm?.data?.leads);
+                console.log('Leads length:', crm?.data?.leads?.length);
+                
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `CRM: ${typeof crm}, Leads: ${crm?.data?.leads?.length || 0}`;
+                
+                // Try to load customers
+                loadCustomersMain();
+                
+                console.log('=== TEST COMPLETE ===');
+            } catch (error) {
+                console.error('Test error:', error);
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `ERROR: ${error.message}`;
+            }
+        }
+
+        function forceLoadSampleData() {
+            try {
+                console.log('=== FORCE LOADING SAMPLE DATA ===');
+                
+                // Clear localStorage to start fresh
+                localStorage.removeItem('umbrellaCRM');
+                
+                // Reinitialize CRM
+                if (typeof crm !== 'undefined') {
+                    crm.initializeData();
+                    crm.loadSampleData();
+                }
+                
+                // Load customers
+                loadCustomersMain();
+                
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `FORCE LOADED: ${crm?.data?.leads?.length || 0} customers`;
+                
+                console.log('=== FORCE LOAD COMPLETE ===');
+            } catch (error) {
+                console.error('Force load error:', error);
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `FORCE LOAD ERROR: ${error.message}`;
+            }
+        }
+
+        function checkCRMData() {
+            try {
+                console.log('=== CHECKING CRM DATA ===');
+                
+                const data = JSON.parse(localStorage.getItem('umbrellaCRM') || '{}');
+                console.log('Raw localStorage data:', data);
+                console.log('Leads in localStorage:', data.leads?.length || 0);
+                
+                if (crm && crm.data) {
+                    console.log('CRM data object:', crm.data);
+                    console.log('CRM leads:', crm.data.leads);
+                    console.log('CRM leads length:', crm.data.leads?.length || 0);
+                }
+                
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `LOCAL: ${data.leads?.length || 0}, CRM: ${crm?.data?.leads?.length || 0}`;
+                
+                console.log('=== CHECK COMPLETE ===');
+            } catch (error) {
+                console.error('Check error:', error);
+                const debugInfo = document.getElementById('debugInfo');
+                debugInfo.innerHTML = `CHECK ERROR: ${error.message}`;
             }
         }
         
