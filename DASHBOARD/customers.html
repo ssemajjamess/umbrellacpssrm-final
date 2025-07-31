@@ -1966,6 +1966,9 @@
                         <button class="btn btn-primary" onclick="openAddCustomerModal()">
                             <i class="fas fa-plus"></i> Add Customer
                         </button>
+                        <button class="btn btn-warning" onclick="testModal()" style="background: #ffc107; color: #212529;">
+                            <i class="fas fa-bug"></i> Test Modal
+                        </button>
                         <button class="btn btn-warning" onclick="openPDFUploadModal()" style="background: #ffc107; color: #212529;">
                             <i class="fas fa-file-pdf"></i> Import PDF
                         </button>
@@ -4587,18 +4590,84 @@
             document.getElementById(tabId).classList.add('active');
         }
 
-        // Open add customer modal
+        // Open add customer modal - FIXED VERSION
         function openAddCustomerModal() {
-            document.getElementById('modalTitle').textContent = 'Add New Customer';
-            const form = document.getElementById('customerForm');
-            form.reset();
-            form.dataset.customerId = ''; // Clear customer ID for new customer
-            document.getElementById('customerModal').style.display = 'block';
+            try {
+                console.log('Opening add customer modal...');
+                
+                const modalTitle = document.getElementById('modalTitle');
+                const form = document.getElementById('customerForm');
+                const modal = document.getElementById('customerModal');
+                
+                if (!modalTitle || !form || !modal) {
+                    console.error('Modal elements not found:', {
+                        modalTitle: !!modalTitle,
+                        form: !!form,
+                        modal: !!modal
+                    });
+                    alert('Error: Modal elements not found. Please refresh the page.');
+                    return;
+                }
+                
+                console.log('Modal elements found, setting up form...');
+                
+                modalTitle.textContent = 'Add New Customer';
+                form.reset();
+                form.dataset.customerId = ''; // Clear customer ID for new customer
+                
+                console.log('Showing modal...');
+                modal.style.display = 'block';
+                
+                console.log('Add customer modal opened successfully');
+            } catch (error) {
+                console.error('Error opening add customer modal:', error);
+                alert('Error opening modal: ' + error.message);
+            }
         }
 
-        // Close customer modal
+        // Close customer modal - FIXED VERSION
         function closeCustomerModal() {
-            document.getElementById('customerModal').style.display = 'none';
+            try {
+                console.log('Closing customer modal...');
+                const modal = document.getElementById('customerModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    console.log('Customer modal closed successfully');
+                } else {
+                    console.error('Customer modal not found');
+                }
+            } catch (error) {
+                console.error('Error closing customer modal:', error);
+            }
+        }
+
+        // Test modal function
+        function testModal() {
+            try {
+                console.log('=== TESTING MODAL ===');
+                
+                const modal = document.getElementById('customerModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const form = document.getElementById('customerForm');
+                
+                console.log('Modal elements:', {
+                    modal: !!modal,
+                    modalTitle: !!modalTitle,
+                    form: !!form
+                });
+                
+                if (modal && modalTitle && form) {
+                    console.log('All modal elements found ✓');
+                    alert('Modal elements found! Click OK to test opening modal.');
+                    openAddCustomerModal();
+                } else {
+                    console.error('Missing modal elements');
+                    alert('Missing modal elements! Check console for details.');
+                }
+            } catch (error) {
+                console.error('Test modal error:', error);
+                alert('Test modal error: ' + error.message);
+            }
         }
 
         // Edit customer - Enhanced version
@@ -4781,7 +4850,7 @@
                 }
 
                 closeCustomerModal();
-                loadCustomers();
+                loadCustomersMain();
                 
                 console.log('Form submission completed successfully');
             } catch (error) {
